@@ -1,0 +1,28 @@
+# golang vendor (dependencies) directory
+vendor
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.zip
+
+# Exception to above for raw data sample files
+!*bil.zip
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+**.DS_Store
+
+**.pyc
+
+**/__debug*
+
+# Regression Test Results
+tests/water-regression-results.json
