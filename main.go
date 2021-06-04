@@ -31,6 +31,11 @@ func main() {
 	restricted := e.Group("") // Restricted Routes
 	restricted.Use(middleware.KeyAuth(config.ApplicationKey))
 
+	// Health Check
+	public.GET("/health", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, map[string]interface{}{"status": "healthy"})
+	})
+
 	// Locations
 	public.GET("/locations", cs.ListLocations)
 	restricted.POST("/locations", cs.CreateLocations)
