@@ -1,4 +1,15 @@
-CREATE USER water_user WITH ENCRYPTED PASSWORD 'water_pass';
+-- For a production-ready deployment scenario, the role 'water_user' with a complicated selected password
+-- should already exist, having been created when the database was stood-up.
+-- The statement below is used to create database user for developing locally with Docker Compose with a
+-- simple password ('water_pass'). https://stackoverflow.com/questions/8092086/create-postgresql-role-user-if-it-doesnt-exist
+DO $$
+BEGIN
+  CREATE USER water_user WITH ENCRYPTED PASSWORD 'water_pass';
+  EXCEPTION WHEN DUPLICATE_OBJECT THEN
+  RAISE NOTICE 'not creating role water_user -- it already exists';
+END
+$$;
+
 CREATE ROLE water_reader;
 CREATE ROLE water_writer;
 CREATE ROLE postgis_reader;
