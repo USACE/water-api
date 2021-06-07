@@ -15,4 +15,6 @@ RUN go get -d -v \
 # SCRATCH IMAGE
 FROM scratch
 COPY --from=builder /go/bin/water-api /go/bin/water-api
+COPY --from=builder /go/src/app/sql /sql/
+VOLUME [ "/sql" ]
 ENTRYPOINT ["/go/bin/water-api"]
