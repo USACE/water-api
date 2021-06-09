@@ -10,9 +10,32 @@ BEGIN
 END
 $$;
 
-CREATE ROLE water_reader;
-CREATE ROLE water_writer;
-CREATE ROLE postgis_reader;
+-- Role water_reader;
+DO $$
+BEGIN
+  CREATE ROLE water_reader;
+  EXCEPTION WHEN DUPLICATE_OBJECT THEN
+  RAISE NOTICE 'not creating role water_reader -- it already exists';
+END
+$$;
+
+-- Role water_writer
+DO $$
+BEGIN
+  CREATE ROLE water_writer;
+  EXCEPTION WHEN DUPLICATE_OBJECT THEN
+  RAISE NOTICE 'not creating role water_writer -- it already exists';
+END
+$$;
+
+-- Role postgis_reader
+DO $$
+BEGIN
+  CREATE ROLE postgis_reader;
+  EXCEPTION WHEN DUPLICATE_OBJECT THEN
+  RAISE NOTICE 'not creating role postgis_reader -- it already exists';
+END
+$$;
 
 -- Set Search Path
 ALTER ROLE water_user SET search_path TO a2w_cwms,topology,public;
