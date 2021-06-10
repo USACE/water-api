@@ -25,10 +25,10 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	e := echo.New()           // All Routes
-	e.Use(middleware.GZIP)    // All Routes Middleware
-	public := e.Group("")     // Public Routes
-	restricted := e.Group("") // Restricted Routes
+	e := echo.New()                         // All Routes
+	e.Use(middleware.CORS, middleware.GZIP) // All Routes Middleware
+	public := e.Group("")                   // Public Routes
+	restricted := e.Group("")               // Restricted Routes
 	restricted.Use(middleware.KeyAuth(config.ApplicationKey))
 
 	// Health Check
