@@ -43,6 +43,9 @@ func main() {
 	restricted.PUT("/locations/:location_id", cs.UpdateLocation)
 	restricted.DELETE("/locations/:location_id", cs.DeleteLocation)
 
+	// Location Kinds
+	public.GET("/location_kind", cs.ListLocationKind)
+
 	// Projects
 	public.GET("/projects", cs.ListProjects)
 
