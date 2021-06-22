@@ -49,6 +49,12 @@ func main() {
 	// Projects
 	public.GET("/projects", cs.ListProjects)
 
+	// States
+	public.GET("/states", cs.ListStates)
+
+	// Maintenance/Automation
+	restricted.POST("/automation/assign_states_to_locations", cs.AssignStatesToLocations)
+
 	// Start server
 	log.Fatal(http.ListenAndServe(":80", e))
 }

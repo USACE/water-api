@@ -145,9 +145,17 @@ func CreateLocations(db *pgxpool.Pool, n LocationCollection) ([]Location, error)
 	return ListLocationsForIDs(db, newIDs)
 }
 
-func GetLocation(db *pgxpool.Pool, locationID *uuid.UUID) (*Location, error) {
+func GetLocationByID(db *pgxpool.Pool, locationID *uuid.UUID) (*Location, error) {
 	var l Location
 	if err := pgxscan.Get(context.Background(), db, &l, ListLocationsBaseSQL+" WHERE a.id = $1", locationID); err != nil {
+		return nil, err
+	}
+	return &l, nil
+}
+
+func GetLocationBySlug(db *pgxpool.Pool, locationSlug *string) (*Location, error) {
+	var l Location
+	if err := pgxscan.Get(context.Background(), db, &l, ListLocationsBaseSQL+" WHERE a.slug = $1", locationSlug); err != nil {
 		return nil, err
 	}
 	return &l, nil
@@ -162,7 +170,7 @@ func UpdateLocation(db *pgxpool.Pool, l *Location) (*Location, error) {
 	); err != nil {
 		return nil, err
 	}
-	return GetLocation(db, &id)
+	return GetLocationByID(db, &id)
 }
 
 func DeleteLocation(db *pgxpool.Pool, locationID *uuid.UUID) error {
