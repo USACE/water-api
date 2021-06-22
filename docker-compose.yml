@@ -18,13 +18,24 @@ services:
     ports:
       - '80:80'
   db:
-    image: postgis/postgis
+    image: postgis/postgis:13-3.1
+    restart: always
     environment:
       - POSTGRES_PASSWORD=postgres
     ports:
       - '5432:5432'
+  tiger-data:
+    profiles: ["init"]
+    build:
+      context: ./postgis-tiger-data-init
+    environment:
+      - DB_USER=postgres
+      - DB_PASS=postgres
+      - DB_NAME=postgres
+      - DB_HOST=db
   flyway:
     image: flyway/flyway
+    restart: on-failure
     command: -url=jdbc:postgresql://db:5432/postgres -schemas=a2w_cwms -user=postgres -password=postgres -connectRetries=60 migrate
     environment:
       - FLYWAY_EDITION=community

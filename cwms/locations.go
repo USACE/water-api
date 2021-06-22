@@ -36,11 +36,20 @@ func (s Store) ListLocations(c echo.Context) error {
 }
 
 func (s Store) GetLocation(c echo.Context) error {
-	locationID, err := uuid.Parse(c.Param("location_id"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, DefaultMessageBadRequest)
+	identifier := c.Param("location_id")
+	// Lookup By Location UUID if location_id parseable as UUID
+	if locationID, err := uuid.Parse(identifier); err == nil {
+		l, err := models.GetLocationByID(s.Connection, &locationID)
+		if err != nil {
+			if pgxscan.NotFound(err) {
+				return c.JSON(http.StatusNotFound, DefaultMessageNotFound)
+			}
+			return c.JSON(http.StatusInternalServerError, DefaultMessageInternalServerError)
+		}
+		return c.JSON(http.StatusOK, l)
 	}
-	l, err := models.GetLocation(s.Connection, &locationID)
+	// Otherwise Lookup By Slug
+	l, err := models.GetLocationBySlug(s.Connection, &identifier)
 	if err != nil {
 		if pgxscan.NotFound(err) {
 			return c.JSON(http.StatusNotFound, DefaultMessageNotFound)
