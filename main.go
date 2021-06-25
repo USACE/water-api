@@ -43,6 +43,15 @@ func main() {
 	restricted.PUT("/locations/:location_id", cs.UpdateLocation)
 	restricted.DELETE("/locations/:location_id", cs.DeleteLocation)
 
+	// Statistics
+	// @todo
+	public.GET("/stats/states", cs.ListStatsStates)
+	public.GET("/stats/states/:state_id", cs.GetStatsState)
+	// public.GET("/stats/watersheds", cs.ListStatsWatersheds)
+	// public.GET("/stats/watersheds/:watershed_id", cs.GetStatsWatershed)
+	public.GET("/stats/offices", cs.ListStatsOffices)
+	public.GET("/stats/offices/:office_id", cs.GetStatsOffice)
+
 	// Location Kinds
 	public.GET("/location_kind", cs.ListLocationKind)
 
