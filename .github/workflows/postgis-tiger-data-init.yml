@@ -3,6 +3,9 @@ name: Build Postgis Tiger Data Init Container
 on:
   push:
     branches: [develop]
+    paths:
+      - 'postgis-tiger-data-init/**'
+      - '.github/workflows/postgis-tiger-data-init.yml'
   workflow_dispatch:
 jobs:
 
