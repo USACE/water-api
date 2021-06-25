@@ -6,28 +6,25 @@ import (
 	"errors"
 	"fmt"
 
+	sq "github.com/Masterminds/squirrel"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
-
-type QueryAndParams struct {
-	Query  string
-	Params []interface{}
-}
 
 type Geometry struct {
 	Type        string    `json:"type"`
 	Coordinates []float64 `json:"coordinates"`
 }
 
-func (g Geometry) WKT() string {
-	return fmt.Sprintf("POINT(%f %f)", g.Coordinates[0], g.Coordinates[1])
+func (g Geometry) EWKT() string {
+	return fmt.Sprintf("SRID=4326;POINT(%f %f)", g.Coordinates[0], g.Coordinates[1])
 }
 
 type Location struct {
 	ID         uuid.UUID `json:"id"`
 	OfficeID   uuid.UUID `json:"office_id"`
+	StateID    *int      `json:"state_id"`
 	Name       string    `json:"name"`
 	PublicName *string   `json:"public_name"`
 	Slug       string    `json:"slug"`
@@ -37,8 +34,9 @@ type Location struct {
 }
 
 type LocationFilter struct {
-	OfficeID *uuid.UUID `json:"office_id" query:"office_id"`
 	KindID   *uuid.UUID `json:"kind_id" query:"kind_id"`
+	OfficeID *uuid.UUID `json:"office_id" query:"office_id"`
+	StateID  *int       `json:"state_id" query:"state_id"`
 }
 
 type LocationCollection struct {
@@ -57,59 +55,78 @@ func (c *LocationCollection) UnmarshalJSON(b []byte) error {
 	}
 }
 
-var ListLocationsBaseSQL = `SELECT a.id,
-                                   a.office_id,
-                                   a.name,
-                                   a.public_name,
-                                   a.slug,
-                                   ST_AsGeoJSON(a.geometry)::json AS geometry,
-                                   k.id as kind_id,
-                                   k.name AS kind
-							FROM location a
-							JOIN location_kind k on k.id = a.kind_id`
+func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 
-func ListLocationsSQL(f *LocationFilter) QueryAndParams {
+	q := sq.Select(`a.id,
+		            a.office_id,
+					a.state_id,
+		            a.name,
+		            a.public_name,
+		            a.slug,
+		            ST_AsGeoJSON(a.geometry)::json AS geometry,
+		            k.id                           AS kind_id,
+		            k.name                         AS kind`,
+	).From("location a")
+
+	// Base string for JOIN of location_kind table
+	j1 := "location_kind k ON k.id = a.kind_id"
 
 	if f != nil {
-		// Filter by KindID and OfficeID
-		if f.KindID != nil && f.OfficeID != nil {
-			return QueryAndParams{
-				Query:  ListLocationsBaseSQL + ` AND k.id = $1 WHERE k.id = $1 AND a.office_id = $2`,
-				Params: append([]interface{}{}, f.KindID, f.OfficeID),
-			}
-		}
-		// Filter by Only OfficeID
-		if f.OfficeID != nil {
-			return QueryAndParams{
-				Query:  ListLocationsBaseSQL + ` WHERE a.office_id = $1`,
-				Params: append([]interface{}{}, f.OfficeID),
-			}
-		}
-		// Filter by Only KindID
+		// Filter by KindID
 		if f.KindID != nil {
-			return QueryAndParams{
-				Query:  ListLocationsBaseSQL + ` WHERE k.id = $1`,
-				Params: append([]interface{}{}, f.KindID),
-			}
+			// limit join table kind if kind_id provided
+			q = q.Join(fmt.Sprintf("%s AND k.id = ?", j1), f.KindID).Where("k.id = ?", f.KindID)
+		} else {
+			// always join location_kind
+			q = q.Join(j1)
 		}
+		// Filter by OfficeID
+		if f.OfficeID != nil {
+			q = q.Where("a.office_id = ?", f.OfficeID)
+		}
+		// Filter by StateID
+		if f.StateID != nil {
+			q = q.Where("a.state_id = ?", f.StateID)
+		}
+	} else {
+		// always join location_kind
+		q = q.Join(j1)
 	}
 
 	// Unfiltered
-	return QueryAndParams{Query: ListLocationsBaseSQL, Params: []interface{}{}}
+	return q.PlaceholderFormat(sq.Dollar), nil
 }
 
 func ListLocations(db *pgxpool.Pool, f *LocationFilter) ([]Location, error) {
-	ll, q := make([]Location, 0), ListLocationsSQL(f)
-	if err := pgxscan.Select(context.Background(), db, &ll, q.Query, q.Params...); err != nil {
+	q, err := ListLocationsQuery(f)
+	if err != nil {
+		return make([]Location, 0), err
+	}
+	sql, args, err := q.ToSql()
+	if err != nil {
+		return make([]Location, 0), err
+	}
+	ll := make([]Location, 0)
+	if err := pgxscan.Select(context.Background(), db, &ll, sql, args...); err != nil {
 		return make([]Location, 0), err
 	}
 	return ll, nil
 }
 
 func ListLocationsForIDs(db *pgxpool.Pool, IDs []uuid.UUID) ([]Location, error) {
+	// Base Locations Query
+	q, err := ListLocationsQuery(nil)
+	if err != nil {
+		return make([]Location, 0), err
+	}
+	// Where ID In (...)
+	q = q.Where(sq.Eq{"a.id": IDs})
+	sql, args, err := q.ToSql()
+	if err != nil {
+		return make([]Location, 0), err
+	}
 	ll := make([]Location, 0)
-	s := ListLocationsSQL(nil)
-	if err := pgxscan.Select(context.Background(), db, &ll, s.Query+" WHERE a.id = ANY($1)", IDs); err != nil {
+	if err := pgxscan.Select(context.Background(), db, &ll, sql, args...); err != nil {
 		return make([]Location, 0), err
 	}
 	return ll, nil
@@ -126,7 +143,7 @@ func CreateLocations(db *pgxpool.Pool, n LocationCollection) ([]Location, error)
 		rows, err := tx.Query(
 			context.Background(),
 			`INSERT INTO location (office_id, name, public_name, slug, geometry, kind_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
-			m.OfficeID, m.Name, m.PublicName, m.Slug, m.Geometry.WKT(), m.KindID,
+			m.OfficeID, m.Name, m.PublicName, m.Slug, m.Geometry.EWKT(), m.KindID,
 		)
 		if err != nil {
 			tx.Rollback(context.Background())
@@ -146,16 +163,39 @@ func CreateLocations(db *pgxpool.Pool, n LocationCollection) ([]Location, error)
 }
 
 func GetLocationByID(db *pgxpool.Pool, locationID *uuid.UUID) (*Location, error) {
+	// Base Locations Query
+	q, err := ListLocationsQuery(nil)
+	if err != nil {
+		return nil, err
+	}
+	// Where ID In (...)
+	q = q.Where("a.id = ?", locationID)
+	sql, args, err := q.ToSql()
+	if err != nil {
+		return nil, err
+	}
+
 	var l Location
-	if err := pgxscan.Get(context.Background(), db, &l, ListLocationsBaseSQL+" WHERE a.id = $1", locationID); err != nil {
+	if err := pgxscan.Get(context.Background(), db, &l, sql, args...); err != nil {
 		return nil, err
 	}
 	return &l, nil
 }
 
 func GetLocationBySlug(db *pgxpool.Pool, locationSlug *string) (*Location, error) {
+	// Base Locations Query
+	q, err := ListLocationsQuery(nil)
+	if err != nil {
+		return nil, err
+	}
+	// Where slug =
+	q = q.Where("a.slug = ?", locationSlug)
+	sql, args, err := q.ToSql()
+	if err != nil {
+		return nil, err
+	}
 	var l Location
-	if err := pgxscan.Get(context.Background(), db, &l, ListLocationsBaseSQL+" WHERE a.slug = $1", locationSlug); err != nil {
+	if err := pgxscan.Get(context.Background(), db, &l, sql, args...); err != nil {
 		return nil, err
 	}
 	return &l, nil
@@ -166,7 +206,7 @@ func UpdateLocation(db *pgxpool.Pool, l *Location) (*Location, error) {
 	if err := pgxscan.Get(
 		context.Background(), db, &id,
 		"UPDATE location SET update_date=CURRENT_TIMESTAMP, office_id=$2, name=$3, public_name=$4, geometry=$5, kind_id=$6 WHERE id = $1 RETURNING id",
-		l.ID, l.OfficeID, l.Name, l.PublicName, l.Geometry.WKT(), l.KindID,
+		l.ID, l.OfficeID, l.Name, l.PublicName, l.Geometry.EWKT(), l.KindID,
 	); err != nil {
 		return nil, err
 	}

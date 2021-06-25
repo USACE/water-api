@@ -44,7 +44,7 @@ func (s Store) GetLocation(c echo.Context) error {
 			if pgxscan.NotFound(err) {
 				return c.JSON(http.StatusNotFound, DefaultMessageNotFound)
 			}
-			return c.JSON(http.StatusInternalServerError, DefaultMessageInternalServerError)
+			return c.String(http.StatusInternalServerError, err.Error())
 		}
 		return c.JSON(http.StatusOK, l)
 	}
