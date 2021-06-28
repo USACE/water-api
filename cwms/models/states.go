@@ -8,6 +8,7 @@ import (
 )
 
 type State struct {
+	ID           int    `json:"id"`
 	Abbreviation string `json:"abbreviation"`
 	Name         string `json:"name"`
 }
@@ -16,7 +17,7 @@ func ListStates(db *pgxpool.Pool) ([]State, error) {
 	ss := make([]State, 0)
 	if err := pgxscan.Select(
 		context.Background(), db, &ss,
-		`SELECT stusps AS abbreviation, name
+		`SELECT gid AS id, stusps AS abbreviation, name
 		 FROM tiger.state
 		 ORDER BY name`,
 	); err != nil {
