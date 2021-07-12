@@ -173,12 +173,12 @@ func SyncLocations(db *pgxpool.Pool, c LocationCollection) ([]Location, error) {
 	for _, l := range c.Items {
 		rows, err := cntx.Query(
 			context.Background(),
-			`INSERT INTO location (office_id, name, public_name, slug, geometry, kind_id)
+			`INSERT INTO location (office_id, name, public_name, kind_id, geometry, slug)
 			VALUES ($1, $2, $3, $4, $5, $6)
 			ON CONFLICT (office_id, name) DO UPDATE
 			SET public_name = EXCLUDED.public_name,
 			geometry = EXCLUDED.geometry, kind_id = EXCLUDED.kind_id RETURNING id`,
-			l.OfficeID, l.Name, l.PublicName, l.Slug, l.Geometry.EWKT(), l.KindID,
+			l.OfficeID, l.Name, l.PublicName, l.KindID, l.Geometry.EWKT(), l.Slug,
 		)
 		if err != nil {
 			cntx.Rollback(context.Background())
