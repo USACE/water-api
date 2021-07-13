@@ -55,7 +55,7 @@ func main() {
 	public.GET("/stats/offices/:office_id", cs.GetStatsOffice)
 
 	// Sync Postgres
-	public.POST("/sync/locations", cs.SyncLocations)
+	restricted.POST("/sync/locations", cs.SyncLocations)
 
 	// Location Kinds
 	public.GET("/location_kind", cs.ListLocationKind)
