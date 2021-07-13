@@ -36,6 +36,9 @@ func main() {
 		return c.JSON(http.StatusOK, map[string]interface{}{"status": "healthy"})
 	})
 
+	// Search
+	public.GET("/search/locations", cs.SearchLocations)
+
 	// Locations
 	public.GET("/locations", cs.ListLocations)
 	restricted.POST("/locations", cs.CreateLocations)

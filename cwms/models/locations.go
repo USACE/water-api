@@ -37,6 +37,7 @@ type LocationFilter struct {
 	KindID   *uuid.UUID `json:"kind_id" query:"kind_id"`
 	OfficeID *uuid.UUID `json:"office_id" query:"office_id"`
 	StateID  *int       `json:"state_id" query:"state_id"`
+	Q        *string    `query:"q"`
 }
 
 type LocationCollection struct {
@@ -95,6 +96,24 @@ func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 
 	// Unfiltered
 	return q.PlaceholderFormat(sq.Dollar), nil
+}
+
+func SearchLocations(db *pgxpool.Pool, f *LocationFilter) ([]Location, error) {
+	q, err := ListLocationsQuery(f)
+	if err != nil {
+		return make([]Location, 0), err
+	}
+	// Filter by Query String
+	q = q.Where("a.name || a.public_name ILIKE '%' || ? || '%' LIMIT 10", f.Q)
+	sql, args, err := q.ToSql()
+	if err != nil {
+		return make([]Location, 0), err
+	}
+	ll := make([]Location, 0)
+	if err := pgxscan.Select(context.Background(), db, &ll, sql, args...); err != nil {
+		return make([]Location, 0), err
+	}
+	return ll, nil
 }
 
 func ListLocations(db *pgxpool.Pool, f *LocationFilter) ([]Location, error) {

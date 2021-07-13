@@ -22,6 +22,24 @@ func (s Store) ListProjects(c echo.Context) error {
 	return c.JSON(http.StatusOK, pp)
 }
 
+func (s Store) SearchLocations(c echo.Context) error {
+	var f models.LocationFilter
+	if err := c.Bind(&f); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	if f.Q == nil || *f.Q == "" {
+		return c.JSON(
+			http.StatusBadRequest,
+			NewMessage("search string must be at one or more chacters long, provided in URL query parameter '?q='"),
+		)
+	}
+	ll, err := models.SearchLocations(s.Connection, &f)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, DefaultMessageInternalServerError)
+	}
+	return c.JSON(http.StatusOK, ll)
+}
+
 func (s Store) ListLocations(c echo.Context) error {
 	// Get filters from query params kind_id= or office_id=
 	var f models.LocationFilter
