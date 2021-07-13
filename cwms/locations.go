@@ -138,6 +138,35 @@ func (s Store) UpdateLocation(c echo.Context) error {
 
 }
 
+func (s Store) SyncLocations(c echo.Context) error {
+	var lc models.LocationCollection
+	if err := c.Bind(&lc); err != nil {
+		return c.String(http.StatusBadRequest, "ERROR 1 "+err.Error())
+	}
+	// Assign Unique Slugs
+	for idx := range lc.Items {
+		_s, _ := helpers.NextUniqueSlug(s.Connection, "location", "slug", lc.Items[idx].Name, "", "")
+		lc.Items[idx].Slug = _s
+	}
+
+	sl, err := models.SyncLocations(s.Connection, lc)
+	if err != nil {
+		// If Error was postgres error, return error message based on error code
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			switch pgErr.Code {
+			case pgerrcode.UniqueViolation:
+				return c.JSON(
+					http.StatusBadRequest,
+					NewMessage(pgErr.Error()))
+			}
+		}
+		// If not explicit error, return string of error message for debugging
+		return c.String(http.StatusInternalServerError, "ERROR 3 "+err.Error())
+	}
+	return c.JSON(http.StatusCreated, sl)
+}
+
 func (s Store) DeleteLocation(c echo.Context) error {
 	locationID, err := uuid.Parse(c.Param("location_id"))
 	if err != nil {
