@@ -8,6 +8,7 @@ import (
 	"github.com/USACE/water-api/helpers"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
+	"github.com/gosimple/slug"
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
 
@@ -143,10 +144,9 @@ func (s Store) SyncLocations(c echo.Context) error {
 	if err := c.Bind(&lc); err != nil {
 		return c.String(http.StatusBadRequest, "ERROR 1 "+err.Error())
 	}
-	// Assign Unique Slugs
+	// Assign Slugs
 	for idx := range lc.Items {
-		_s, _ := helpers.NextUniqueSlug(s.Connection, "location", "slug", lc.Items[idx].Name, "", "")
-		lc.Items[idx].Slug = _s
+		lc.Items[idx].Slug = slug.Make(lc.Items[idx].Name)
 	}
 
 	sl, err := models.SyncLocations(s.Connection, lc)

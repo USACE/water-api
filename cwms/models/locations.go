@@ -194,9 +194,11 @@ func SyncLocations(db *pgxpool.Pool, c LocationCollection) ([]Location, error) {
 			context.Background(),
 			`INSERT INTO location (office_id, name, public_name, kind_id, geometry, slug)
 			VALUES ($1, $2, $3, $4, $5, $6)
-			ON CONFLICT (office_id, name) DO UPDATE
-			SET public_name = EXCLUDED.public_name,
-			geometry = EXCLUDED.geometry, kind_id = EXCLUDED.kind_id RETURNING id`,
+			ON CONFLICT (office_id, name, slug) DO UPDATE
+			SET public_name = $3,
+			kind_id = $4,
+			geometry = $5
+			RETURNING id`,
 			l.OfficeID, l.Name, l.PublicName, l.KindID, l.Geometry.EWKT(), l.Slug,
 		)
 		if err != nil {
