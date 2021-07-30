@@ -8,6 +8,7 @@ import (
 	"github.com/USACE/water-api/helpers"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
+	"github.com/gosimple/slug"
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
 
@@ -142,6 +143,9 @@ func (s Store) SyncLocations(c echo.Context) error {
 	var lc models.LocationCollection
 	if err := c.Bind(&lc); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
+	}
+	for idx := range lc.Items {
+		lc.Items[idx].Slug = slug.Make(lc.Items[idx].Name)
 	}
 	sl, err := models.SyncLocations(s.Connection, lc)
 	if err != nil {
