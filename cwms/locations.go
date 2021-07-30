@@ -8,7 +8,6 @@ import (
 	"github.com/USACE/water-api/helpers"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
-	"github.com/gosimple/slug"
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
 
@@ -142,13 +141,8 @@ func (s Store) UpdateLocation(c echo.Context) error {
 func (s Store) SyncLocations(c echo.Context) error {
 	var lc models.LocationCollection
 	if err := c.Bind(&lc); err != nil {
-		return c.String(http.StatusBadRequest, "ERROR 1 "+err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
-	// Assign Slugs
-	for idx := range lc.Items {
-		lc.Items[idx].Slug = slug.Make(lc.Items[idx].Name)
-	}
-
 	sl, err := models.SyncLocations(s.Connection, lc)
 	if err != nil {
 		// If Error was postgres error, return error message based on error code
@@ -162,7 +156,7 @@ func (s Store) SyncLocations(c echo.Context) error {
 			}
 		}
 		// If not explicit error, return string of error message for debugging
-		return c.String(http.StatusInternalServerError, "ERROR 3 "+err.Error())
+		return c.String(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusCreated, sl)
 }
