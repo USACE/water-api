@@ -188,34 +188,35 @@ func SyncLocations(db *pgxpool.Pool, c LocationCollection) ([]Location, error) {
 		return make([]Location, 0), err
 	}
 	defer cntx.Rollback(context.Background())
-	newIDs := make([]uuid.UUID, 0)
+
+	returnID := make([]uuid.UUID, 0)
+
 	for _, l := range c.Items {
 		rows, err := cntx.Query(
 			context.Background(),
-			`INSERT INTO location (office_id, name, public_name, kind_id, geometry, slug)
-			VALUES ($1, $2, $3, $4, $5, $6)
-			ON CONFLICT (slug) DO UPDATE
-			SET public_name=EXCLUDED.public_name,
-			kind_id=EXCLUDED.kind_id,
-			geometry=EXCLUDED.geometry,
-			update_date=CURRENT_TIMESTAMP
-			RETURNING id`,
+			`UPDATE location SET office_id=$1, name=$2, public_name=$3,
+			kind_id=$4, geometry=$5, update_date=CURRENT_TIMESTAMP
+			WHERE slug = $6 RETURNING id;`,
 			l.OfficeID, l.Name, l.PublicName, l.KindID, l.Geometry.EWKT(), l.Slug,
 		)
 		if err != nil {
-			cntx.Rollback(context.Background())
 			return make([]Location, 0), err
 		}
+
 		var id uuid.UUID
 		if err := pgxscan.ScanOne(&id, rows); err != nil {
-			cntx.Rollback(context.Background())
-			return make([]Location, 0), err
+			var lc LocationCollection
+			lc.Items = append(lc.Items, l)
+			ls, err := CreateLocations(db, lc)
+			if err == nil {
+				returnID = append(returnID, ls[len(ls)-1].ID)
+			}
 		} else {
-			newIDs = append(newIDs, id)
+			returnID = append(returnID, id)
 		}
 	}
 	cntx.Commit(context.Background())
-	return ListLocationsForIDs(db, newIDs)
+	return ListLocationsForIDs(db, returnID)
 }
 
 func GetLocationByID(db *pgxpool.Pool, locationID *uuid.UUID) (*Location, error) {
