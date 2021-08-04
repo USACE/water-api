@@ -183,40 +183,39 @@ func CreateLocations(db *pgxpool.Pool, n LocationCollection) ([]Location, error)
 
 // Sync Locations
 func SyncLocations(db *pgxpool.Pool, c LocationCollection) ([]Location, error) {
-	cntx, err := db.Begin(context.Background())
+	tx, err := db.Begin(context.Background())
 	if err != nil {
 		return make([]Location, 0), err
 	}
-	defer cntx.Rollback(context.Background())
+	defer tx.Rollback(context.Background())
 
-	returnID := make([]uuid.UUID, 0)
+	newIDs := make([]uuid.UUID, 0)
 
 	for _, l := range c.Items {
-		rows, err := cntx.Query(
+		rows, err := tx.Query(
 			context.Background(),
-			`UPDATE location SET office_id=$1, name=$2, public_name=$3,
-			kind_id=$4, geometry=$5, update_date=CURRENT_TIMESTAMP
-			WHERE slug = $6 RETURNING id;`,
-			l.OfficeID, l.Name, l.PublicName, l.KindID, l.Geometry.EWKT(), l.Slug,
+			`UPDATE a2w_cwms.location SET
+			public_name=$3,
+			kind_id=$4,
+			geometry=$5,
+			update_date=CURRENT_TIMESTAMP
+			WHERE office_id=$1 AND name=$2
+			RETURNING id`,
+			l.OfficeID, l.Name, l.PublicName, l.KindID, l.Geometry.EWKT(),
 		)
 		if err != nil {
 			return make([]Location, 0), err
 		}
-
 		var id uuid.UUID
 		if err := pgxscan.ScanOne(&id, rows); err != nil {
-			var lc LocationCollection
-			lc.Items = append(lc.Items, l)
-			ls, err := CreateLocations(db, lc)
-			if err == nil {
-				returnID = append(returnID, ls[len(ls)-1].ID)
-			}
+			tx.Rollback(context.Background())
+			return c.Items, err
 		} else {
-			returnID = append(returnID, id)
+			newIDs = append(newIDs, id)
 		}
 	}
-	cntx.Commit(context.Background())
-	return ListLocationsForIDs(db, returnID)
+	tx.Commit(context.Background())
+	return ListLocationsForIDs(db, newIDs)
 }
 
 func GetLocationByID(db *pgxpool.Pool, locationID *uuid.UUID) (*Location, error) {
