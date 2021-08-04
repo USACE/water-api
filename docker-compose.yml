@@ -50,3 +50,12 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=postgres
     ports:
       - '8080:80'
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    ports:
+      - "8001:8080"
+    volumes:
+      - ./apidoc.yml:/usr/share/nginx/html/swagger/api.yaml
+    environment:
+      API_URL: swagger/api.yaml
