@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2bd1f3a9-4b28-48b5-a7a8-f3eb58bb355b",
+		"_postman_id": "ca4418a0-b157-422b-ba69-13ce10988ea3",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -15,7 +15,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "72a9e743-c92c-4628-9c7b-d53e3af0cb5a",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -47,7 +46,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7f9a25bd-c0de-468e-af6f-bcb8eca4fb85",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -85,7 +83,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bdea5770-878a-424f-b473-32a74972fe17",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -123,7 +120,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c729fffa-1c16-42a3-bec3-2fa4d92ae682",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -165,7 +161,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "65a6229f-bd80-4b44-bbeb-1cba5deac93d",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -198,7 +193,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "575558e4-a9cf-4e41-a4ee-1284b3b1fbd7",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -235,7 +229,104 @@
 					"response": []
 				},
 				{
+					"name": "Update Location by Office (Regression Test Location 01)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Regression Test Create One Location\",\n    \"public_name\": \"Regression Test Create One Location UPDATED\",\n    \"slug\": \"regression-test-create-one-location\",\n    \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n    \"kind\": \"PROJECT\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -82.2,\n            38.9\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/offices/lrd/locations/regression-test-create-one-location",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"offices",
+								"lrd",
+								"locations",
+								"regression-test-create-one-location"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Location (One)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"office_id\": \"91cf44dc-6384-4622-bd9f-0f36e4343413\",\n    \"name\": \"Regression Test Create One Location\",\n    \"public_name\": \"Regression Test Create One Location\",\n    \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Location by Office (One)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Regression Test Create One Location\",\n    \"public_name\": \"Regression Test Create One Location\",\n    \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/offices/lrd/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"offices",
+								"lrd",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync Location (One)",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -287,6 +378,60 @@
 					"response": []
 				},
 				{
+					"name": "Create Location by Office (Many)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"name\": \"Regression Test Create Many Locations A\",\n        \"public_name\": \"Regression Test Create Many Locations A\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    },\n    {\n        \"name\": \"Regression Test Create Many Locations B\",\n        \"public_name\": \"Regression Test Create Many Locations B\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    },\n    {\n        \"name\": \"Regression Test Create Many Locations C\",\n        \"public_name\": \"Regression Test Create Many Locations C\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/offices/lrd/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"offices",
+								"lrd",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync Location (Many)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"office_id\": \"91cf44dc-6384-4622-bd9f-0f36e4343413\",\n        \"name\": \"Regression Test Create Many Locations A\",\n        \"public_name\": \"Regression Test Create Many Locations A\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    },\n    {\n        \"office_id\": \"91cf44dc-6384-4622-bd9f-0f36e4343413\",\n        \"name\": \"Regression Test Create Many Locations B\",\n        \"public_name\": \"Regression Test Create Many Locations B\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    },\n    {\n        \"office_id\": \"91cf44dc-6384-4622-bd9f-0f36e4343413\",\n        \"name\": \"Regression Test Create Many Locations C\",\n        \"public_name\": \"Regression Test Create Many Locations C\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Delete Location (Regression Test Location 01)",
 					"request": {
 						"method": "DELETE",
@@ -303,9 +448,28 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Delete Location by Office (Regression Test Location 01)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/offices/LRD/locations/regression-test-create-one-location",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"offices",
+								"LRD",
+								"locations",
+								"regression-test-create-one-location"
+							]
+						}
+					},
+					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		}
 	],
 	"auth": {
@@ -332,7 +496,6 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "dcb90c5f-fe12-49ce-b58e-ad4d242d50d3",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -342,13 +505,11 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "0661c7f9-a08d-485f-980b-b92e93267dcb",
 				"type": "text/javascript",
 				"exec": [
 					""
 				]
 			}
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }

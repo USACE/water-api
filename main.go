@@ -61,9 +61,9 @@ func main() {
 	// Locations (Office Context)
 	// public.GET("/offices/:office_symbol/locations")
 	// public.GET("/offices/:office_symbol/locations/:location_slug")  // e.g. /offices/lrn/locations/barkley
-	// private.POST("/offices/:office_symbol/locations")
-	// private.PUT("/offices/:office_symbol/locations/:location_slug")
-	// private.DELETE("/offices/:office_symbol/locations/:location_slug")
+	private.POST("/offices/:office_symbol/locations", cs.CreateLocationsByOffice)
+	private.PUT("/offices/:office_symbol/locations/:location_slug", cs.UpdateLocationByOffice)
+	private.DELETE("/offices/:office_symbol/locations/:location_slug", cs.DeleteLocationByOffice)
 
 	// Statistics
 	public.GET("/stats/states", cs.ListStatsStates)
