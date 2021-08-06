@@ -27,9 +27,21 @@ func main() {
 
 	e := echo.New()                         // All Routes
 	e.Use(middleware.CORS, middleware.GZIP) // All Routes Middleware
-	public := e.Group("")                   // Public Routes
-	restricted := e.Group("")               // Restricted Routes
-	restricted.Use(middleware.KeyAuth(config.ApplicationKey))
+
+	// Public Routes
+	public := e.Group("")
+
+	// Private Routes w/ Access Control
+	private := e.Group("")
+	if config.AuthMocked {
+		private.Use(middleware.JWTMock)
+	} else {
+		private.Use(middleware.JWT)
+	}
+
+	// App Routes (Intended to be used by application only)
+	app := e.Group("")
+	app.Use(middleware.KeyAuth(config.ApplicationKey))
 
 	// Health Check
 	public.GET("/health", func(c echo.Context) error {
@@ -41,10 +53,17 @@ func main() {
 
 	// Locations
 	public.GET("/locations", cs.ListLocations)
-	restricted.POST("/locations", cs.CreateLocations)
+	app.POST("/locations", cs.CreateLocations)
 	public.GET("/locations/:location_id", cs.GetLocation)
-	restricted.PUT("/locations/:location_id", cs.UpdateLocation)
-	restricted.DELETE("/locations/:location_id", cs.DeleteLocation)
+	app.PUT("/locations/:location_id", cs.UpdateLocation)
+	app.DELETE("/locations/:location_id", cs.DeleteLocation)
+
+	// Locations (Office Context)
+	// public.GET("/offices/:office_symbol/locations")
+	// public.GET("/offices/:office_symbol/locations/:location_slug")  // e.g. /offices/lrn/locations/barkley
+	// private.POST("/offices/:office_symbol/locations")
+	// private.PUT("/offices/:office_symbol/locations/:location_slug")
+	// private.DELETE("/offices/:office_symbol/locations/:location_slug")
 
 	// Statistics
 	public.GET("/stats/states", cs.ListStatsStates)
@@ -55,7 +74,7 @@ func main() {
 	public.GET("/stats/offices/:office_id", cs.GetStatsOffice)
 
 	// Sync Postgres
-	restricted.POST("/sync/locations", cs.SyncLocations)
+	app.POST("/sync/locations", cs.SyncLocations)
 
 	// Location Kinds
 	public.GET("/location_kind", cs.ListLocationKind)
@@ -67,7 +86,7 @@ func main() {
 	public.GET("/states", cs.ListStates)
 
 	// Maintenance/Automation
-	restricted.POST("/automation/assign_states_to_locations", cs.AssignStatesToLocations)
+	app.POST("/automation/assign_states_to_locations", cs.AssignStatesToLocations)
 
 	// Start server
 	log.Fatal(http.ListenAndServe(":80", e))
