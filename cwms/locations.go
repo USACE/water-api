@@ -162,7 +162,7 @@ func (s Store) SyncLocations(c echo.Context) error {
 			case pgerrcode.UniqueViolation:
 				return c.JSON(
 					http.StatusBadRequest,
-					NewMessage("PostgreSQL Error - "+pgErr.Error()))
+					NewMessage(pgErr.Error()))
 			}
 		}
 		return c.JSON(http.StatusCreated, cl)
