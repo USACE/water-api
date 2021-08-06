@@ -1,0 +1,210 @@
+openapi: '3.0.2'
+info:
+  title: Access to Water REST API
+  version: '0.1'
+servers:
+  - url: "https://water-api.rsgis.dev"
+    description: Stable API
+  - url: "https://water-cumulus-api.rsgis.dev"
+    description: Development API
+  - url: "http://localhost"
+    description: Local API Testing
+
+components:
+  schemas:
+    location:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        office_id:
+          type: string
+          format: uuid
+        state_id:
+          type: integer
+        name:
+          type: string
+        public_name:
+          type: string
+        kind_id:
+          type: string
+          format: uuid
+        kind:
+          type: string
+        geometry:          
+          properties:
+            type:
+              type: string
+            coordinates:
+              type: array
+              items:
+                type: number
+              minItems: 2
+              maxItems: 2
+  examples:
+    createLocationRequest:
+      value:
+        name: New Project
+        public_name: New Project
+        office_id: 2f160ba7-fd5f-4716-8ced-4a29f75065a6
+        state_id: 1
+        kind_id: 460ea73b-c65e-4fc8-907a-6e6fd2907a99
+        geometry:
+          type: Point
+          coordinates:
+            - -82.445
+            - 38.419
+          
+                
+                
+
+              
+paths:
+  /location_kind:
+    get:
+      tags:
+        - Location Kind
+      description: Get Location Kinds
+      responses:
+        '200':
+          description: OK
+
+  /locations:
+    get:
+      tags:
+        - Locations
+      description: List all Locations
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - Locations
+      description: Create New Location
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/location"
+            examples:
+              NewProject:              
+                $ref: "#/components/examples/createLocationRequest"
+      responses:
+        '201':
+          description: Object Created
+
+  /locations/{location_id}:
+    parameters:
+      - name: location_id
+        in: path
+        required: true
+        description: The ID of the location
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags:
+        - Locations
+      description: Get Location
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/location"
+    put:
+      tags:
+        - Locations
+      description: Update Location
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/location"
+      
+  /projects:
+    get:
+      tags:
+        - Projects
+      description: List Project Locations
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/location"
+
+  /search/locations:
+    get:
+      tags:
+        - Search
+      description: Search Locations
+      parameters:
+        - name: office_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: kind_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - name: state_id
+          in: query
+          schema:
+            type: integer
+            format: integer
+        - name: q
+          in: query
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+
+  /states:
+    get:
+      tags:
+        - States
+      description: List States
+      responses:
+        '200':
+          description: OK
+
+  /stats/states:
+    get:
+      tags:
+        - Stats
+      description: Get States for States
+      responses:
+        '200':
+          description: OK
+        
+  /stats/states/{state_id}:
+    get:
+      tags:
+        - Stats
+      description: Get States for Single State
+      parameters:
+      - name: state_id
+        in: path
+        required: true
+        description: The ID of the state
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+              
+
+  
+              
