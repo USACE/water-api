@@ -22,17 +22,17 @@ type SiteInfo struct {
 	Elevation         *float32 `json:"elevation"`
 	HorizontalDatumId int      `json:"horizontan_datum_id" db:"horizontal_datum_id"`
 	VerticallDatumId  int      `json:"vertical_datum_id" db:"vertical_datum_id"`
-	VerticalDatum     string   `json:"vertical_datum" db:"vertical_datum"`
 	Huc               *string  `json:"huc"`
 	StateAbbrev       *string  `json:"state_abbrev" db:"state_abbrev"`
 }
 
 type Site struct {
-	ID         string `json:"id"`
-	SiteInfo   SiteInfo
-	State      string     `json:"state"`
-	CreateDate time.Time  `json:"create_date" db:"create_date"`
-	UpdateDate *time.Time `json:"update_date" db:"update_date"`
+	ID            string `json:"id"`
+	SiteInfo      SiteInfo
+	State         string     `json:"state"`
+	VerticalDatum string     `json:"vertical_datum" db:"vertical_datum"`
+	CreateDate    time.Time  `json:"create_date" db:"create_date"`
+	UpdateDate    *time.Time `json:"update_date" db:"update_date"`
 }
 
 func (s1 Site) IsEquivalent(s2 Site) bool {
