@@ -67,6 +67,7 @@ func main() {
 	// USGS Sites
 	public.GET("/usgs_sites", cs.ListSites)
 	public.GET("/usgs_sites/state/:state_abbrev", cs.ListSites)
+	restricted.POST("/usgs_sites", cs.SyncSites)
 
 	// Maintenance/Automation
 	restricted.POST("/automation/assign_states_to_locations", cs.AssignStatesToLocations)
