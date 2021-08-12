@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/georgysavva/scany/pgxscan"
@@ -181,6 +182,73 @@ func CreateLocations(db *pgxpool.Pool, n LocationCollection) ([]Location, error)
 	return ListLocationsForIDs(db, newIDs)
 }
 
+// CreateLocationsByOffice creates locations using the input office symbol
+func CreateLocationsByOffice(db *pgxpool.Pool, c LocationCollection, office_symbol *string) ([]Location, error) {
+	tx, err := db.Begin(context.Background())
+	if err != nil {
+		return make([]Location, 0), err
+	}
+	defer tx.Rollback(context.Background())
+	newIDs := make([]uuid.UUID, 0)
+	for _, l := range c.Items {
+		rows, err := tx.Query(
+			context.Background(),
+			`INSERT INTO location (office_id,name,public_name,slug,geometry,kind_id)
+				VALUES ((SELECT o.id FROM office AS o WHERE o.symbol = $1),$2,$3,$4,$5,$6)
+				RETURNING id`,
+			strings.ToUpper(*office_symbol), l.Name, l.PublicName, l.Slug, l.Geometry.EWKT(), l.KindID,
+		)
+		if err != nil {
+			tx.Rollback(context.Background())
+			return make([]Location, 0), err
+		}
+		var id uuid.UUID
+		if err := pgxscan.ScanOne(&id, rows); err != nil {
+			tx.Rollback(context.Background())
+			return make([]Location, 0), err
+		} else {
+			newIDs = append(newIDs, id)
+		}
+	}
+	tx.Commit(context.Background())
+
+	return ListLocationsForIDs(db, newIDs)
+}
+
+// Sync Locations
+func SyncLocations(db *pgxpool.Pool, c LocationCollection) ([]Location, error) {
+	tx, err := db.Begin(context.Background())
+	if err != nil {
+		return make([]Location, 0), err
+	}
+	defer tx.Rollback(context.Background())
+
+	newIDs := make([]uuid.UUID, 0)
+
+	for _, l := range c.Items {
+		rows, err := tx.Query(
+			context.Background(),
+			`UPDATE a2w_cwms.location SET public_name=$3, kind_id=$4,
+			geometry=$5, update_date=CURRENT_TIMESTAMP
+			WHERE office_id=$1 AND name=$2
+			RETURNING id`,
+			l.OfficeID, l.Name, l.PublicName, l.KindID, l.Geometry.EWKT(),
+		)
+		if err != nil {
+			return make([]Location, 0), err
+		}
+		var id uuid.UUID
+		if err := pgxscan.ScanOne(&id, rows); err != nil {
+			tx.Rollback(context.Background())
+			return c.Items, err
+		} else {
+			newIDs = append(newIDs, id)
+		}
+	}
+	tx.Commit(context.Background())
+	return ListLocationsForIDs(db, newIDs)
+}
+
 func GetLocationByID(db *pgxpool.Pool, locationID *uuid.UUID) (*Location, error) {
 	// Base Locations Query
 	q, err := ListLocationsQuery(nil)
@@ -232,8 +300,35 @@ func UpdateLocation(db *pgxpool.Pool, l *Location) (*Location, error) {
 	return GetLocationByID(db, &id)
 }
 
+// UpdateLocationByOffice
+func UpdateLocationByOffice(db *pgxpool.Pool, l *Location, office_symbol *string) (*Location, error) {
+	var id uuid.UUID
+	if err := pgxscan.Get(
+		context.Background(), db, &id,
+		`UPDATE location SET update_date=CURRENT_TIMESTAMP, name=$3, public_name=$4, geometry=$5, kind_id=$6
+		WHERE slug = $1 and office_id = (SELECT o.id FROM office AS o WHERE o.symbol = $2) RETURNING id`,
+		l.Slug, strings.ToUpper(*office_symbol), l.Name, l.PublicName, l.Geometry.EWKT(), l.KindID,
+	); err != nil {
+		return nil, err
+	}
+	return GetLocationByID(db, &id)
+}
+
 func DeleteLocation(db *pgxpool.Pool, locationID *uuid.UUID) error {
 	if _, err := db.Exec(context.Background(), `DELETE FROM location WHERE id = $1`, locationID); err != nil {
+		return err
+	}
+	return nil
+}
+
+// DeleteLocationByOffice takes db connections, location id as slug and office id as three letter symbol
+func DeleteLocationByOffice(db *pgxpool.Pool, location_slug string, office_symbol string) error {
+	if _, err := db.Exec(
+		context.Background(),
+		`DELETE FROM location
+		WHERE id = (SELECT l.id FROM a2w_cwms.location AS l, a2w_cwms.office AS o
+		WHERE o.symbol = $1 and l.slug = $2)`, strings.ToUpper(office_symbol), location_slug,
+	); err != nil {
 		return err
 	}
 	return nil

@@ -6,6 +6,7 @@ services:
       context: ./
     restart: always
     environment:
+      - AUTH_MOCKED=true
       - APPLICATION_KEY=appkey
       - WATER_DB_USER=water_user
       - WATER_DB_PASS=water_pass
@@ -49,7 +50,7 @@ services:
       - PGADMIN_DEFAULT_EMAIL=postgres@postgres.com
       - PGADMIN_DEFAULT_PASSWORD=postgres
     ports:
-      - '8080:80'
+      - '8081:80'
   swagger-ui:
     image: swaggerapi/swagger-ui
     container_name: swagger-ui

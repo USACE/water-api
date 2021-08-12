@@ -15,6 +15,7 @@ type Store struct {
 
 type Config struct {
 	ApplicationKey        string        `envconfig:"APPLICATION_KEY"`
+	AuthMocked            bool          `envconfig:"AUTH_MOCKED" default:"false"`
 	DBUser                string        `envconfig:"DB_USER"`
 	DBPass                string        `envconfig:"DB_PASS"`
 	DBName                string        `envconfig:"DB_NAME"`
