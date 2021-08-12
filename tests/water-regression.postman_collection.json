@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2bd1f3a9-4b28-48b5-a7a8-f3eb58bb355b",
+		"_postman_id": "aa111e2c-78fd-498a-96fd-69438f3b7dd7",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -15,7 +15,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "72a9e743-c92c-4628-9c7b-d53e3af0cb5a",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -47,7 +46,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7f9a25bd-c0de-468e-af6f-bcb8eca4fb85",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -85,7 +83,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bdea5770-878a-424f-b473-32a74972fe17",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -123,7 +120,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c729fffa-1c16-42a3-bec3-2fa4d92ae682",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -165,7 +161,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "65a6229f-bd80-4b44-bbeb-1cba5deac93d",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -198,7 +193,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "575558e4-a9cf-4e41-a4ee-1284b3b1fbd7",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -304,8 +298,156 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
+		},
+		{
+			"name": "USGS Sites",
+			"item": [
+				{
+					"name": "List Sites",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/usgs_sites",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usgs_sites"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Sites - By State",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/usgs_sites/state/wv",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usgs_sites",
+								"state",
+								"wv"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync Sites - Create New",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 202\", function () {",
+									"    pm.response.to.have.status(202);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"usgs_id\": \"99999999\",\n        \"name\": \"REGRESSION TEST, NC\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -80.1,\n                35.1\n            ]\n        },\n        \"elevation\": 800,\n        \"horizontan_datum_id\": 4269,\n        \"vertical_datum_id\": 3,\n        \"huc\": \"03040103\",\n        \"state_abbrev\": \"NC\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/usgs_sites",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usgs_sites"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync Sites - Modify Existing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 202\", function () {",
+									"    pm.response.to.have.status(202);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"usgs_id\": \"02121500\",\n        \"name\": \"ABBOTTS CREEK AT LEXINGTON, NC - MODIFY EXISTING\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -80.2,\n                35.8\n            ]\n        },\n        \"elevation\": 100.10,\n        \"horizontan_datum_id\": 4269,\n        \"vertical_datum_id\": 3,\n        \"huc\": \"03040103\",\n        \"state_abbrev\": \"NC\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/usgs_sites",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usgs_sites"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
@@ -332,7 +474,6 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "dcb90c5f-fe12-49ce-b58e-ad4d242d50d3",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -342,13 +483,11 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "0661c7f9-a08d-485f-980b-b92e93267dcb",
 				"type": "text/javascript",
 				"exec": [
 					""
 				]
 			}
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }
