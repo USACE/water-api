@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "aa111e2c-78fd-498a-96fd-69438f3b7dd7",
+		"_postman_id": "02eef0e6-ce9c-43ad-9a22-83f47e1ce60a",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -559,7 +559,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"usgs_id\": \"99999999\",\n        \"name\": \"REGRESSION TEST, NC\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -80.1,\n                35.1\n            ]\n        },\n        \"elevation\": 800,\n        \"horizontan_datum_id\": 4269,\n        \"vertical_datum_id\": 3,\n        \"huc\": \"03040103\",\n        \"state_abbrev\": \"NC\"\n    }\n]",
+							"raw": "[\n    {\n        \"usgs_id\": \"99999999\",\n        \"name\": \"REGRESSION TEST, NC\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -80.1,\n                35.1\n            ]\n        },\n        \"elevation\": 800,\n        \"horizontal_datum_id\": 4269,\n        \"vertical_datum_id\": 3,\n        \"huc\": \"03040103\",\n        \"state_abbrev\": \"NC\"\n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -599,7 +599,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"usgs_id\": \"02121500\",\n        \"name\": \"ABBOTTS CREEK AT LEXINGTON, NC - MODIFY EXISTING\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -80.2,\n                35.8\n            ]\n        },\n        \"elevation\": 100.10,\n        \"horizontan_datum_id\": 4269,\n        \"vertical_datum_id\": 3,\n        \"huc\": \"03040103\",\n        \"state_abbrev\": \"NC\"\n    }\n]",
+							"raw": "[\n    {\n        \"usgs_id\": \"02121500\",\n        \"name\": \"ABBOTTS CREEK AT LEXINGTON, NC - MODIFY EXISTING\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -80.2,\n                35.8\n            ]\n        },\n        \"elevation\": 100.10,\n        \"horizontal_datum_id\": 4269,\n        \"vertical_datum_id\": 3,\n        \"huc\": \"03040103\",\n        \"state_abbrev\": \"NC\"\n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
