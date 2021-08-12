@@ -19,7 +19,7 @@ type SiteInfo struct {
 	Name              string   `json:"name"`
 	Geometry          Geometry `json:"geometry"`
 	Elevation         *float32 `json:"elevation"`
-	HorizontalDatumId int      `json:"horizontan_datum_id" db:"horizontal_datum_id"`
+	HorizontalDatumId int      `json:"horizontal_datum_id" db:"horizontal_datum_id"`
 	VerticallDatumId  int      `json:"vertical_datum_id" db:"vertical_datum_id"`
 	Huc               *string  `json:"huc"`
 	StateAbbrev       *string  `json:"state_abbrev" db:"state_abbrev"`
