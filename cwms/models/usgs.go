@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"reflect"
 	"strings"
 	"time"
@@ -27,8 +26,8 @@ type SiteInfo struct {
 }
 
 type Site struct {
-	ID            string `json:"id"`
-	SiteInfo      SiteInfo
+	ID string `json:"id"`
+	SiteInfo
 	State         string     `json:"state"`
 	VerticalDatum string     `json:"vertical_datum" db:"vertical_datum"`
 	CreateDate    time.Time  `json:"create_date" db:"create_date"`
@@ -102,21 +101,20 @@ func ListSitesQuery(sf *SiteFilter) (sq.SelectBuilder, error) {
 func ListSites(db *pgxpool.Pool, sf *SiteFilter) ([]Site, error) {
 
 	q, err := ListSitesQuery(sf)
-	fmt.Println("check1")
+
 	if err != nil {
 		return make([]Site, 0), err
 	}
 	sql, args, err := q.ToSql()
-	fmt.Println("check2")
+
 	if err != nil {
 		return make([]Site, 0), err
 	}
 	ss := make([]Site, 0)
-	fmt.Println("check3")
+
 	if err := pgxscan.Select(context.Background(), db, &ss, sql, args...); err != nil {
 		return make([]Site, 0), err
 	}
-	fmt.Println(ss)
 	return ss, nil
 }
 

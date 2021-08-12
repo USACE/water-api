@@ -2,7 +2,6 @@ package cwms
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/USACE/water-api/cwms/models"
@@ -57,12 +56,11 @@ func (s Store) SyncSites(c echo.Context) error {
 	// Get existing sites for comparison
 	var sf models.SiteFilter
 	existingSites, err := models.ListSites(s.Connection, &sf)
-	fmt.Println("test1")
-	fmt.Println(existingSites)
+
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
-	fmt.Println("test2")
+
 	// Analyze sync payload
 	var sc models.SiteCollection
 
@@ -86,15 +84,11 @@ func (s Store) SyncSites(c echo.Context) error {
 		// If no key in map, we have a new site
 		if existingSite, ok := sitemap[site.SiteInfo.UsgsId]; !ok {
 			// payload site not found, adding to new_sites
-			fmt.Println("new1")
 			new_sites = append(new_sites, site)
-			fmt.Println("new2")
 		} else {
 
 			if !site.IsEquivalent(existingSite) {
-				fmt.Println("update1")
 				update_sites = append(update_sites, site)
-				fmt.Println("update2")
 				// fmt.Println("update needed")
 			}
 		}
