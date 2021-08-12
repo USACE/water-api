@@ -115,14 +115,10 @@ for state in states:
         state_sites.append(site)
     
     # print(state_sites)
-    for s in state_sites:
-        if s['horizontal_datum_id'] == 0:
-            print("ahhhhh")
-            print(s['horizontal_datum_id'])
-    print('-'*64)
+    
     
     r = requests.post(
-    "http://localhost/usgs_sites?key=appkey",
+    "http://localhost/sync/usgs_sites?key=appkey",
     json=state_sites,
     headers={"Content-Type": "application/json"},    
     )
