@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ca4418a0-b157-422b-ba69-13ce10988ea3",
+		"_postman_id": "02eef0e6-ce9c-43ad-9a22-83f47e1ce60a",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -464,6 +464,155 @@
 								"LRD",
 								"locations",
 								"regression-test-create-one-location"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "USGS Sites",
+			"item": [
+				{
+					"name": "List Sites",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/usgs_sites",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usgs_sites"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Sites - By State",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/usgs_sites/state/wv",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usgs_sites",
+								"state",
+								"wv"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync Sites - Create New",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 202\", function () {",
+									"    pm.response.to.have.status(202);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"usgs_id\": \"99999999\",\n        \"name\": \"REGRESSION TEST, NC\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -80.1,\n                35.1\n            ]\n        },\n        \"elevation\": 800,\n        \"horizontal_datum_id\": 4269,\n        \"vertical_datum_id\": 3,\n        \"huc\": \"03040103\",\n        \"state_abbrev\": \"NC\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/usgs_sites",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usgs_sites"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync Sites - Modify Existing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 202\", function () {",
+									"    pm.response.to.have.status(202);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"usgs_id\": \"02121500\",\n        \"name\": \"ABBOTTS CREEK AT LEXINGTON, NC - MODIFY EXISTING\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -80.2,\n                35.8\n            ]\n        },\n        \"elevation\": 100.10,\n        \"horizontal_datum_id\": 4269,\n        \"vertical_datum_id\": 3,\n        \"huc\": \"03040103\",\n        \"state_abbrev\": \"NC\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/usgs_sites",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usgs_sites"
 							]
 						}
 					},

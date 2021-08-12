@@ -85,6 +85,11 @@ func main() {
 	// States
 	public.GET("/states", cs.ListStates)
 
+	// USGS Sites
+	public.GET("/usgs_sites", cs.ListSites)
+	public.GET("/usgs_sites/state/:state_abbrev", cs.ListSites)
+	app.POST("/usgs_sites", cs.SyncSites)
+
 	// Maintenance/Automation
 	app.POST("/automation/assign_states_to_locations", cs.AssignStatesToLocations)
 
