@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "02eef0e6-ce9c-43ad-9a22-83f47e1ce60a",
+		"_postman_id": "45e3a2e7-c612-4fc8-94fd-97486e2054e7",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -567,11 +567,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/usgs_sites",
+							"raw": "{{base_url}}/sync/usgs_sites",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
+								"sync",
 								"usgs_sites"
 							]
 						}
@@ -607,11 +608,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/usgs_sites",
+							"raw": "{{base_url}}/sync/usgs_sites",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
+								"sync",
 								"usgs_sites"
 							]
 						}
