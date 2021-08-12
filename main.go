@@ -53,8 +53,9 @@ func main() {
 
 	// Locations
 	public.GET("/locations", cs.ListLocations)
-	app.POST("/locations", cs.CreateLocations)
 	public.GET("/locations/:location_id", cs.GetLocation)
+	public.GET("/locations/:location_slug/details", cs.GetLocationDetail)
+	app.POST("/locations", cs.CreateLocations)
 	app.PUT("/locations/:location_id", cs.UpdateLocation)
 	app.DELETE("/locations/:location_id", cs.DeleteLocation)
 
