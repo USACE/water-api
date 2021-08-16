@@ -18,8 +18,8 @@ type Geometry struct {
 	Coordinates []float64 `json:"coordinates"`
 }
 
-func (g Geometry) EWKT() string {
-	return fmt.Sprintf("SRID=4326;POINT(%f %f)", g.Coordinates[0], g.Coordinates[1])
+func (g Geometry) EWKT(precision int) string {
+	return fmt.Sprintf("SRID=4326;POINT(%.[3]*[1]f %.[3]*[2]f)", g.Coordinates[0], g.Coordinates[1], precision)
 }
 
 type Location struct {
@@ -163,7 +163,7 @@ func CreateLocations(db *pgxpool.Pool, n LocationCollection) ([]Location, error)
 		rows, err := tx.Query(
 			context.Background(),
 			`INSERT INTO location (office_id, name, public_name, slug, geometry, kind_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
-			m.OfficeID, m.Name, m.PublicName, m.Slug, m.Geometry.EWKT(), m.KindID,
+			m.OfficeID, m.Name, m.PublicName, m.Slug, m.Geometry.EWKT(6), m.KindID,
 		)
 		if err != nil {
 			tx.Rollback(context.Background())
@@ -196,7 +196,7 @@ func CreateLocationsByOffice(db *pgxpool.Pool, c LocationCollection, office_symb
 			`INSERT INTO location (office_id,name,public_name,slug,geometry,kind_id)
 				VALUES ((SELECT o.id FROM office AS o WHERE o.symbol = $1),$2,$3,$4,$5,$6)
 				RETURNING id`,
-			strings.ToUpper(*office_symbol), l.Name, l.PublicName, l.Slug, l.Geometry.EWKT(), l.KindID,
+			strings.ToUpper(*office_symbol), l.Name, l.PublicName, l.Slug, l.Geometry.EWKT(6), l.KindID,
 		)
 		if err != nil {
 			tx.Rollback(context.Background())
@@ -232,7 +232,7 @@ func SyncLocations(db *pgxpool.Pool, c LocationCollection) ([]Location, error) {
 			geometry=$5, update_date=CURRENT_TIMESTAMP
 			WHERE office_id=$1 AND name=$2
 			RETURNING id`,
-			l.OfficeID, l.Name, l.PublicName, l.KindID, l.Geometry.EWKT(),
+			l.OfficeID, l.Name, l.PublicName, l.KindID, l.Geometry.EWKT(6),
 		)
 		if err != nil {
 			return make([]Location, 0), err
@@ -293,7 +293,7 @@ func UpdateLocation(db *pgxpool.Pool, l *Location) (*Location, error) {
 	if err := pgxscan.Get(
 		context.Background(), db, &id,
 		"UPDATE location SET update_date=CURRENT_TIMESTAMP, office_id=$2, name=$3, public_name=$4, geometry=$5, kind_id=$6 WHERE id = $1 RETURNING id",
-		l.ID, l.OfficeID, l.Name, l.PublicName, l.Geometry.EWKT(), l.KindID,
+		l.ID, l.OfficeID, l.Name, l.PublicName, l.Geometry.EWKT(6), l.KindID,
 	); err != nil {
 		return nil, err
 	}
@@ -307,7 +307,7 @@ func UpdateLocationByOffice(db *pgxpool.Pool, l *Location, office_symbol *string
 		context.Background(), db, &id,
 		`UPDATE location SET update_date=CURRENT_TIMESTAMP, name=$3, public_name=$4, geometry=$5, kind_id=$6
 		WHERE slug = $1 and office_id = (SELECT o.id FROM office AS o WHERE o.symbol = $2) RETURNING id`,
-		l.Slug, strings.ToUpper(*office_symbol), l.Name, l.PublicName, l.Geometry.EWKT(), l.KindID,
+		l.Slug, strings.ToUpper(*office_symbol), l.Name, l.PublicName, l.Geometry.EWKT(6), l.KindID,
 	); err != nil {
 		return nil, err
 	}

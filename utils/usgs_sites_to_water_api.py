@@ -77,12 +77,11 @@ for state in states:
                 _line[k] = line[i].strip()
             result.append(_line)
 
-    # print(result)
 
-    for line in result:
-        print('-'*10)
-        for k,v in line.items():
-            print(k, '=>', v)
+    # for line in result:
+    #     print('-'*10)
+    #     for k,v in line.items():
+    #         print(k, '=>', v)
 
     state_sites = []    
 
@@ -98,7 +97,7 @@ for state in states:
             site['horizontal_datum_id'] = horizontal_datum[line['dec_coord_datum_cd']]
         except:
             site['horizontal_datum_id'] = 4269
-        huc = f"'{line['huc_cd'].strip()}'" if line['huc_cd'].strip() != '' else None
+        site['huc'] = f"{line['huc_cd'].strip()}" if line['huc_cd'].strip() != '' else None
         try:
             site['vertical_datum_id'] = vertical_datum[line['alt_datum_cd']]
         except:
@@ -122,6 +121,6 @@ for state in states:
     json=state_sites,
     headers={"Content-Type": "application/json"},    
     )
-    print(json.dumps(state_sites, indent=4))
+    # print(json.dumps(state_sites, indent=4))
     print(r.status_code)
     print(r.text)

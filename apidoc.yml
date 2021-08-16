@@ -1,6 +1,10 @@
 openapi: '3.0.2'
 info:
   title: Access to Water REST API
+  description: Access to Water REST API
+  contact:
+    name: API Support
+    url: https://github.com/USACE/water
   version: '0.1'
 servers:
   - url: "https://water-api.rsgis.dev"
@@ -63,6 +67,7 @@ components:
 paths:
   /location_kind:
     get:
+      operationId: "get-location-kind"
       tags:
         - Location Kind
       description: Get Location Kinds
@@ -72,6 +77,7 @@ paths:
 
   /locations:
     get:
+      operationId: "get-locations"
       tags:
         - Locations
       description: List all Locations
@@ -79,6 +85,7 @@ paths:
         '200':
           description: OK
     post:
+      operationId: "create-locations"
       tags:
         - Locations
       description: Create New Location
@@ -100,11 +107,14 @@ paths:
       - name: location_id
         in: path
         required: true
+        
         description: The ID of the location
         schema:
           type: string
           format: uuid
+          default: 350836c0-b7fb-4c24-b367-57fce43092ce
     get:
+      operationId: "get-location-by-id"
       tags:
         - Locations
       description: Get Location
@@ -116,6 +126,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/location"
     put:
+      operationId: "replace-location"
       tags:
         - Locations
       description: Update Location
@@ -129,6 +140,7 @@ paths:
       
   /projects:
     get:
+      operationId: "get-projects"
       tags:
         - Projects
       description: List Project Locations
@@ -142,6 +154,7 @@ paths:
 
   /search/locations:
     get:
+      operationId: "search-locations"
       tags:
         - Search
       description: Search Locations
@@ -156,6 +169,7 @@ paths:
           schema:
             type: string
             format: uuid
+            default: 460ea73b-c65e-4fc8-907a-6e6fd2907a99
           required: true
         - name: state_id
           in: query
@@ -166,6 +180,7 @@ paths:
           in: query
           schema:
             type: string
+            default: bluestone
           required: true
       responses:
         '200':
@@ -173,6 +188,7 @@ paths:
 
   /states:
     get:
+      operationId: "get-states"
       tags:
         - States
       description: List States
@@ -182,6 +198,7 @@ paths:
 
   /stats/states:
     get:
+      operationId: "get-stats-for-states"
       tags:
         - Stats
       description: Get States for States
@@ -191,6 +208,7 @@ paths:
         
   /stats/states/{state_id}:
     get:
+      operationId: "get-stats-for-state"
       tags:
         - Stats
       description: Get States for Single State
