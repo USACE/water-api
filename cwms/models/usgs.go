@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"reflect"
 	"strings"
 	"time"
@@ -36,17 +37,6 @@ type Site struct {
 
 func (s1 Site) IsEquivalent(s2 Site) bool {
 	// Compare values that must be set in payload
-
-	// if &s1.Elevation == nil || &s1.Geometry == nil {
-	// 	return false
-	// }
-
-	// return s1.UsgsId == s2.UsgsId && s1.Name == s2.Name &&
-	// 	s1.Geometry.EWKT() == s2.Geometry.EWKT() &&
-	// 	*s1.Elevation == *s2.Elevation &&
-	// 	s1.HorizontalDatumId == s2.HorizontalDatumId &&
-	// 	s1.VerticallDatumId == s2.VerticallDatumId &&
-	// 	*s1.Huc == *s2.Huc && *s1.StateAbbrev == *s2.StateAbbrev
 	return reflect.DeepEqual(s1.SiteInfo, s2.SiteInfo)
 }
 
@@ -149,8 +139,11 @@ func CreateSites(db *pgxpool.Pool, nn []Site) ([]Site, error) {
 			context.Background(),
 			`INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) 
 			VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
-			m.SiteInfo.UsgsId, m.SiteInfo.Name, m.SiteInfo.Geometry.EWKT(), m.SiteInfo.Elevation, m.SiteInfo.HorizontalDatumId, m.SiteInfo.VerticallDatumId, m.SiteInfo.Huc, m.SiteInfo.StateAbbrev,
+			m.SiteInfo.UsgsId, m.SiteInfo.Name, m.SiteInfo.Geometry.EWKT(8), m.SiteInfo.Elevation, m.SiteInfo.HorizontalDatumId, m.SiteInfo.VerticallDatumId, m.SiteInfo.Huc, m.SiteInfo.StateAbbrev,
 		)
+		fmt.Println("INSERTING:")
+		fmt.Println(m.SiteInfo.Geometry.EWKT(8))
+		fmt.Println(m.SiteInfo.Geometry.Coordinates)
 		if err != nil {
 			tx.Rollback(context.Background())
 			return make([]Site, 0), err
@@ -211,7 +204,7 @@ func UpdateSites(db *pgxpool.Pool, nn []Site) ([]Site, error) {
 		rows, err := tx.Query(
 			context.Background(),
 			`UPDATE usgs_site SET name=$2, geometry=$3, elevation=$4, horizontal_datum_id=$5, vertical_datum_id=$6, huc=$7, state_abbrev=$8, update_date=CURRENT_TIMESTAMP WHERE usgs_id = $1 RETURNING id`,
-			s.SiteInfo.UsgsId, s.SiteInfo.Name, s.SiteInfo.Geometry.EWKT(), s.SiteInfo.Elevation, s.SiteInfo.HorizontalDatumId, s.SiteInfo.VerticallDatumId, s.SiteInfo.Huc, s.SiteInfo.StateAbbrev,
+			s.SiteInfo.UsgsId, s.SiteInfo.Name, s.SiteInfo.Geometry.EWKT(8), s.SiteInfo.Elevation, s.SiteInfo.HorizontalDatumId, s.SiteInfo.VerticallDatumId, s.SiteInfo.Huc, s.SiteInfo.StateAbbrev,
 		)
 		if err != nil {
 			tx.Rollback(context.Background())
