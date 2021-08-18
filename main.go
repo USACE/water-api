@@ -89,6 +89,8 @@ func main() {
 	// USGS Sites
 	public.GET("/usgs_sites", cs.ListSites)
 	public.GET("/usgs_sites/state/:state_abbrev", cs.ListSites)
+	public.GET("/usgs_sites/parameters", cs.ListParameters)
+	public.GET("/usgs_sites/enabled_parameters", cs.ListParametersEnabled)
 	app.POST("/sync/usgs_sites", cs.SyncSites)
 
 	// Maintenance/Automation

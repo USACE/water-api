@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"reflect"
 	"strings"
 	"time"
@@ -14,6 +13,19 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
+
+type Parameter struct {
+	Id          uuid.UUID `json:"id"`
+	Code        string    `json:"code"`
+	Description string    `json:"description"`
+}
+
+type SiteParameter struct {
+	UsgsSiteId        uuid.UUID   `json:"usgs_site_id" db:"usgs_site_id"`
+	UsgsId            string      `json:"usgs_id" db:"usgs_id"`
+	UsgsParameterId   []uuid.UUID `json:"usgs_parameter_id" db:"usgs_parameter_id"`
+	UsgsParameterCode []string    `json:"usgs_parameter_code" db:"usgs_parameter_code"`
+}
 
 type SiteInfo struct {
 	UsgsId            string   `json:"usgs_id" db:"usgs_id"`
@@ -141,9 +153,6 @@ func CreateSites(db *pgxpool.Pool, nn []Site) ([]Site, error) {
 			VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
 			m.SiteInfo.UsgsId, m.SiteInfo.Name, m.SiteInfo.Geometry.EWKT(8), m.SiteInfo.Elevation, m.SiteInfo.HorizontalDatumId, m.SiteInfo.VerticallDatumId, m.SiteInfo.Huc, m.SiteInfo.StateAbbrev,
 		)
-		fmt.Println("INSERTING:")
-		fmt.Println(m.SiteInfo.Geometry.EWKT(8))
-		fmt.Println(m.SiteInfo.Geometry.Coordinates)
 		if err != nil {
 			tx.Rollback(context.Background())
 			return make([]Site, 0), err
@@ -221,4 +230,38 @@ func UpdateSites(db *pgxpool.Pool, nn []Site) ([]Site, error) {
 	tx.Commit(context.Background())
 
 	return ListSitesForIDs(db, newIDs)
+}
+
+func ListParameters(db *pgxpool.Pool) ([]Parameter, error) {
+
+	q := sq.Select(`id, code, description`).From("usgs_parameter")
+
+	sql, args, err := q.ToSql()
+
+	if err != nil {
+		return make([]Parameter, 0), err
+	}
+	pp := make([]Parameter, 0)
+
+	if err := pgxscan.Select(context.Background(), db, &pp, sql, args...); err != nil {
+		return make([]Parameter, 0), err
+	}
+	return pp, nil
+}
+
+func ListParametersEnabled(db *pgxpool.Pool) ([]SiteParameter, error) {
+
+	q := sq.Select(`usgs_site_id, usgs_id, usgs_parameter_id, usgs_parameter_code`).From("v_usgs_site_parameters_enabled")
+
+	sql, args, err := q.ToSql()
+
+	if err != nil {
+		return make([]SiteParameter, 0), err
+	}
+	pp := make([]SiteParameter, 0)
+
+	if err := pgxscan.Select(context.Background(), db, &pp, sql, args...); err != nil {
+		return make([]SiteParameter, 0), err
+	}
+	return pp, nil
 }

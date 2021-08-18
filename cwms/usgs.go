@@ -131,3 +131,19 @@ func (s Store) SyncSites(c echo.Context) error {
 
 	return c.JSON(http.StatusAccepted, r)
 }
+
+func (s Store) ListParameters(c echo.Context) error {
+	pp, err := models.ListParameters(s.Connection)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, pp)
+}
+
+func (s Store) ListParametersEnabled(c echo.Context) error {
+	pp, err := models.ListParametersEnabled(s.Connection)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, pp)
+}
