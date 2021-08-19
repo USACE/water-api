@@ -2,6 +2,7 @@ package cwms
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/USACE/water-api/cwms/models"
@@ -132,6 +133,35 @@ func (s Store) SyncSites(c echo.Context) error {
 	return c.JSON(http.StatusAccepted, r)
 }
 
+func (s Store) SyncSiteParameters(c echo.Context) error {
+
+	var sp models.SiteParameterCollection
+
+	if err := c.Bind(&sp); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	// Loop over payload items
+	for _, site := range sp.Items {
+
+		// If no key in map, we have a new site
+		// if existingSite, ok := sitemap[site.SiteInfo.UsgsId]; !ok {
+		// 	// payload site not found, adding to new_sites
+		// 	new_sites = append(new_sites, site)
+		// } else {
+
+		// 	if !site.IsEquivalent(existingSite) {
+		// 		update_sites = append(update_sites, site)
+		// 		// fmt.Println("update needed")
+		// 	}
+		// }
+		fmt.Println(site)
+	}
+
+	return c.JSON(http.StatusAccepted, sp)
+
+}
+
 func (s Store) ListParameters(c echo.Context) error {
 	pp, err := models.ListParameters(s.Connection)
 	if err != nil {
@@ -140,10 +170,11 @@ func (s Store) ListParameters(c echo.Context) error {
 	return c.JSON(http.StatusOK, pp)
 }
 
-func (s Store) ListParametersEnabled(c echo.Context) error {
-	pp, err := models.ListParametersEnabled(s.Connection)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, err.Error())
-	}
-	return c.JSON(http.StatusOK, pp)
-}
+// NOT USED - SAVE FOR WATERSHED/SITE/PARAM Enabled
+// func (s Store) ListParametersEnabled(c echo.Context) error {
+// 	pp, err := models.ListParametersEnabled(s.Connection)
+// 	if err != nil {
+// 		return c.String(http.StatusInternalServerError, err.Error())
+// 	}
+// 	return c.JSON(http.StatusOK, pp)
+// }

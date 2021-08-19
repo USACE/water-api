@@ -21,10 +21,13 @@ type Parameter struct {
 }
 
 type SiteParameter struct {
-	UsgsSiteId        uuid.UUID   `json:"usgs_site_id" db:"usgs_site_id"`
-	UsgsId            string      `json:"usgs_id" db:"usgs_id"`
-	UsgsParameterId   []uuid.UUID `json:"usgs_parameter_id" db:"usgs_parameter_id"`
-	UsgsParameterCode []string    `json:"usgs_parameter_code" db:"usgs_parameter_code"`
+	// UsgsSiteId         uuid.UUID   `json:"usgs_site_id" db:"usgs_site_id"`
+	UsgsId string `json:"usgs_id" db:"usgs_id"`
+	// UsgsParameterId    []uuid.UUID `json:"usgs_parameter_id" db:"usgs_parameter_id"`
+	UsgsParameterCodes []string `json:"usgs_parameter_codes" db:"usgs_parameter_codes"`
+}
+type SiteParameterCollection struct {
+	Items []SiteParameter `json:"items"`
 }
 
 type SiteInfo struct {
@@ -39,12 +42,13 @@ type SiteInfo struct {
 }
 
 type Site struct {
-	ID string `json:"id"`
+	ID string `json:"-"`
 	SiteInfo
-	State         string     `json:"state"`
-	VerticalDatum string     `json:"vertical_datum" db:"vertical_datum"`
-	CreateDate    time.Time  `json:"create_date" db:"create_date"`
-	UpdateDate    *time.Time `json:"update_date" db:"update_date"`
+	UsgsParameterCodes []string   `json:"parameter_codes" db:"parameter_codes"`
+	State              string     `json:"state"`
+	VerticalDatum      string     `json:"vertical_datum" db:"vertical_datum"`
+	CreateDate         time.Time  `json:"create_date" db:"create_date"`
+	UpdateDate         *time.Time `json:"update_date" db:"update_date"`
 }
 
 func (s1 Site) IsEquivalent(s2 Site) bool {
@@ -71,30 +75,42 @@ func (c *SiteCollection) UnmarshalJSON(b []byte) error {
 	}
 }
 
+func (c *SiteParameterCollection) UnmarshalJSON(b []byte) error {
+	switch JSONType(b) {
+	case "ARRAY":
+		return json.Unmarshal(b, &c.Items)
+	case "OBJECT":
+		c.Items = make([]SiteParameter, 1)
+		return json.Unmarshal(b, &c.Items[0])
+	default:
+		return errors.New("payload not recognized as JSON array or object")
+	}
+}
+
 func ListSitesQuery(sf *SiteFilter) (sq.SelectBuilder, error) {
 
-	q := sq.Select(`s.id,
-					s.usgs_id,   
-					s.name,		            
-		            ST_AsGeoJSON(s.geometry)::json AS geometry,
-		            s.elevation,
-					s.horizontal_datum_id,
-					s.vertical_datum_id,
-					v.name AS vertical_datum,
-					s.huc,
-					s.state_abbrev,
-					st.name as state,
-					s.create_date,
-					s.update_date`,
-	).From("usgs_site s").Join("vertical_datum v on v.id=s.vertical_datum_id").Join("tiger_data.state_all st on st.stusps=s.state_abbrev")
+	q := sq.Select(`id,
+					usgs_id,   
+					name,		            
+		            geometry,
+		            elevation,
+					horizontal_datum_id,
+					vertical_datum_id,
+					vertical_datum,
+					huc,
+					state_abbrev,
+					parameter_codes,
+					state,
+					create_date,
+					update_date`).From("v_usgs_site")
 
 	if sf != nil {
 		// Filter by StateID
 		if sf.StateAbbrev != nil {
-			q = q.Where("s.state_abbrev = ?", strings.ToUpper(*sf.StateAbbrev))
+			q = q.Where("state_abbrev = ?", strings.ToUpper(*sf.StateAbbrev))
 		}
 	}
-	q = q.OrderBy("s.name")
+	q = q.OrderBy("name")
 
 	// Unfiltered
 	return q.PlaceholderFormat(sq.Dollar), nil
@@ -103,17 +119,14 @@ func ListSitesQuery(sf *SiteFilter) (sq.SelectBuilder, error) {
 func ListSites(db *pgxpool.Pool, sf *SiteFilter) ([]Site, error) {
 
 	q, err := ListSitesQuery(sf)
-
 	if err != nil {
 		return make([]Site, 0), err
 	}
 	sql, args, err := q.ToSql()
-
 	if err != nil {
 		return make([]Site, 0), err
 	}
 	ss := make([]Site, 0)
-
 	if err := pgxscan.Select(context.Background(), db, &ss, sql, args...); err != nil {
 		return make([]Site, 0), err
 	}
@@ -249,19 +262,20 @@ func ListParameters(db *pgxpool.Pool) ([]Parameter, error) {
 	return pp, nil
 }
 
-func ListParametersEnabled(db *pgxpool.Pool) ([]SiteParameter, error) {
+// NOT USED - SAVE FOR WATERSHED/SITE/PARAM Enabled
+// func ListParametersEnabled(db *pgxpool.Pool) ([]SiteParameter, error) {
 
-	q := sq.Select(`usgs_site_id, usgs_id, usgs_parameter_id, usgs_parameter_code`).From("v_usgs_site_parameters_enabled")
+// 	q := sq.Select(`usgs_site_id, usgs_id, usgs_parameter_id, usgs_parameter_code`).From("v_usgs_site_parameters_enabled")
 
-	sql, args, err := q.ToSql()
+// 	sql, args, err := q.ToSql()
 
-	if err != nil {
-		return make([]SiteParameter, 0), err
-	}
-	pp := make([]SiteParameter, 0)
+// 	if err != nil {
+// 		return make([]SiteParameter, 0), err
+// 	}
+// 	pp := make([]SiteParameter, 0)
 
-	if err := pgxscan.Select(context.Background(), db, &pp, sql, args...); err != nil {
-		return make([]SiteParameter, 0), err
-	}
-	return pp, nil
-}
+// 	if err := pgxscan.Select(context.Background(), db, &pp, sql, args...); err != nil {
+// 		return make([]SiteParameter, 0), err
+// 	}
+// 	return pp, nil
+// }

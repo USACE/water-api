@@ -13,6 +13,34 @@ CREATE TABLE IF NOT EXISTS usgs_site_parameters (
     CONSTRAINT site_unique_param UNIQUE(usgs_site_id, usgs_parameter_id)
 );
 
+-- Create v_usgs_site
+CREATE OR REPLACE VIEW v_usgs_site AS (
+    SELECT 
+    s.id,
+    s.usgs_id,   
+    s.name,		            
+    ST_AsGeoJSON(s.geometry)::json AS geometry,
+    s.elevation,
+    s.horizontal_datum_id,
+    s.vertical_datum_id,
+    v.name AS vertical_datum,
+    s.huc,
+    s.state_abbrev,
+    st.name as state,
+    COALESCE(code_agg.parameter_codes, '{}') as parameter_codes,
+    s.create_date,
+    s.update_date
+    FROM usgs_site s
+    JOIN vertical_datum v ON v.id=s.vertical_datum_id
+    JOIN tiger_data.state_all st ON st.stusps=s.state_abbrev
+    LEFT JOIN (
+        SELECT array_agg(code) AS parameter_codes, b.usgs_site_id 
+        FROM usgs_parameter a
+        JOIN usgs_site_parameters b ON b.usgs_parameter_id = a.id
+        GROUP BY b.usgs_site_id 
+        ) code_agg ON code_agg.usgs_site_id = s.id
+);
+
 -- Create v_usgs_site_parameters_enabled
 CREATE OR REPLACE VIEW v_usgs_site_parameters_enabled AS (
     SELECT
@@ -41,7 +69,8 @@ CREATE OR REPLACE VIEW v_usgs_site_parameters_enabled AS (
 GRANT SELECT ON
     usgs_parameter,
     usgs_site_parameters,
-    v_usgs_site_parameters_enabled
+    v_usgs_site_parameters_enabled,
+    v_usgs_site
 TO water_reader;
 
 -- Grant write
