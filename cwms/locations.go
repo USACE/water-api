@@ -8,6 +8,7 @@ import (
 	"github.com/USACE/water-api/helpers"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
+	"github.com/gosimple/slug"
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
 
@@ -201,29 +202,12 @@ func (s Store) SyncLocations(c echo.Context) error {
 	if err := c.Bind(&lc); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
+	for idx := range lc.Items {
+		lc.Items[idx].Slug = slug.Make(lc.Items[idx].Name)
+	}
 	sl, err := models.SyncLocations(s.Connection, lc)
 	if err != nil {
-		// The server error results from UPDATE; try to create
-		// Assign Unique Slugs
-		for idx := range lc.Items {
-			_s, err := helpers.NextUniqueSlug(s.Connection, "location", "slug", lc.Items[idx].Name, "", "")
-			if err != nil {
-				return c.String(http.StatusInternalServerError, err.Error())
-			}
-			lc.Items[idx].Slug = _s
-		}
-		cl, err := models.CreateLocations(s.Connection, lc)
-		// If Error was postgres error, return error message based on error code
-		var pgErr *pgconn.PgError
-		if errors.As(err, &pgErr) {
-			switch pgErr.Code {
-			case pgerrcode.UniqueViolation:
-				return c.JSON(
-					http.StatusBadRequest,
-					NewMessage(pgErr.Error()))
-			}
-		}
-		return c.JSON(http.StatusCreated, cl)
+		return c.JSON(http.StatusCreated, err.Error())
 	}
 	return c.JSON(http.StatusAccepted, sl)
 }
