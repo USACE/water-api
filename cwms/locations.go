@@ -121,9 +121,10 @@ func (s Store) CreateLocationsByOffice(c echo.Context) error {
 	for idx := range lc.Items {
 		_s, err := helpers.NextUniqueSlug(s.Connection, "location", "slug", lc.Items[idx].Name, "", "")
 		if err != nil {
-			return c.String(http.StatusInternalServerError, err.Error())
+			lc.Items[idx].Slug = _s
+		} else {
+			lc.Items[idx].Slug = slug.Make(lc.Items[idx].Name)
 		}
-		lc.Items[idx].Slug = _s
 	}
 	ll, err := models.CreateLocationsByOffice(s.Connection, lc, &office_symbol)
 	if err != nil {
@@ -202,8 +203,13 @@ func (s Store) SyncLocations(c echo.Context) error {
 	if err := c.Bind(&lc); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
+	// Assign Unique Slugs
 	for idx := range lc.Items {
-		lc.Items[idx].Slug = slug.Make(lc.Items[idx].Name)
+		_s, err := helpers.NextUniqueSlug(s.Connection, "location", "slug", lc.Items[idx].Name, "", "")
+		if err != nil {
+			return c.String(http.StatusInternalServerError, err.Error())
+		}
+		lc.Items[idx].Slug = _s
 	}
 	sl, err := models.SyncLocations(s.Connection, lc)
 	if err != nil {
