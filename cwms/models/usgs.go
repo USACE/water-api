@@ -21,9 +21,7 @@ type Parameter struct {
 }
 
 type SiteParameter struct {
-	// UsgsSiteId         uuid.UUID   `json:"usgs_site_id" db:"usgs_site_id"`
-	UsgsId string `json:"usgs_id" db:"usgs_id"`
-	// UsgsParameterId    []uuid.UUID `json:"usgs_parameter_id" db:"usgs_parameter_id"`
+	UsgsId             string   `json:"usgs_id" db:"usgs_id"`
 	UsgsParameterCodes []string `json:"usgs_parameter_codes" db:"usgs_parameter_codes"`
 }
 type SiteParameterCollection struct {
@@ -140,7 +138,7 @@ func ListSitesForIDs(db *pgxpool.Pool, IDs []uuid.UUID) ([]Site, error) {
 		return make([]Site, 0), err
 	}
 	// Where ID In (...)
-	q = q.Where(sq.Eq{"s.id": IDs})
+	q = q.Where(sq.Eq{"id": IDs})
 	sql, args, err := q.ToSql()
 	if err != nil {
 		return make([]Site, 0), err
@@ -190,7 +188,7 @@ func GetSiteByID(db *pgxpool.Pool, siteID *uuid.UUID) (*Site, error) {
 		return nil, err
 	}
 	// Where ID In (...)
-	q = q.Where("s.id = ?", siteID)
+	q = q.Where("id = ?", siteID)
 	sql, args, err := q.ToSql()
 	if err != nil {
 		return nil, err
@@ -202,18 +200,6 @@ func GetSiteByID(db *pgxpool.Pool, siteID *uuid.UUID) (*Site, error) {
 	}
 	return &s, nil
 }
-
-// func UpdateSite(db *pgxpool.Pool, s *Site) (*Site, error) {
-// 	var id uuid.UUID
-// 	if err := pgxscan.Get(
-// 		context.Background(), db, &id,
-// 		"UPDATE usgs_site SET name=$2, geometry=$3, elevation=$4, horizontal_datum_id=$5, vertical_datum_id=$6, huc=$7, state_id=$8, update_date=CURRENT_TIMESTAMP WHERE usgs_id = $1 RETURNING id",
-// 		s.UsgsId, s.Name, s.Geometry.EWKT(), s.Elevation, s.HorizontalDatumId, s.VerticallDatumId, s.Huc, s.StateID,
-// 	); err != nil {
-// 		return nil, err
-// 	}
-// 	return GetSiteByID(db, &id)
-// }
 
 func UpdateSites(db *pgxpool.Pool, nn []Site) ([]Site, error) {
 	tx, err := db.Begin(context.Background())
@@ -248,7 +234,6 @@ func UpdateSites(db *pgxpool.Pool, nn []Site) ([]Site, error) {
 func ListParameters(db *pgxpool.Pool) ([]Parameter, error) {
 
 	q := sq.Select(`id, code, description`).From("usgs_parameter")
-
 	sql, args, err := q.ToSql()
 
 	if err != nil {
@@ -260,6 +245,38 @@ func ListParameters(db *pgxpool.Pool) ([]Parameter, error) {
 		return make([]Parameter, 0), err
 	}
 	return pp, nil
+}
+
+func CreateSiteParameters(db *pgxpool.Pool, ss []SiteParameter) ([]SiteParameter, error) {
+
+	tx, err := db.Begin(context.Background())
+	if err != nil {
+		return make([]SiteParameter, 0), err
+	}
+	defer tx.Rollback(context.Background())
+	for _, m := range ss {
+		// fmt.Println(m.UsgsId)
+		// fmt.Println(m.UsgsParameterCodes[0])
+		rows, err := tx.Query(
+			context.Background(),
+			`INSERT INTO usgs_site_parameters (usgs_site_id, usgs_parameter_id) 
+			VALUES ((select id from usgs_site where usgs_id = $1), (select id from usgs_parameter where code = $2)) RETURNING id`,
+			m.UsgsId, m.UsgsParameterCodes[0],
+		)
+		if err != nil {
+			tx.Rollback(context.Background())
+			return make([]SiteParameter, 0), err
+		}
+		var id uuid.UUID
+		if err := pgxscan.ScanOne(&id, rows); err != nil {
+			tx.Rollback(context.Background())
+			return make([]SiteParameter, 0), err
+		}
+	}
+	tx.Commit(context.Background())
+
+	return ss, nil
+
 }
 
 // NOT USED - SAVE FOR WATERSHED/SITE/PARAM Enabled

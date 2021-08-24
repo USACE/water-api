@@ -89,11 +89,12 @@ func main() {
 	// USGS Sites
 	public.GET("/usgs_sites", cs.ListSites)
 	public.GET("/usgs_sites/state/:state_abbrev", cs.ListSites)
-	public.GET("/usgs_sites/parameters", cs.ListParameters)
+	public.GET("/usgs_parameters", cs.ListParameters)
 	//public.GET("/usgs_sites/enabled_parameters", cs.ListParametersEnabled)
 
 	app.POST("/sync/usgs_sites", cs.SyncSites)
-	app.POST("/sync/usgs_site_parameters", cs.SyncSiteParameters)
+	app.POST("/usgs_sites/parameters", cs.CreateSiteParameters)
+	//app.POST("/sync/usgs_site_parameters", cs.SyncSiteParameters)
 
 	// Maintenance/Automation
 	app.POST("/automation/assign_states_to_locations", cs.AssignStatesToLocations)

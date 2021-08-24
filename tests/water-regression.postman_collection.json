@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "45e3a2e7-c612-4fc8-94fd-97486e2054e7",
+		"_postman_id": "bcd218e5-0cef-47d3-9e27-68ad3f5c2cb7",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -472,6 +472,37 @@
 			"name": "USGS Sites",
 			"item": [
 				{
+					"name": "List Parameters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/usgs_sites",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usgs_sites"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "List Sites",
 					"event": [
 						{
@@ -612,6 +643,88 @@
 							"path": [
 								"sync",
 								"usgs_sites"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Site Parameters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t{\n\t\t\"usgs_id\": \"99999999\",\n\t\t\"usgs_parameter_codes\": [\n\t\t\t\"00065\"\n\t\t]\n\t},\n\t{\n\t\t\"usgs_id\": \"99999999\",\n\t\t\"usgs_parameter_codes\":[\n\t\t\t\"00060\"\n\t\t]\n\t}\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/usgs_sites/parameters",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usgs_sites",
+								"parameters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Site Parameters Duplicate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t{\n\t\t\"usgs_id\": \"99999999\",\n\t\t\"usgs_parameter_codes\": [\n\t\t\t\"00065\"\n\t\t]\n\t},\n\t{\n\t\t\"usgs_id\": \"99999999\",\n\t\t\"usgs_parameter_codes\":[\n\t\t\t\"00060\"\n\t\t]\n\t}\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/usgs_sites/parameters",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usgs_sites",
+								"parameters"
 							]
 						}
 					},
