@@ -109,7 +109,7 @@ func main() {
 	public.GET("/usgs/parameters", gs.ListParameters)
 	//public.GET("/usgs_sites/enabled_parameters", cs.ListParametersEnabled)
 
-	key.POST("/sync/usgs_sites", gs.SyncSites)
+	key.POST("/usgs/sync/sites", gs.SyncSites)
 	key.POST("/usgs/site_parameters", gs.CreateSiteParameters)
 
 	// Start server

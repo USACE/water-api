@@ -3,7 +3,6 @@ package usgs
 import (
 	"errors"
 	"net/http"
-	"strings"
 
 	"github.com/USACE/water-api/messages"
 	"github.com/USACE/water-api/usgs/models"
@@ -58,14 +57,12 @@ func (s Store) SyncSites(c echo.Context) error {
 	// Get existing sites for comparison
 	var sf models.SiteFilter
 	existingSites, err := models.ListSites(s.Connection, &sf)
-
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
 	// Analyze sync payload
 	var sc models.SiteCollection
-
 	if err := c.Bind(&sc); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -77,14 +74,14 @@ func (s Store) SyncSites(c echo.Context) error {
 	sitemap := make(map[string]models.Site, len(existingSites))
 
 	for _, s := range existingSites {
-		sitemap[s.SiteInfo.UsgsId] = s
+		sitemap[s.SiteInfo.SiteNumber] = s
 	}
 
 	// Loop over payload items
 	for _, site := range sc.Items {
 
 		// If no key in map, we have a new site
-		if existingSite, ok := sitemap[site.SiteInfo.UsgsId]; !ok {
+		if existingSite, ok := sitemap[site.SiteInfo.SiteNumber]; !ok {
 			// payload site not found, adding to new_sites
 			new_sites = append(new_sites, site)
 		} else {
@@ -132,39 +129,4 @@ func (s Store) SyncSites(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusAccepted, r)
-}
-
-func (s Store) ListParameters(c echo.Context) error {
-	pp, err := models.ListParameters(s.Connection)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, err.Error())
-	}
-	return c.JSON(http.StatusOK, pp)
-}
-
-// NOT USED - SAVE FOR WATERSHED/SITE/PARAM Enabled
-// func (s Store) ListParametersEnabled(c echo.Context) error {
-// 	pp, err := models.ListParametersEnabled(s.Connection)
-// 	if err != nil {
-// 		return c.String(http.StatusInternalServerError, err.Error())
-// 	}
-// 	return c.JSON(http.StatusOK, pp)
-// }
-
-func (s Store) CreateSiteParameters(c echo.Context) error {
-
-	var sp models.SiteParameterCollection
-	if err := c.Bind(&sp); err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
-	}
-	ss, err := models.CreateSiteParameters(s.Connection, sp.Items)
-	if err != nil {
-		if strings.Contains(string(err.Error()), "duplicate key value") {
-			// return 422
-			return c.String(http.StatusUnprocessableEntity, err.Error())
-		}
-		return c.String(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusCreated, ss)
 }
