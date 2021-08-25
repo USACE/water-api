@@ -46,7 +46,7 @@ type SiteFilter struct {
 
 func ListSitesQuery(sf *SiteFilter) (sq.SelectBuilder, error) {
 
-	q := sq.Select(`id,
+	q := sq.Select(`uid,
 					site_number,   
 					name,		            
 		            geometry,

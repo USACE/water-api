@@ -1,4 +1,6 @@
 # Created from output of loader_generate_nation_script('sh') on a PostGIS 13-3.1 Database
+echo "Sleeping for 15 sec..."
+sleep 15
 TMPDIR="/gisdata/temp/"
 UNZIPTOOL=unzip
 WGETTOOL="/usr/bin/wget"

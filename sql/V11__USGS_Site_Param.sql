@@ -41,11 +41,11 @@ GRANT SELECT ON usgs_site_parameters, v_usgs_site TO water_reader;
 GRANT INSERT,UPDATE,DELETE ON usgs_site_parameters TO water_writer;
 
 -- usgs_site_parameters seed data for testing
-INSERT INTO usgs_site_parameters (id, usgs_site_id, usgs_parameter_id) VALUES
+INSERT INTO usgs_site_parameters (uid, site_uid, parameter_uid) VALUES
 -- GUYANDOTTE RIVER AT LOGAN, WV - Stage and Flow
-('2a8c983a-2210-490b-a18d-55533a048f4a', (select id from usgs_site where name='GUYANDOTTE RIVER AT LOGAN, WV'), 'a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28'),
-('b5ad3c36-4238-4fbb-8b0d-a5d544479eac', (select id from usgs_site where name='GUYANDOTTE RIVER AT LOGAN, WV'), 'ba29fc34-6315-4424-838f-9b1863715fad'),
+('2a8c983a-2210-490b-a18d-55533a048f4a', (select uid from usgs_site where name='GUYANDOTTE RIVER AT LOGAN, WV'), 'a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28'),
+('b5ad3c36-4238-4fbb-8b0d-a5d544479eac', (select uid from usgs_site where name='GUYANDOTTE RIVER AT LOGAN, WV'), 'ba29fc34-6315-4424-838f-9b1863715fad'),
 -- GUYANDOTTE RIVER AT BRANCHLAND, WV - Stage and Precip
-('1fdd9651-84ab-4d17-9e6f-37a5c2596521', (select id from usgs_site where name='GUYANDOTTE RIVER AT BRANCHLAND, WV'), 'a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28'),
-('ef9538de-8e44-4827-b552-0498ef1c18ff', (select id from usgs_site where name='GUYANDOTTE RIVER AT BRANCHLAND, WV'), '738eb4df-b34b-45cc-a5aa-f2136384244f')
+('1fdd9651-84ab-4d17-9e6f-37a5c2596521', (select uid from usgs_site where name='GUYANDOTTE RIVER AT BRANCHLAND, WV'), 'a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28'),
+('ef9538de-8e44-4827-b552-0498ef1c18ff', (select uid from usgs_site where name='GUYANDOTTE RIVER AT BRANCHLAND, WV'), '738eb4df-b34b-45cc-a5aa-f2136384244f')
 ON CONFLICT DO NOTHING;
