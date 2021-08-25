@@ -220,11 +220,17 @@ func SyncLocations(db *pgxpool.Pool, c LocationCollection) ([]Location, error) {
 	for _, l := range c.Items {
 		rows, err := tx.Query(
 			context.Background(),
-			`UPDATE a2w_cwms.location SET public_name=$3, kind_id=$4,
-			geometry=$5, update_date=CURRENT_TIMESTAMP
-			WHERE office_id=$1 AND name=$2
+			`INSERT INTO location (office_id, name, public_name, slug, geometry, kind_id)
+			VALUES($1, $2, $3, $4, $5, $6)
+			ON CONFLICT ON CONSTRAINT office_unique_name
+			DO UPDATE SET
+			public_name = $3,
+			geometry = $5,
+			kind_id = $6,
+			update_date = CURRENT_TIMESTAMP
+			WHERE location.office_id = $1 AND location.name = $2
 			RETURNING id`,
-			l.OfficeID, l.Name, l.PublicName, l.KindID, l.Geometry.EWKT(6),
+			l.OfficeID, l.Name, l.PublicName, l.Slug, l.Geometry.EWKT(6), l.KindID,
 		)
 		if err != nil {
 			return make([]Location, 0), err
