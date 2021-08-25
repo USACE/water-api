@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bcd218e5-0cef-47d3-9e27-68ad3f5c2cb7",
+		"_postman_id": "0a688a7c-3265-4f4b-8aab-5e208f4534ab",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -491,12 +491,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/usgs_sites",
+							"raw": "{{base_url}}/usgs/parameters",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"usgs_sites"
+								"usgs",
+								"parameters"
 							]
 						}
 					},
@@ -522,12 +523,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/usgs_sites",
+							"raw": "{{base_url}}/usgs/sites",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"usgs_sites"
+								"usgs",
+								"sites"
 							]
 						}
 					},
@@ -553,14 +555,19 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/usgs_sites/state/wv",
+							"raw": "{{base_url}}/usgs/sites?state=wv",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"usgs_sites",
-								"state",
-								"wv"
+								"usgs",
+								"sites"
+							],
+							"query": [
+								{
+									"key": "state",
+									"value": "wv"
+								}
 							]
 						}
 					},
@@ -677,13 +684,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/usgs_sites/parameters",
+							"raw": "{{base_url}}/usgs/site_parameters",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"usgs_sites",
-								"parameters"
+								"usgs",
+								"site_parameters"
 							]
 						}
 					},
@@ -718,13 +725,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/usgs_sites/parameters",
+							"raw": "{{base_url}}/usgs/site_parameters",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"usgs_sites",
-								"parameters"
+								"usgs",
+								"site_parameters"
 							]
 						}
 					},
