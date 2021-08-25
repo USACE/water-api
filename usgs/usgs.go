@@ -1,11 +1,12 @@
-package cwms
+package usgs
 
 import (
 	"errors"
 	"net/http"
 	"strings"
 
-	"github.com/USACE/water-api/cwms/models"
+	"github.com/USACE/water-api/messages"
+	"github.com/USACE/water-api/usgs/models"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
@@ -43,7 +44,7 @@ func (s Store) CreateSites(c echo.Context) error {
 			case pgerrcode.UniqueViolation:
 				return c.JSON(
 					http.StatusBadRequest,
-					NewMessage("Sites not created. Site information conflicts with an existing site"))
+					messages.NewMessage("Sites not created. Site information conflicts with an existing site"))
 			}
 		}
 		// If not explicit error, return string of error message for debugging
@@ -103,7 +104,7 @@ func (s Store) SyncSites(c echo.Context) error {
 
 		if err != nil {
 			if pgxscan.NotFound(err) {
-				return c.JSON(http.StatusNotFound, DefaultMessageNotFound)
+				return c.JSON(http.StatusNotFound, messages.DefaultMessageNotFound)
 			}
 			return c.JSON(http.StatusInternalServerError, err)
 			// return c.String(http.StatusInternalServerError, err.Error())

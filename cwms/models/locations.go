@@ -8,30 +8,22 @@ import (
 	"strings"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/USACE/water-api/helpers"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-type Geometry struct {
-	Type        string    `json:"type"`
-	Coordinates []float64 `json:"coordinates"`
-}
-
-func (g Geometry) EWKT(precision int) string {
-	return fmt.Sprintf("SRID=4326;POINT(%.[3]*[1]f %.[3]*[2]f)", g.Coordinates[0], g.Coordinates[1], precision)
-}
-
 type Location struct {
-	ID         uuid.UUID `json:"id"`
-	OfficeID   uuid.UUID `json:"office_id"`
-	StateID    *int      `json:"state_id"`
-	Name       string    `json:"name"`
-	PublicName *string   `json:"public_name"`
-	Slug       string    `json:"slug"`
-	KindID     uuid.UUID `json:"kind_id"`
-	Kind       string    `json:"kind"`
-	Geometry   Geometry  `json:"geometry"`
+	ID         uuid.UUID        `json:"id"`
+	OfficeID   uuid.UUID        `json:"office_id"`
+	StateID    *int             `json:"state_id"`
+	Name       string           `json:"name"`
+	PublicName *string          `json:"public_name"`
+	Slug       string           `json:"slug"`
+	KindID     uuid.UUID        `json:"kind_id"`
+	Kind       string           `json:"kind"`
+	Geometry   helpers.Geometry `json:"geometry"`
 }
 
 type LocationFilter struct {
@@ -46,7 +38,7 @@ type LocationCollection struct {
 }
 
 func (c *LocationCollection) UnmarshalJSON(b []byte) error {
-	switch JSONType(b) {
+	switch helpers.JSONType(b) {
 	case "ARRAY":
 		return json.Unmarshal(b, &c.Items)
 	case "OBJECT":

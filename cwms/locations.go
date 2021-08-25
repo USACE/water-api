@@ -6,6 +6,7 @@ import (
 
 	"github.com/USACE/water-api/cwms/models"
 	"github.com/USACE/water-api/helpers"
+	"github.com/USACE/water-api/messages"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
 	"github.com/jackc/pgconn"
@@ -30,12 +31,12 @@ func (s Store) SearchLocations(c echo.Context) error {
 	if f.Q == nil || *f.Q == "" {
 		return c.JSON(
 			http.StatusBadRequest,
-			NewMessage("search string must be at one or more chacters long, provided in URL query parameter '?q='"),
+			messages.NewMessage("search string must be at one or more chacters long, provided in URL query parameter '?q='"),
 		)
 	}
 	ll, err := models.SearchLocations(s.Connection, &f)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, DefaultMessageInternalServerError)
+		return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
 	}
 	return c.JSON(http.StatusOK, ll)
 }
@@ -60,7 +61,7 @@ func (s Store) GetLocation(c echo.Context) error {
 		l, err := models.GetLocationByID(s.Connection, &locationID)
 		if err != nil {
 			if pgxscan.NotFound(err) {
-				return c.JSON(http.StatusNotFound, DefaultMessageNotFound)
+				return c.JSON(http.StatusNotFound, messages.DefaultMessageNotFound)
 			}
 			return c.String(http.StatusInternalServerError, err.Error())
 		}
@@ -70,9 +71,9 @@ func (s Store) GetLocation(c echo.Context) error {
 	l, err := models.GetLocationBySlug(s.Connection, &identifier)
 	if err != nil {
 		if pgxscan.NotFound(err) {
-			return c.JSON(http.StatusNotFound, DefaultMessageNotFound)
+			return c.JSON(http.StatusNotFound, messages.DefaultMessageNotFound)
 		}
-		return c.JSON(http.StatusInternalServerError, DefaultMessageInternalServerError)
+		return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
 	}
 	return c.JSON(http.StatusOK, l)
 }
@@ -100,7 +101,7 @@ func (s Store) CreateLocations(c echo.Context) error {
 			case pgerrcode.UniqueViolation:
 				return c.JSON(
 					http.StatusBadRequest,
-					NewMessage("Locations not created. Location information conflicts with an existing location"))
+					messages.NewMessage("Locations not created. Location information conflicts with an existing location"))
 			}
 		}
 		// If not explicit error, return string of error message for debugging
@@ -133,7 +134,7 @@ func (s Store) CreateLocationsByOffice(c echo.Context) error {
 			case pgerrcode.UniqueViolation:
 				return c.JSON(
 					http.StatusBadRequest,
-					NewMessage("Locations not created. Location information conflicts with an existing location"))
+					messages.NewMessage("Locations not created. Location information conflicts with an existing location"))
 			}
 		}
 		// If not explicit error, return string of error message for debugging
@@ -146,24 +147,24 @@ func (s Store) UpdateLocation(c echo.Context) error {
 	// Location ID From Route
 	locationID, err := uuid.Parse(c.Param("location_id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, DefaultMessageBadRequest)
+		return c.JSON(http.StatusBadRequest, messages.DefaultMessageBadRequest)
 	}
 	// Bind Payload (Updated Location Information)
 	var uLocation models.Location
 	if err := c.Bind(&uLocation); err != nil {
-		return c.JSON(http.StatusBadRequest, DefaultMessageBadRequest)
+		return c.JSON(http.StatusBadRequest, messages.DefaultMessageBadRequest)
 	}
 	// Compare Location ID from Route to Location ID from Payload
 	if locationID != uLocation.ID {
 		return c.JSON(
 			http.StatusBadRequest,
-			NewMessage("ID in Route Parameters does not match ID in payload"),
+			messages.NewMessage("ID in Route Parameters does not match ID in payload"),
 		)
 	}
 	l, err := models.UpdateLocation(s.Connection, &uLocation)
 	if err != nil {
 		if pgxscan.NotFound(err) {
-			return c.JSON(http.StatusNotFound, DefaultMessageNotFound)
+			return c.JSON(http.StatusNotFound, messages.DefaultMessageNotFound)
 		}
 		return c.JSON(http.StatusInternalServerError, err)
 	}
@@ -177,19 +178,19 @@ func (s Store) UpdateLocationByOffice(c echo.Context) error {
 	location_slug := c.Param("location_slug")
 	var uLocation models.Location
 	if err := c.Bind(&uLocation); err != nil {
-		return c.JSON(http.StatusBadRequest, DefaultMessageBadRequest)
+		return c.JSON(http.StatusBadRequest, messages.DefaultMessageBadRequest)
 	}
 	// Compare slug from Route to Location Slug from Payload
 	if location_slug != uLocation.Slug {
 		return c.JSON(
 			http.StatusBadRequest,
-			NewMessage("Slug in Route Parameters does not match slug in payload"),
+			messages.NewMessage("Slug in Route Parameters does not match slug in payload"),
 		)
 	}
 	l, err := models.UpdateLocationByOffice(s.Connection, &uLocation, &office_symbol)
 	if err != nil {
 		if pgxscan.NotFound(err) {
-			return c.JSON(http.StatusNotFound, DefaultMessageNotFound)
+			return c.JSON(http.StatusNotFound, messages.DefaultMessageNotFound)
 		}
 		return c.JSON(http.StatusInternalServerError, err)
 	}
@@ -220,7 +221,7 @@ func (s Store) SyncLocations(c echo.Context) error {
 			case pgerrcode.UniqueViolation:
 				return c.JSON(
 					http.StatusBadRequest,
-					NewMessage(pgErr.Error()))
+					messages.NewMessage(pgErr.Error()))
 			}
 		}
 		return c.JSON(http.StatusCreated, cl)
@@ -231,10 +232,10 @@ func (s Store) SyncLocations(c echo.Context) error {
 func (s Store) DeleteLocation(c echo.Context) error {
 	locationID, err := uuid.Parse(c.Param("location_id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, DefaultMessageBadRequest)
+		return c.JSON(http.StatusBadRequest, messages.DefaultMessageBadRequest)
 	}
 	if err := models.DeleteLocation(s.Connection, &locationID); err != nil {
-		return c.JSON(http.StatusInternalServerError, DefaultMessageInternalServerError)
+		return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
 	}
 	return c.JSON(http.StatusOK, make(map[string]interface{}))
 }
@@ -245,7 +246,7 @@ func (s Store) DeleteLocationByOffice(c echo.Context) error {
 	location_slug := c.Param("location_slug")
 	office_symbol := c.Param("office_symbol")
 	if err := models.DeleteLocationByOffice(s.Connection, location_slug, office_symbol); err != nil {
-		return c.JSON(http.StatusInternalServerError, DefaultMessageInternalServerError)
+		return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
 	}
 	return c.JSON(http.StatusOK, make(map[string]interface{}))
 }

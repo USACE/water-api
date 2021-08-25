@@ -12,6 +12,8 @@ import (
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
+
+	"github.com/USACE/water-api/helpers"
 )
 
 type Parameter struct {
@@ -29,14 +31,14 @@ type SiteParameterCollection struct {
 }
 
 type SiteInfo struct {
-	UsgsId            string   `json:"usgs_id" db:"usgs_id"`
-	Name              string   `json:"name"`
-	Geometry          Geometry `json:"geometry"`
-	Elevation         *float32 `json:"elevation"`
-	HorizontalDatumId int      `json:"horizontal_datum_id" db:"horizontal_datum_id"`
-	VerticallDatumId  int      `json:"vertical_datum_id" db:"vertical_datum_id"`
-	Huc               *string  `json:"huc"`
-	StateAbbrev       *string  `json:"state_abbrev" db:"state_abbrev"`
+	UsgsId            string           `json:"usgs_id" db:"usgs_id"`
+	Name              string           `json:"name"`
+	Geometry          helpers.Geometry `json:"geometry"`
+	Elevation         *float32         `json:"elevation"`
+	HorizontalDatumId int              `json:"horizontal_datum_id" db:"horizontal_datum_id"`
+	VerticallDatumId  int              `json:"vertical_datum_id" db:"vertical_datum_id"`
+	Huc               *string          `json:"huc"`
+	StateAbbrev       *string          `json:"state_abbrev" db:"state_abbrev"`
 }
 
 type Site struct {
@@ -62,7 +64,7 @@ type SiteCollection struct {
 }
 
 func (c *SiteCollection) UnmarshalJSON(b []byte) error {
-	switch JSONType(b) {
+	switch helpers.JSONType(b) {
 	case "ARRAY":
 		return json.Unmarshal(b, &c.Items)
 	case "OBJECT":
@@ -74,7 +76,7 @@ func (c *SiteCollection) UnmarshalJSON(b []byte) error {
 }
 
 func (c *SiteParameterCollection) UnmarshalJSON(b []byte) error {
-	switch JSONType(b) {
+	switch helpers.JSONType(b) {
 	case "ARRAY":
 		return json.Unmarshal(b, &c.Items)
 	case "OBJECT":
