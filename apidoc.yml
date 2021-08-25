@@ -478,3 +478,13 @@ paths:
                   - state_abbrev
       tags:
         - USGS Sites
+  /offices:
+    get:
+      summary: ''
+      tags:
+        - Offices
+      responses:
+        '200':
+          description: OK
+      operationId: get-offices
+      description: List All Offices
