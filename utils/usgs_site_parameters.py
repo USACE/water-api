@@ -11,7 +11,7 @@ states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA",
           "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
 
 
-water_usgs_parameters_url = 'http://localhost/usgs_parameters'
+water_usgs_parameters_url = 'http://localhost/usgs/parameters'
 r = requests.get(water_usgs_parameters_url)
 parameter_codes = r.json()
 water_usgs_parameters = []
@@ -21,7 +21,7 @@ for pc in parameter_codes:
 
 
 for state in states:
-    url = f'http://localhost/usgs_sites/state/{state.lower()}'
+    url = f'http://localhost/usgs/sites?state={state.lower()}'
     #print(url)
     print("---------")
     print(state)
@@ -83,7 +83,7 @@ for state in states:
     # Post payload for current state
     print("Sending payload...")
     r = requests.post(
-    "http://localhost/usgs_sites/parameters?key=appkey",
+    "http://localhost/usgs/site_parameters?key=appkey",
     json=insert_payload,
     headers={"Content-Type": "application/json"},    
     )

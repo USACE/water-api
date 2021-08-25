@@ -57,7 +57,7 @@ func (s1 Site) IsEquivalent(s2 Site) bool {
 }
 
 type SiteFilter struct {
-	StateAbbrev *string `json:"state_abbrev" param:"state_abbrev"`
+	StateAbbrev *string `json:"state" query:"state"`
 }
 type SiteCollection struct {
 	Items []Site `json:"items"`

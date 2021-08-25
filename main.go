@@ -104,14 +104,13 @@ func main() {
 	gs := usgs.Store{Connection: st.Connection}
 
 	// USGS Sites
-	public.GET("/usgs_sites", gs.ListSites)
-	public.GET("/usgs_sites/state/:state_abbrev", gs.ListSites)
-	public.GET("/usgs_parameters", gs.ListParameters)
+	public.GET("/usgs/sites", gs.ListSites)
+	//public.GET("/usgs/sites/state=:state_abbrev", gs.ListSites)
+	public.GET("/usgs/parameters", gs.ListParameters)
 	//public.GET("/usgs_sites/enabled_parameters", cs.ListParametersEnabled)
 
 	key.POST("/sync/usgs_sites", gs.SyncSites)
-	key.POST("/usgs_sites/parameters", gs.CreateSiteParameters)
-	//app.POST("/sync/usgs_site_parameters", usgs.SyncSiteParameters)
+	key.POST("/usgs/site_parameters", gs.CreateSiteParameters)
 
 	// Start server
 	log.Fatal(http.ListenAndServe(":80", e))
