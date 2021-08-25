@@ -88,6 +88,9 @@ func main() {
 	// Location Kinds
 	public.GET("/location_kind", cs.ListLocationKind)
 
+	// Offices
+	public.GET("/offices", cs.ListOffices)
+
 	// Projects
 	public.GET("/projects", cs.ListProjects)
 
