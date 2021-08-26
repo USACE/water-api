@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "0a688a7c-3265-4f4b-8aab-5e208f4534ab",
+		"_postman_id": "b487142b-52d6-4795-8258-b4a9b9173abe",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -594,7 +594,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"usgs_id\": \"99999999\",\n        \"name\": \"REGRESSION TEST, NC\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -80.1,\n                35.1\n            ]\n        },\n        \"elevation\": 800,\n        \"horizontal_datum_id\": 4269,\n        \"vertical_datum_id\": 3,\n        \"huc\": \"03040103\",\n        \"state_abbrev\": \"NC\"\n    }\n]",
+							"raw": "[\n    {\n        \"site_number\": \"99999999\",\n        \"name\": \"REGRESSION TEST, NC\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -80.1,\n                35.1\n            ]\n        },\n        \"elevation\": 800,\n        \"horizontal_datum_id\": 4269,\n        \"vertical_datum_id\": 3,\n        \"huc\": \"03040103\",\n        \"state_abbrev\": \"NC\"\n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -602,13 +602,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/sync/usgs_sites",
+							"raw": "{{base_url}}/usgs/sync/sites",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
+								"usgs",
 								"sync",
-								"usgs_sites"
+								"sites"
 							]
 						}
 					},
@@ -635,7 +636,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"usgs_id\": \"02121500\",\n        \"name\": \"ABBOTTS CREEK AT LEXINGTON, NC - MODIFY EXISTING\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -80.2,\n                35.8\n            ]\n        },\n        \"elevation\": 100.10,\n        \"horizontal_datum_id\": 4269,\n        \"vertical_datum_id\": 3,\n        \"huc\": \"03040103\",\n        \"state_abbrev\": \"NC\"\n    }\n]",
+							"raw": "[\n    {\n        \"site_number\": \"02121500\",\n        \"name\": \"ABBOTTS CREEK AT LEXINGTON, NC - MODIFY EXISTING\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -80.2,\n                35.8\n            ]\n        },\n        \"elevation\": 100.10,\n        \"horizontal_datum_id\": 4269,\n        \"vertical_datum_id\": 3,\n        \"huc\": \"03040103\",\n        \"state_abbrev\": \"NC\"\n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -643,13 +644,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/sync/usgs_sites",
+							"raw": "{{base_url}}/usgs/sync/sites",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
+								"usgs",
 								"sync",
-								"usgs_sites"
+								"sites"
 							]
 						}
 					},
@@ -676,7 +678,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n\t{\n\t\t\"usgs_id\": \"99999999\",\n\t\t\"usgs_parameter_codes\": [\n\t\t\t\"00065\"\n\t\t]\n\t},\n\t{\n\t\t\"usgs_id\": \"99999999\",\n\t\t\"usgs_parameter_codes\":[\n\t\t\t\"00060\"\n\t\t]\n\t}\n]",
+							"raw": "[\n\t{\n\t\t\"site_number\": \"99999999\",\n\t\t\"parameter_codes\": [\n\t\t\t\"00065\"\n\t\t]\n\t},\n\t{\n\t\t\"site_number\": \"99999999\",\n\t\t\"parameter_codes\":[\n\t\t\t\"00060\"\n\t\t]\n\t}\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -717,7 +719,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n\t{\n\t\t\"usgs_id\": \"99999999\",\n\t\t\"usgs_parameter_codes\": [\n\t\t\t\"00065\"\n\t\t]\n\t},\n\t{\n\t\t\"usgs_id\": \"99999999\",\n\t\t\"usgs_parameter_codes\":[\n\t\t\t\"00060\"\n\t\t]\n\t}\n]",
+							"raw": "[\n\t{\n\t\t\"site_number\": \"99999999\",\n\t\t\"parameter_codes\": [\n\t\t\t\"00065\"\n\t\t]\n\t},\n\t{\n\t\t\"site_number\": \"99999999\",\n\t\t\"parameter_codes\":[\n\t\t\t\"00060\"\n\t\t]\n\t}\n]",
 							"options": {
 								"raw": {
 									"language": "json"
