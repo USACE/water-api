@@ -52,9 +52,8 @@ components:
       x-examples:
         example-1:
           value:
-            id: c329d973-c308-43e4-b1f2-7a6b26b55c4a
+            site_number: '01654000'
             name: 'ACCOTINK CREEK NEAR ANNANDALE, VA'
-            usgs_id: '01654000'
             geometry:
               type: Point
               coordinates:
@@ -77,7 +76,7 @@ components:
           type: string
         name:
           type: string
-        usgs_id:
+        site_number:
           type: string
         geometry:
           type: object
@@ -341,22 +340,6 @@ paths:
                 description: ''
                 minItems: 1
                 uniqueItems: true
-                items:
-                  type: object
-                  required:
-                    - id
-                    - code
-                    - description
-                  properties:
-                    id:
-                      type: string
-                      minLength: 1
-                    code:
-                      type: string
-                      minLength: 1
-                    description:
-                      type: string
-                      minLength: 1
                 x-examples:
                   example-1:
                     - id: a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28
@@ -380,6 +363,18 @@ paths:
                     - id: 12ff9f0b-159b-43cb-8126-5253f7948380
                       code: '00011'
                       description: 'Temperature, water, degrees Fahrenheit'
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      minLength: 1
+                    description:
+                      type: string
+                      minLength: 1
+                  required:
+                    - code
+                    - description
       operationId: get-usgs_parameters
       description: USGS Parameters Supported by Water API
     parameters: []
@@ -478,3 +473,49 @@ paths:
                   - state_abbrev
       tags:
         - USGS Sites
+  /usgs/site_parameters:
+    post:
+      summary: ''
+      operationId: post-usgs-site-parameters
+      responses:
+        '201':
+          description: Created
+      description: Automation endpoint to associate Paramaters to Sites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  site_number:
+                    type: string
+                  parameter_codes:
+                    type: array
+                    minItems: 1
+                    maxItems: 1
+                    items:
+                      type: string
+                required:
+                  - site_number
+                  - parameter_codes
+            examples:
+              example-1:
+                value:
+                  - site_number: '03408500'
+                    parameter_codes:
+                      - '00065'
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+      tags:
+        - USGS Site Parameters
+      parameters:
+        - schema:
+            type: string
+            default: appkey
+          in: query
+          name: key
+          required: true
