@@ -1,10 +1,11 @@
-package cwms
+package usgs
 
 import (
 	"errors"
 	"net/http"
 
-	"github.com/USACE/water-api/cwms/models"
+	"github.com/USACE/water-api/messages"
+	"github.com/USACE/water-api/usgs/models"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
@@ -42,7 +43,7 @@ func (s Store) CreateSites(c echo.Context) error {
 			case pgerrcode.UniqueViolation:
 				return c.JSON(
 					http.StatusBadRequest,
-					NewMessage("Sites not created. Site information conflicts with an existing site"))
+					messages.NewMessage("Sites not created. Site information conflicts with an existing site"))
 			}
 		}
 		// If not explicit error, return string of error message for debugging
@@ -56,14 +57,12 @@ func (s Store) SyncSites(c echo.Context) error {
 	// Get existing sites for comparison
 	var sf models.SiteFilter
 	existingSites, err := models.ListSites(s.Connection, &sf)
-
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
 	// Analyze sync payload
 	var sc models.SiteCollection
-
 	if err := c.Bind(&sc); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -75,14 +74,14 @@ func (s Store) SyncSites(c echo.Context) error {
 	sitemap := make(map[string]models.Site, len(existingSites))
 
 	for _, s := range existingSites {
-		sitemap[s.SiteInfo.UsgsId] = s
+		sitemap[s.SiteInfo.SiteNumber] = s
 	}
 
 	// Loop over payload items
 	for _, site := range sc.Items {
 
 		// If no key in map, we have a new site
-		if existingSite, ok := sitemap[site.SiteInfo.UsgsId]; !ok {
+		if existingSite, ok := sitemap[site.SiteInfo.SiteNumber]; !ok {
 			// payload site not found, adding to new_sites
 			new_sites = append(new_sites, site)
 		} else {
@@ -102,7 +101,7 @@ func (s Store) SyncSites(c echo.Context) error {
 
 		if err != nil {
 			if pgxscan.NotFound(err) {
-				return c.JSON(http.StatusNotFound, DefaultMessageNotFound)
+				return c.JSON(http.StatusNotFound, messages.DefaultMessageNotFound)
 			}
 			return c.JSON(http.StatusInternalServerError, err)
 			// return c.String(http.StatusInternalServerError, err.Error())

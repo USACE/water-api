@@ -89,7 +89,7 @@ for state in states:
     for line in result:
 
         site = {}
-        site['usgs_id'] = line['site_no'].strip()
+        site['site_number'] = line['site_no'].strip()
         site['name'] = line['station_nm'].replace("'", "").strip()
         site['state_abbrev'] = state
         site['elevation'] = float(line['alt_va'].strip()) if line['alt_va'].strip() != '' else None
@@ -117,7 +117,7 @@ for state in states:
     
     
     r = requests.post(
-    "http://localhost/sync/usgs_sites?key=appkey",
+    "http://localhost/usgs/sync/sites?key=appkey",
     json=state_sites,
     headers={"Content-Type": "application/json"},    
     )

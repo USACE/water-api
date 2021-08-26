@@ -1,19 +1,18 @@
-openapi: '3.0.2'
+openapi: 3.0.2
 info:
   title: Access to Water REST API
   description: Access to Water REST API
   contact:
     name: API Support
-    url: https://github.com/USACE/water
+    url: 'https://github.com/USACE/water'
   version: '0.1'
 servers:
-  - url: "https://water-api.rsgis.dev"
+  - url: 'https://water-api.rsgis.dev'
     description: Stable API
-  - url: "https://water-cumulus-api.rsgis.dev"
+  - url: 'https://water-cumulus-api.rsgis.dev'
     description: Development API
-  - url: "http://localhost"
+  - url: 'http://localhost'
     description: Local API Testing
-
 components:
   schemas:
     location:
@@ -36,7 +35,7 @@ components:
           format: uuid
         kind:
           type: string
-        geometry:          
+        geometry:
           properties:
             type:
               type: string
@@ -46,6 +45,76 @@ components:
                 type: number
               minItems: 2
               maxItems: 2
+    site:
+      title: site
+      type: object
+      description: USGS Site
+      x-examples:
+        example-1:
+          value:
+            site_number: '01654000'
+            name: 'ACCOTINK CREEK NEAR ANNANDALE, VA'
+            geometry:
+              type: Point
+              coordinates:
+                - -77.228
+                - 38.812
+            parameter_codes:
+              - '00060'
+              - '00065'
+            elevation: 190.6
+            horizontal_datum_id: 4269
+            vertical_datum_id: 3
+            huc: '02070010'
+            state_abbrev: VA
+            state: Virginia
+            vertical_datum: NAVD88
+            create_date: '2021-08-17T12:53:49.933208Z'
+            update_date: null
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        site_number:
+          type: string
+        geometry:
+          type: object
+          properties:
+            type:
+              type: string
+            coordinates:
+              type: array
+              minItems: 2
+              maxItems: 2
+              items:
+                type: number
+        elevation:
+          type: number
+        horizontal_datum_id:
+          type: integer
+          minimum: 0
+        vertical_datum_id:
+          type: integer
+          minimum: 0
+        huc:
+          type: string
+        parameter_codes:
+          type: array
+          items:
+            type: string
+        state_abbrev:
+          type: string
+          maxLength: 2
+          minLength: 2
+        state:
+          type: string
+        vertical_datum:
+          type: string
+        create_date:
+          type: string
+        update_date:
+          type: string
   examples:
     createLocationRequest:
       value:
@@ -59,25 +128,19 @@ components:
           coordinates:
             - -82.445
             - 38.419
-          
-                
-                
-
-              
 paths:
   /location_kind:
     get:
-      operationId: "get-location-kind"
+      operationId: get-location-kind
       tags:
         - Location Kind
       description: Get Location Kinds
       responses:
         '200':
           description: OK
-
   /locations:
     get:
-      operationId: "get-locations"
+      operationId: get-locations
       tags:
         - Locations
       description: List all Locations
@@ -85,7 +148,7 @@ paths:
         '200':
           description: OK
     post:
-      operationId: "create-locations"
+      operationId: create-locations
       tags:
         - Locations
       description: Create New Location
@@ -94,27 +157,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/location"
+              $ref: '#/components/schemas/location'
             examples:
-              NewProject:              
-                $ref: "#/components/examples/createLocationRequest"
+              NewProject:
+                $ref: '#/components/examples/createLocationRequest'
       responses:
         '201':
           description: Object Created
-
-  /locations/{location_id}:
+  '/locations/{location_id}':
     parameters:
       - name: location_id
         in: path
         required: true
-        
         description: The ID of the location
         schema:
           type: string
           format: uuid
           default: 350836c0-b7fb-4c24-b367-57fce43092ce
     get:
-      operationId: "get-location-by-id"
+      operationId: get-location-by-id
       tags:
         - Locations
       description: Get Location
@@ -124,9 +185,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/location"
+                $ref: '#/components/schemas/location'
     put:
-      operationId: "replace-location"
+      operationId: replace-location
       tags:
         - Locations
       description: Update Location
@@ -136,11 +197,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/location"
-      
+                $ref: '#/components/schemas/location'
   /projects:
     get:
-      operationId: "get-projects"
+      operationId: get-projects
       tags:
         - Projects
       description: List Project Locations
@@ -150,11 +210,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/location"
-
+                $ref: '#/components/schemas/location'
   /search/locations:
     get:
-      operationId: "search-locations"
+      operationId: search-locations
       tags:
         - Search
       description: Search Locations
@@ -185,44 +244,278 @@ paths:
       responses:
         '200':
           description: OK
-
   /states:
     get:
-      operationId: "get-states"
+      operationId: get-states
       tags:
         - States
       description: List States
       responses:
         '200':
           description: OK
-
   /stats/states:
     get:
-      operationId: "get-stats-for-states"
+      operationId: get-stats-for-states
       tags:
         - Stats
       description: Get States for States
       responses:
         '200':
           description: OK
-        
-  /stats/states/{state_id}:
+  '/stats/states/{state_id}':
     get:
-      operationId: "get-stats-for-state"
+      operationId: get-stats-for-state
       tags:
         - Stats
-      description: Get States for Single State
+      description: Get Stats for Single State
       parameters:
-      - name: state_id
-        in: path
-        required: true
-        description: The ID of the state
-        schema:
-          type: integer
+        - name: state_id
+          in: path
+          required: true
+          description: The ID of the state
+          schema:
+            type: integer
       responses:
         '200':
           description: OK
-              
-
-  
-              
+    parameters:
+      - schema:
+          type: integer
+        name: state_id
+        in: path
+        required: true
+  /usgs/sites:
+    get:
+      summary: ''
+      tags:
+        - USGS Sites
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/site'
+      operationId: get-usgs-sites
+      description: List all USGS Sites in Water API
+    parameters: []
+  /usgs/sites?state=:
+    get:
+      summary: ''
+      tags:
+        - USGS Sites
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/site'
+              examples: {}
+      operationId: get-usgs-sites-state
+      description: USGS Sites for Single State
+      parameters:
+        - schema:
+            type: string
+            minLength: 2
+            maxLength: 2
+            default: wv
+          in: query
+          name: state
+          description: State Abbreviation
+          required: true
+    parameters: []
+  /usgs/parameters:
+    get:
+      summary: ''
+      tags:
+        - USGS Parameters
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ''
+                minItems: 1
+                uniqueItems: true
+                x-examples:
+                  example-1:
+                    - id: a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28
+                      code: '00065'
+                      description: 'Gage height, feet'
+                    - id: ba29fc34-6315-4424-838f-9b1863715fad
+                      code: '00060'
+                      description: 'Discharge, cubic feet per second'
+                    - id: f739b4af-1c96-437c-a788-901f59d177fb
+                      code: '62614'
+                      description: 'Lake or reservoir water surface elevation above NGVD 1929, feet'
+                    - id: 60bb26cb-a65d-40d2-ad54-b00d6802de7b
+                      code: '62615'
+                      description: 'Lake or reservoir water surface elevation above NAVD 1988, feet'
+                    - id: 738eb4df-b34b-45cc-a5aa-f2136384244f
+                      code: '00045'
+                      description: 'Precipitation, total, inches'
+                    - id: 0fa9993d-6674-4ba3-ac8a-f02830beea1e
+                      code: '00010'
+                      description: 'Temperature, water, degrees Celsius'
+                    - id: 12ff9f0b-159b-43cb-8126-5253f7948380
+                      code: '00011'
+                      description: 'Temperature, water, degrees Fahrenheit'
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      minLength: 1
+                    description:
+                      type: string
+                      minLength: 1
+                  required:
+                    - code
+                    - description
+      operationId: get-usgs_parameters
+      description: USGS Parameters Supported by Water API
+    parameters: []
+  /sync/usgs_sites:
+    post:
+      summary: ''
+      operationId: post-sync-usgs-sites
+      responses:
+        '200':
+          description: OK
+      description: Sync Endpoint for Internal App Usage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: ''
+              minItems: 1
+              uniqueItems: true
+              x-examples:
+                example-1:
+                  - usgs_id: '01595300'
+                    name: 'ABRAM CREEK AT OAKMONT, WV'
+                    geometry:
+                      type: Point
+                      coordinates:
+                        - -79.17892449
+                        - 39.36676569
+                    elevation: 1834.9
+                    horizontal_datum_id: 4269
+                    vertical_datum_id: 3
+                    huc: '02070002'
+                    state_abbrev: WV
+                    parameter_codes: []
+                    state: West Virginia
+                    vertical_datum: NAVD88
+                    create_date: '2021-08-24T12:51:30.282631Z'
+                    update_date: null
+                  - usgs_id: '03182700'
+                    name: 'ANTHONY CREEK NEAR ANTHONY, WV'
+                    geometry:
+                      type: Point
+                      coordinates:
+                        - -80.28988889
+                        - 37.9086111
+                    elevation: null
+                    horizontal_datum_id: 4269
+                    vertical_datum_id: 0
+                    huc: '05050003'
+                    state_abbrev: WV
+                    parameter_codes: []
+                    state: West Virginia
+                    vertical_datum: UNKNOWN
+                    create_date: '2021-08-24T12:51:30.282631Z'
+                    update_date: null
+              items:
+                type: object
+                properties:
+                  usgs_id:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                    minLength: 1
+                  geometry:
+                    type: object
+                    required:
+                      - type
+                      - coordinates
+                    properties:
+                      type:
+                        type: string
+                        minLength: 1
+                      coordinates:
+                        type: array
+                        items:
+                          type: object
+                  elevation:
+                    type: number
+                  horizontal_datum_id:
+                    type: number
+                  vertical_datum_id:
+                    type: number
+                  huc:
+                    type: string
+                    minLength: 1
+                  state_abbrev:
+                    type: string
+                    minLength: 1
+                required:
+                  - usgs_id
+                  - name
+                  - geometry
+                  - horizontal_datum_id
+                  - vertical_datum_id
+                  - state_abbrev
+      tags:
+        - USGS Sites
+  /usgs/site_parameters:
+    post:
+      summary: ''
+      operationId: post-usgs-site-parameters
+      responses:
+        '201':
+          description: Created
+      description: Automation endpoint to associate Paramaters to Sites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  site_number:
+                    type: string
+                  parameter_codes:
+                    type: array
+                    minItems: 1
+                    maxItems: 1
+                    items:
+                      type: string
+                required:
+                  - site_number
+                  - parameter_codes
+            examples:
+              example-1:
+                value:
+                  - site_number: '03408500'
+                    parameter_codes:
+                      - '00065'
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+      tags:
+        - USGS Site Parameters
+      parameters:
+        - schema:
+            type: string
+            default: appkey
+          in: query
+          name: key
+          required: true

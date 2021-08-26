@@ -26,7 +26,10 @@ services:
     ports:
       - '5432:5432'
   tiger-data:
-    profiles: ["init"]
+    restart: on-failure
+    depends_on:
+      - db
+    # profiles: ["init"]
     build:
       context: ./postgis-tiger-data-init
     environment:

@@ -83,7 +83,7 @@ for state in states:
 
 
     sql = f"-- {state} sites\n"
-    sql += 'INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES\n'
+    sql += 'INSERT INTO usgs_site (site_number, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES\n'
     last_line = len(result)
     for idx, line in enumerate(result):
 
