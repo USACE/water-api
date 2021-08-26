@@ -41,7 +41,7 @@ for state in states:
                 _p[wp] = True
             else:
                 _p[wp] = False        
-        map[s['usgs_id']] = _p      
+        map[s['site_number']] = _p      
             
 
     # print('---------')
@@ -68,7 +68,7 @@ for state in states:
         if usgs_id in map.keys():
 
             if param_code in water_usgs_parameters and not map[usgs_id][param_code]:
-                insert_payload.append({'usgs_id':usgs_id, 'usgs_parameter_codes':[param_code]})
+                insert_payload.append({'site_number':usgs_id, 'parameter_codes':[param_code]})
                 # print('payload inserted')
             # else:
             #     print(" -- PARAM EXISTS --")
