@@ -7,6 +7,42 @@
 	},
 	"item": [
 		{
+			"name": "Offices",
+			"item": [
+				{
+					"name": "List Offices",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/offices",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"offices"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Locations",
 			"item": [
 				{
