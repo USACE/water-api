@@ -198,6 +198,59 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/location'
+  /offices:
+    get:
+      summary: ''
+      tags:
+        - Offices
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ''
+                minItems: 1
+                uniqueItems: true
+                x-examples:
+                  example-1:
+                    - id: 17fa25b8-44a0-4e6d-9679-bdf6b0ee6b1a
+                      name: Buffalo District
+                      symbol: LRB
+                      parent_id: 91cf44dc-6384-4622-bd9f-0f36e4343413
+                    - id: d8f8934d-e414-499d-bd51-bc93bbde6345
+                      name: Chicago District
+                      symbol: LRC
+                      parent_id: 91cf44dc-6384-4622-bd9f-0f36e4343413
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      minLength: 1
+                    name:
+                      type: string
+                      minLength: 1
+                    symbol:
+                      type: string
+                      minLength: 1
+                    parent_id:
+                      type: string
+                      minLength: 1
+                  required:
+                    - name
+                    - symbol
+                    - parent_id
+              examples:
+                example-1:
+                  value:
+                    - id: 17fa25b8-44a0-4e6d-9679-bdf6b0ee6b1a
+                      name: Buffalo District
+                      symbol: LRB
+                      parent_id: 91cf44dc-6384-4622-bd9f-0f36e4343413
+      operationId: get-offices
+      description: List Offices
   /projects:
     get:
       operationId: get-projects
