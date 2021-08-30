@@ -97,6 +97,11 @@ func main() {
 	// States
 	public.GET("/states", cs.ListStates)
 
+	// Watersheds
+	public.GET("/watersheds", cs.ListWatersheds)
+	public.GET("/watersheds/:watershed_id", cs.GetWatershed)
+	key.POST("/watersheds", cs.CreateWatershed)
+
 	// Maintenance/Automation
 	key.POST("/automation/assign_states_to_locations", cs.AssignStatesToLocations)
 
