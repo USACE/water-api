@@ -11,16 +11,18 @@ import (
 
 // Watershed is a watershed struct
 type Watershed struct {
-	ID           uuid.UUID `json:"id" db:"uid"`
-	OfficeSymbol string    `json:"office_symbol" db:"office_symbol"`
+	ID           uuid.UUID `json:"id" db:"id"`
+	OfficeSymbol *string   `json:"office_symbol" db:"office_symbol"`
+	OfficeID     uuid.UUID `json:"office_id" db:"office_id"`
 	Slug         string    `json:"slug"`
 	Name         string    `json:"name"`
 	Bbox         []float64 `json:"bbox" db:"bbox"`
 }
 
 // WatershedSQL includes common fields selected to build a watershed
-const WatershedSQL = `SELECT w.uid,
+const WatershedSQL = `SELECT w.id,
                              w.office_symbol,
+							 w.office_id,
                              w.slug,
                              w.name,
 	                         ARRAY[
@@ -43,7 +45,7 @@ func ListWatersheds(db *pgxpool.Pool) ([]Watershed, error) {
 func GetWatershed(db *pgxpool.Pool, watershedID *uuid.UUID) (*Watershed, error) {
 	var w Watershed
 	if err := pgxscan.Get(
-		context.Background(), db, &w, WatershedSQL+` FROM v_watershed w WHERE w.uid = $1`, watershedID,
+		context.Background(), db, &w, WatershedSQL+` FROM v_watershed w WHERE w.id = $1`, watershedID,
 	); err != nil {
 		return nil, err
 	}
@@ -59,17 +61,18 @@ func CreateWatershed(db *pgxpool.Pool, w *Watershed) (*Watershed, error) {
 	var wNew Watershed
 	if err := pgxscan.Get(
 		context.Background(), db, &wNew,
-		`INSERT INTO watershed (name, slug, office_id) VALUES ($1,$2, (SELECT id from office where symbol=$3)) RETURNING uid, name, slug`, &w.Name, slug, w.OfficeSymbol,
+		`INSERT INTO watershed (name, slug, office_id) VALUES ($1,$2, $3) RETURNING id, name, slug, office_id`, &w.Name, slug, &w.OfficeID,
 	); err != nil {
 		return nil, err
 	}
-	return &wNew, nil
+	return GetWatershed(db, &wNew.ID)
+	//return &wNew, nil
 }
 
 // UpdateWatershed updates a watershed
 func UpdateWatershed(db *pgxpool.Pool, w *Watershed) (*Watershed, error) {
 	var wID uuid.UUID
-	if err := pgxscan.Get(context.Background(), db, &wID, `UPDATE watershed SET name=$1, office_id=(SELECT id from office where symbol=$3) WHERE uid=$2 RETURNING uid`, &w.Name, &w.ID, w.OfficeSymbol); err != nil {
+	if err := pgxscan.Get(context.Background(), db, &wID, `UPDATE watershed SET name=$1, office_id=$3 WHERE id=$2 RETURNING id`, &w.Name, &w.ID, &w.OfficeID); err != nil {
 		return nil, err
 	}
 	return GetWatershed(db, &wID)
@@ -77,7 +80,7 @@ func UpdateWatershed(db *pgxpool.Pool, w *Watershed) (*Watershed, error) {
 
 // DeleteWatershed deletes a watershed by slug
 func DeleteWatershed(db *pgxpool.Pool, watershedID *uuid.UUID) error {
-	if _, err := db.Exec(context.Background(), `UPDATE watershed SET deleted=true WHERE uid=$1`, watershedID); err != nil {
+	if _, err := db.Exec(context.Background(), `UPDATE watershed SET deleted=true WHERE id=$1`, watershedID); err != nil {
 		return err
 	}
 	return nil
@@ -86,7 +89,7 @@ func DeleteWatershed(db *pgxpool.Pool, watershedID *uuid.UUID) error {
 func UndeleteWatershed(db *pgxpool.Pool, watershedID *uuid.UUID) (*Watershed, error) {
 	var wID uuid.UUID
 	if err := pgxscan.Get(
-		context.Background(), db, &wID, `UPDATE watershed SET deleted=false WHERE uid=$1 RETURNING uid`, watershedID,
+		context.Background(), db, &wID, `UPDATE watershed SET deleted=false WHERE id=$1 RETURNING id`, watershedID,
 	); err != nil {
 		return nil, err
 	}
