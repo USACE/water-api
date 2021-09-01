@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b487142b-52d6-4795-8258-b4a9b9173abe",
+		"_postman_id": "2af9965c-3d21-490f-9fd2-55f01bf7c086",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -770,6 +770,240 @@
 							"path": [
 								"usgs",
 								"site_parameters"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Watersheds",
+			"item": [
+				{
+					"name": "List Watersheds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// status code is 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/watersheds",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"watersheds"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Watershed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"let r = JSON.parse(responseBody);",
+									"pm.environment.set(\"new_create_watershed_id\", r.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Regression Test 1 - LRH Watershed\",\n    \"office_id\": \"2f160ba7-fd5f-4716-8ced-4a29f75065a6\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/watersheds",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"watersheds"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Watershed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// status code is 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"{{new_create_watershed_id}}\",\n    \"name\": \"Regression Test 1 - Changed to LRN\",\n    \"office_id\": \"552e59f7-c0cc-4689-8a4d-e791c028430a\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"watersheds",
+								"{{new_create_watershed_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Watershed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// status code is 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"watersheds",
+								"{{new_create_watershed_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Watershed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// status code is 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"watersheds",
+								"{{new_create_watershed_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Undelete Watershed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// status code is 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"{{new_create_watershed_id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed_id}}/undelete",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"watersheds",
+								"{{new_create_watershed_id}}",
+								"undelete"
 							]
 						}
 					},
