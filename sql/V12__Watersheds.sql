@@ -1,6 +1,6 @@
 -- watershed
 CREATE TABLE IF NOT EXISTS watershed (
-    uid UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     slug VARCHAR UNIQUE NOT NULL,
     name VARCHAR,
     geometry geometry NOT NULL DEFAULT ST_GeomFromText('POLYGON ((0 0, 0 0, 0 0, 0 0, 0 0))',5070),
@@ -20,7 +20,7 @@ TO water_writer;
 
 -- extent to polygon reference order - simple 4 point extents
 -- xmin,ymax (top left), xmax ymax (top right), xmax ymin (bottom right), xmin ymin (bottom left), xmin ymax (top left again)
-INSERT INTO watershed (uid,slug,"name",geometry,office_id) VALUES	 
+INSERT INTO watershed (id,slug,"name",geometry,office_id) VALUES	 
     ('0f065e6a-3380-4ac3-b576-89fae7774b9f','little-sandy-river','Little Sandy River',ST_GeomFromText('POLYGON ((1096000 1812000, 1158000 1812000, 1158000 1732000, 1096000 1732000, 1096000 1812000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),    
     ('1a629fac-82c9-4b3e-b7fc-6a891d944140','ohio-river','Ohio River',ST_GeomFromText('POLYGON ((1006000 1914000, 1206000 1914000, 1206000 1754000, 1006000 1754000, 1006000 1914000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),	
     ('3e322a11-b76b-4710-8f9a-b7884cd8ae77','big-sandy-river','Big Sandy River',ST_GeomFromText('POLYGON ((1114000 1796000, 1288000 1796000, 1288000 1624000, 1114000 1624000, 1114000 1796000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),	 
@@ -41,10 +41,11 @@ INSERT INTO watershed (uid,slug,"name",geometry,office_id) VALUES
 -- -----
 
 CREATE OR REPLACE VIEW v_watershed AS (
-    SELECT w.uid,
+    SELECT w.id,
            w.slug,
            w.name,
            w.geometry AS geometry,
+           w.office_id,
            f.symbol AS office_symbol
 	FROM   watershed w
     LEFT JOIN office f ON w.office_id = f.id
