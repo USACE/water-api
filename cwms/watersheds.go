@@ -70,7 +70,7 @@ func (s Store) UpdateWatershed(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusCreated, wUpdated)
+	return c.JSON(http.StatusOK, wUpdated)
 
 }
 
