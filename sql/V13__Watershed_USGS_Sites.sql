@@ -1,8 +1,9 @@
 -- watershed_usgs_sites
 CREATE TABLE IF NOT EXISTS watershed_usgs_sites (
-    watershed_id UUID REFERENCES watershed(id),
-    usgs_site_id UUID REFERENCES usgs_site(id),
-    usgs_parameter_id UUID REFERENCES usgs_parameter(id)
+    watershed_id UUID NOT NULL REFERENCES watershed(id),
+    usgs_site_id UUID NOT NULL REFERENCES usgs_site(id),
+    usgs_parameter_id UUID NOT NULL REFERENCES usgs_parameter(id),
+    CONSTRAINT watershed_unique_site_param UNIQUE(watershed_id, usgs_site_id, usgs_parameter_id)
 );
 
 -- Grant read
