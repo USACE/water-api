@@ -19,7 +19,7 @@ func (s Store) CreateSiteParameters(c echo.Context) error {
 	if err != nil {
 		if strings.Contains(string(err.Error()), "duplicate key value") {
 			// return 422
-			return c.String(http.StatusUnprocessableEntity, err.Error())
+			return c.JSON(http.StatusUnprocessableEntity, err)
 		}
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
