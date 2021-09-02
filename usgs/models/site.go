@@ -15,7 +15,7 @@ import (
 )
 
 type Site struct {
-	UID            uuid.UUID  `json:"-"`
+	UID            uuid.UUID  `json:"-" db:"id"`
 	ParameterCodes []string   `json:"parameter_codes" db:"parameter_codes"`
 	State          string     `json:"state"`
 	VerticalDatum  string     `json:"vertical_datum" db:"vertical_datum"`
@@ -46,7 +46,7 @@ type SiteFilter struct {
 
 func ListSitesQuery(sf *SiteFilter) (sq.SelectBuilder, error) {
 
-	q := sq.Select(`uid,
+	q := sq.Select(`id,
 					site_number,   
 					name,		            
 		            geometry,
@@ -97,7 +97,7 @@ func ListSitesForIDs(db *pgxpool.Pool, IDs []uuid.UUID) ([]Site, error) {
 		return make([]Site, 0), err
 	}
 	// Where ID In (...)
-	q = q.Where(sq.Eq{"uid": IDs})
+	q = q.Where(sq.Eq{"id": IDs})
 	sql, args, err := q.ToSql()
 	if err != nil {
 		return make([]Site, 0), err
@@ -121,19 +121,19 @@ func CreateSites(db *pgxpool.Pool, nn []Site) ([]Site, error) {
 			context.Background(),
 			`INSERT INTO usgs_site (site_number, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) 
 			VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-			RETURNING uid`,
+			RETURNING id`,
 			m.SiteInfo.SiteNumber, m.SiteInfo.Name, m.SiteInfo.Geometry.EWKT(8), m.SiteInfo.Elevation, m.SiteInfo.HorizontalDatumId, m.SiteInfo.VerticallDatumId, m.SiteInfo.Huc, m.SiteInfo.StateAbbrev,
 		)
 		if err != nil {
 			tx.Rollback(context.Background())
 			return make([]Site, 0), err
 		}
-		var uid uuid.UUID
-		if err := pgxscan.ScanOne(&uid, rows); err != nil {
+		var id uuid.UUID
+		if err := pgxscan.ScanOne(&id, rows); err != nil {
 			tx.Rollback(context.Background())
 			return make([]Site, 0), err
 		} else {
-			newIDs = append(newIDs, uid)
+			newIDs = append(newIDs, id)
 		}
 	}
 	tx.Commit(context.Background())
@@ -148,7 +148,7 @@ func GetSiteByID(db *pgxpool.Pool, siteID *uuid.UUID) (*Site, error) {
 		return nil, err
 	}
 	// Where UID In (...)
-	q = q.Where("uid = ?", siteID)
+	q = q.Where("id = ?", siteID)
 	sql, args, err := q.ToSql()
 	if err != nil {
 		return nil, err
@@ -172,19 +172,19 @@ func UpdateSites(db *pgxpool.Pool, nn []Site) ([]Site, error) {
 		rows, err := tx.Query(
 			context.Background(),
 			`UPDATE usgs_site SET name=$2, geometry=$3, elevation=$4, horizontal_datum_id=$5, vertical_datum_id=$6, huc=$7, state_abbrev=$8, update_date=CURRENT_TIMESTAMP WHERE site_number = $1
-			 RETURNING uid`,
+			 RETURNING id`,
 			s.SiteInfo.SiteNumber, s.SiteInfo.Name, s.SiteInfo.Geometry.EWKT(8), s.SiteInfo.Elevation, s.SiteInfo.HorizontalDatumId, s.SiteInfo.VerticallDatumId, s.SiteInfo.Huc, s.SiteInfo.StateAbbrev,
 		)
 		if err != nil {
 			tx.Rollback(context.Background())
 			return make([]Site, 0), err
 		}
-		var uid uuid.UUID
-		if err := pgxscan.ScanOne(&uid, rows); err != nil {
+		var id uuid.UUID
+		if err := pgxscan.ScanOne(&id, rows); err != nil {
 			tx.Rollback(context.Background())
 			return make([]Site, 0), err
 		} else {
-			newIDs = append(newIDs, uid)
+			newIDs = append(newIDs, id)
 		}
 	}
 	tx.Commit(context.Background())
