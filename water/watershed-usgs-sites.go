@@ -15,8 +15,7 @@ func (s Store) CreateWatershedSiteParameter(c echo.Context) error {
 	if err := c.Bind(&wsp); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
-	err := models.CreateWatershedSiteParameter(s.Connection, &wsp)
-	if err != nil {
+	if err := models.CreateWatershedSiteParameter(s.Connection, &wsp); err != nil {
 		if strings.Contains(string(err.Error()), "duplicate key value") {
 			// return 422
 			return c.JSON(http.StatusUnprocessableEntity, make(map[string]interface{}))
