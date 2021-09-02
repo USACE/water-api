@@ -8,6 +8,7 @@ import (
 	"github.com/USACE/water-api/cwms"
 	"github.com/USACE/water-api/middleware"
 	"github.com/USACE/water-api/usgs"
+	"github.com/USACE/water-api/water"
 
 	_ "github.com/jackc/pgx/v4"
 	"github.com/kelseyhightower/envconfig"
@@ -119,9 +120,18 @@ func main() {
 	//public.GET("/usgs/sites/state=:state_abbrev", gs.ListSites)
 	public.GET("/usgs/parameters", gs.ListParameters)
 	//public.GET("/usgs_sites/enabled_parameters", cs.ListParametersEnabled)
-
 	key.POST("/usgs/sync/sites", gs.SyncSites)
 	key.POST("/usgs/site_parameters", gs.CreateSiteParameters)
+
+	/////////////////////////////////////////////////////////////////////////////
+	// WATER
+	/////////////////////////////////////////////////////////////////////////////
+	// WATER Store
+	ws := water.Store{Connection: st.Connection}
+
+	// Associate USGS sites/parameters with Watershed
+	key.POST("/watersheds/:watershed_slug/site/:site_number/parameter/:parameter_code", ws.CreateWatershedSiteParameter)
+	key.DELETE("/watersheds/:watershed_slug/site/:site_number/parameter/:parameter_code", ws.DeleteWatershedSiteParameter)
 
 	// Start server
 	log.Fatal(http.ListenAndServe(":80", e))
