@@ -34,9 +34,9 @@ func DeleteWatershedSiteParameter(db *pgxpool.Pool, w *WatershedSiteParameter) e
 	if _, err := db.Exec(
 		context.Background(),
 		`DELETE FROM watershed_usgs_sites
-		WHERE watershed_id = (select id from watershed where slug = $1 limit 1)
-		AND usgs_site_id = (select id from usgs_site where site_number = $2 limit 1)
-		AND usgs_parameter_id = (select id from usgs_parameter where code = $3 limit 1)
+		WHERE watershed_id = (select id from watershed where slug = $1)
+		AND usgs_site_id = (select id from usgs_site where site_number = $2)
+		AND usgs_parameter_id = (select id from usgs_parameter where code = $3)
 		`, w.WatershedSlug, w.SiteNumber, w.ParameterCode,
 	); err != nil {
 		return err
