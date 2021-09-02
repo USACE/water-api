@@ -505,7 +505,7 @@
 			]
 		},
 		{
-			"name": "USGS Sites",
+			"name": "USGS Parameters",
 			"item": [
 				{
 					"name": "List Parameters",
@@ -538,7 +538,12 @@
 						}
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "USGS Sites",
+			"item": [
 				{
 					"name": "List Sites",
 					"event": [
@@ -812,7 +817,7 @@
 					"response": []
 				},
 				{
-					"name": "Create Watershed",
+					"name": "Create Watershed #1",
 					"event": [
 						{
 							"listen": "test",
@@ -823,7 +828,7 @@
 									"});",
 									"",
 									"let r = JSON.parse(responseBody);",
-									"pm.environment.set(\"new_create_watershed_id\", r.id);"
+									"pm.environment.set(\"new_create_watershed1_id\", r.id);"
 								],
 								"type": "text/javascript"
 							}
@@ -854,7 +859,50 @@
 					"response": []
 				},
 				{
-					"name": "Update Watershed",
+					"name": "Create Watershed #2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"let r = JSON.parse(responseBody);",
+									"pm.environment.set(\"new_create_watershed2_id\", r.id);",
+									"pm.environment.set(\"new_create_watershed2_slug\", r.slug);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Regression Test 2 - LRH Watershed\",\n    \"office_id\": \"2f160ba7-fd5f-4716-8ced-4a29f75065a6\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/watersheds",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"watersheds"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Watershed #1",
 					"event": [
 						{
 							"listen": "test",
@@ -874,7 +922,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"{{new_create_watershed_id}}\",\n    \"name\": \"Regression Test 1 - Changed to LRN\",\n    \"office_id\": \"552e59f7-c0cc-4689-8a4d-e791c028430a\"\n}",
+							"raw": "{\n    \"id\": \"{{new_create_watershed1_id}}\",\n    \"name\": \"Regression Test 1 - Changed to LRN\",\n    \"office_id\": \"552e59f7-c0cc-4689-8a4d-e791c028430a\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -882,20 +930,20 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/watersheds/{{new_create_watershed_id}}",
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed1_id}}",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"watersheds",
-								"{{new_create_watershed_id}}"
+								"{{new_create_watershed1_id}}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get Watershed",
+					"name": "Get Watershed #1",
 					"event": [
 						{
 							"listen": "test",
@@ -914,20 +962,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/watersheds/{{new_create_watershed_id}}",
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed1_id}}",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"watersheds",
-								"{{new_create_watershed_id}}"
+								"{{new_create_watershed1_id}}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete Watershed",
+					"name": "Delete Watershed #1",
 					"event": [
 						{
 							"listen": "test",
@@ -955,20 +1003,20 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/watersheds/{{new_create_watershed_id}}",
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed1_id}}",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"watersheds",
-								"{{new_create_watershed_id}}"
+								"{{new_create_watershed1_id}}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Undelete Watershed",
+					"name": "Undelete Watershed #1",
 					"event": [
 						{
 							"listen": "test",
@@ -988,7 +1036,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"{{new_create_watershed_id}}\"\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -996,14 +1044,63 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/watersheds/{{new_create_watershed_id}}/undelete",
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed1_id}}/undelete",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"watersheds",
-								"{{new_create_watershed_id}}",
+								"{{new_create_watershed1_id}}",
 								"undelete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Watershed-USGS Sites",
+			"item": [
+				{
+					"name": "CreateWatershedSiteParameter",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed2_slug}}/site/99999999/parameter/00065",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"watersheds",
+								"{{new_create_watershed2_slug}}",
+								"site",
+								"99999999",
+								"parameter",
+								"00065"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteWatershedSiteParameter",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed2_slug}}/site/99999999/parameter/00065",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"watersheds",
+								"{{new_create_watershed2_slug}}",
+								"site",
+								"99999999",
+								"parameter",
+								"00065"
 							]
 						}
 					},
