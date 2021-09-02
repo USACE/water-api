@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS watershed (
     id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     slug VARCHAR UNIQUE NOT NULL,
-    name VARCHAR,
+    name VARCHAR NOT NULL,
     geometry geometry NOT NULL DEFAULT ST_GeomFromText('POLYGON ((0 0, 0 0, 0 0, 0 0, 0 0))',5070),
     office_id UUID NOT NULL REFERENCES office(id),
 	deleted boolean NOT NULL DEFAULT false
