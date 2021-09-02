@@ -35,10 +35,7 @@ func (s Store) DeleteWatershedSiteParameter(c echo.Context) error {
 	}
 	err := models.DeleteWatershedSiteParameter(s.Connection, &wsp)
 	if err != nil {
-		// if strings.Contains(string(err.Error()), "duplicate key value") {
-		// 	// return 422
-		// 	return c.String(http.StatusUnprocessableEntity, err.Error())
-		// }
+
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
