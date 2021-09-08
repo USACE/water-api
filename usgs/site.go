@@ -39,6 +39,7 @@ func (s Store) SearchSites(c echo.Context) error {
 			messages.NewMessage("search string must be at one or more chacters long, provided in URL query parameter '?q='"),
 		)
 	}
+
 	// USGS Site Number being queried
 	if _, err := strconv.Atoi(*f.Q); err == nil {
 		// fmt.Printf("%q looks like a number.\n", *f.Q)
@@ -50,7 +51,6 @@ func (s Store) SearchSites(c echo.Context) error {
 		}
 
 	}
-
 	ss, err := models.SearchSites(s.Connection, &f)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
