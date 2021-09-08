@@ -123,6 +123,10 @@ func main() {
 	key.POST("/usgs/sync/sites", gs.SyncSites)
 	key.POST("/usgs/site_parameters", gs.CreateSiteParameters)
 
+	// USGS Time Series
+	key.POST("/usgs/sites/:site_number/measurements", gs.CreateOrUpdateMeasurements)
+	// public.GET("/usgs/sites/:site_number/measurements", gs.ListMeasurements)
+
 	/////////////////////////////////////////////////////////////////////////////
 	// WATER
 	/////////////////////////////////////////////////////////////////////////////
