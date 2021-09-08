@@ -115,9 +115,11 @@ func main() {
 	// USGS Store
 	gs := usgs.Store{Connection: st.Connection}
 
+	// Search
+	public.GET("/search/usgs_sites", gs.SearchSites)
+
 	// USGS Sites
-	public.GET("/usgs/sites", gs.ListSites)
-	//public.GET("/usgs/sites/state=:state_abbrev", gs.ListSites)
+	public.GET("/usgs/sites", gs.ListSites) // Will accept ?state=xx
 	public.GET("/usgs/parameters", gs.ListParameters)
 	//public.GET("/usgs_sites/enabled_parameters", cs.ListParametersEnabled)
 	key.POST("/usgs/sync/sites", gs.SyncSites)
