@@ -3,6 +3,7 @@ package usgs
 import (
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/USACE/water-api/messages"
 	"github.com/USACE/water-api/usgs/models"
@@ -37,6 +38,18 @@ func (s Store) SearchSites(c echo.Context) error {
 			http.StatusBadRequest,
 			messages.NewMessage("search string must be at one or more chacters long, provided in URL query parameter '?q='"),
 		)
+	}
+
+	// USGS Site Number being queried
+	if _, err := strconv.Atoi(*f.Q); err == nil {
+		// fmt.Printf("%q looks like a number.\n", *f.Q)
+		if len(*f.Q) < 3 {
+			return c.JSON(
+				http.StatusBadRequest,
+				messages.NewMessage("site number must be at least three chacters long, provided in URL query parameter '?q='"),
+			)
+		}
+
 	}
 	ss, err := models.SearchSites(s.Connection, &f)
 	if err != nil {
