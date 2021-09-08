@@ -42,6 +42,7 @@ type SiteInfo struct {
 
 type SiteFilter struct {
 	StateAbbrev *string `json:"state" query:"state"`
+	Q           *string `query:"q"`
 }
 
 func ListSitesQuery(sf *SiteFilter) (sq.SelectBuilder, error) {
@@ -67,15 +68,33 @@ func ListSitesQuery(sf *SiteFilter) (sq.SelectBuilder, error) {
 			q = q.Where("state_abbrev = ?", strings.ToUpper(*sf.StateAbbrev))
 		}
 	}
-	q = q.OrderBy("name")
 
 	// Unfiltered
 	return q.PlaceholderFormat(sq.Dollar), nil
 }
 
+func SearchSites(db *pgxpool.Pool, f *SiteFilter) ([]Site, error) {
+	q, err := ListSitesQuery(f)
+	if err != nil {
+		return make([]Site, 0), err
+	}
+	// Filter by Query String
+	q = q.Where("name ILIKE '%' || ? || '%' ORDER BY name LIMIT 10", f.Q)
+	sql, args, err := q.ToSql()
+	if err != nil {
+		return make([]Site, 0), err
+	}
+	ss := make([]Site, 0)
+	if err := pgxscan.Select(context.Background(), db, &ss, sql, args...); err != nil {
+		return make([]Site, 0), err
+	}
+	return ss, nil
+}
+
 func ListSites(db *pgxpool.Pool, sf *SiteFilter) ([]Site, error) {
 
 	q, err := ListSitesQuery(sf)
+	q = q.OrderBy("name")
 	if err != nil {
 		return make([]Site, 0), err
 	}

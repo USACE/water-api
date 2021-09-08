@@ -27,6 +27,24 @@ func (s Store) ListSites(c echo.Context) error {
 	return c.JSON(http.StatusOK, ss)
 }
 
+func (s Store) SearchSites(c echo.Context) error {
+	var f models.SiteFilter
+	if err := c.Bind(&f); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	if f.Q == nil || *f.Q == "" {
+		return c.JSON(
+			http.StatusBadRequest,
+			messages.NewMessage("search string must be at one or more chacters long, provided in URL query parameter '?q='"),
+		)
+	}
+	ss, err := models.SearchSites(s.Connection, &f)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
+	}
+	return c.JSON(http.StatusOK, ss)
+}
+
 func (s Store) CreateSites(c echo.Context) error {
 	var sc models.SiteCollection
 	if err := c.Bind(&sc); err != nil {
