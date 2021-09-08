@@ -79,7 +79,7 @@ func SearchSites(db *pgxpool.Pool, f *SiteFilter) ([]Site, error) {
 		return make([]Site, 0), err
 	}
 	// Filter by Query String
-	q = q.Where("name ILIKE '%' || ? || '%' ORDER BY name LIMIT 10", f.Q)
+	q = q.Where("name ILIKE '%' || ? || '%' OR site_number LIKE '%' || ? || '%' ORDER BY name LIMIT 10", f.Q, f.Q)
 	sql, args, err := q.ToSql()
 	if err != nil {
 		return make([]Site, 0), err
