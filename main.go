@@ -125,7 +125,7 @@ func main() {
 
 	// USGS Time Series
 	key.POST("/usgs/sites/:site_number/measurements", gs.CreateOrUpdateMeasurements)
-	// public.GET("/usgs/sites/:site_number/measurements", gs.ListMeasurements)
+	public.GET("/usgs/sites/:site_number/measurements", gs.ListUSGSMeasurements)
 
 	/////////////////////////////////////////////////////////////////////////////
 	// WATER

@@ -2,8 +2,10 @@ package models
 
 import (
 	"context"
+	"fmt"
 	"time"
 
+	"github.com/USACE/water-api/timeseries"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -27,14 +29,14 @@ type ParameterMeasurements struct {
 }
 
 // CreateOrUpdateTimeseriesMeasurements
-func CreateOrUpdateMeasurements(db *pgxpool.Pool, c ParameterMeasurementCollection) ([]Site, error) {
+func CreateOrUpdateMeasurements(db *pgxpool.Pool, c ParameterMeasurementCollection) (map[string]string, error) {
 	// Loop through the array of parameter measurements
 	tx, err := db.Begin(context.Background())
 	if err != nil {
-		return make([]Site, 0), err
+		return make(map[string]string), err
 	}
 	defer tx.Rollback(context.Background())
-	newIDs := make([]uuid.UUID, 0)
+	// newIDs := make([]uuid.UUID, 0)
 	s_number := c.SiteNumber
 	pm := c.Items
 	for idx := range pm {
@@ -64,18 +66,68 @@ func CreateOrUpdateMeasurements(db *pgxpool.Pool, c ParameterMeasurementCollecti
 			)
 			if err != nil {
 				tx.Rollback(context.Background())
-				return make([]Site, 0), err
+				return make(map[string]string), err
 			}
 			var id uuid.UUID
 			if err := pgxscan.ScanOne(&id, rows); err != nil {
 				tx.Rollback(context.Background())
-				return make([]Site, 0), err
-			} else {
-				newIDs = append(newIDs, id)
+				return make(map[string]string), err
+				// } else {
+				// 	newIDs = append(newIDs, id)
 			}
 		}
 	}
 	tx.Commit(context.Background())
 
-	return ListSitesForIDs(db, newIDs)
+	// return ListSitesForIDs(db, newIDs)
+	return make(map[string]string), nil
+}
+
+// ListMeasurements returns time and value for the USGS location
+// filtered by a time range.
+func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, site_parameter *string, tw *timeseries.TimeWindow) (ParameterMeasurementCollection, error) {
+	tx, err := db.Begin(context.Background())
+	var pc ParameterMeasurementCollection
+	var pm ParameterMeasurements
+	if err != nil {
+		fmt.Println("Error at 95")
+		return pc, err
+	}
+	defer tx.Rollback(context.Background())
+	rows, err := tx.Query(
+		context.Background(),
+		`WITH s_id AS (
+		SELECT id FROM usgs_site s WHERE s.site_number = $1
+		), p_id AS (
+			SELECT id FROM usgs_parameter p WHERE p.code = $2
+		), site_parameter_id AS (
+			SELECT id FROM usgs_site_parameters sp
+			WHERE parameter_id = (SELECT * FROM p_id) AND site_id = (SELECT * FROM s_id)
+		)
+		SELECT m.time, m.value
+		FROM usgs_measurements m
+		WHERE usgs_site_parameters_id = (SELECT * FROM site_parameter_id)
+		AND time >= $3 AND time <= $4`,
+		site_number,
+		site_parameter,
+		tw.After.Format(time.RFC3339),
+		tw.Before.Format(time.RFC3339),
+	)
+	if err != nil {
+		fmt.Println("Error ata 119")
+		tx.Rollback(context.Background())
+		return pc, err
+	}
+	// ms := make([]Measurement, 0)
+	var ms []Measurement
+	if err := pgxscan.ScanAll(&ms, rows); err != nil {
+		fmt.Println("Error at 126")
+		tx.Rollback(context.Background())
+		return pc, err
+	}
+	pm.ParameterCode = *site_parameter
+	pm.Measurements.Items = ms
+	pc.SiteNumber = *site_number
+	pc.Items = append(pc.Items, pm)
+	return pc, nil
 }
