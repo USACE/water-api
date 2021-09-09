@@ -28,6 +28,19 @@ func (s Store) ListSites(c echo.Context) error {
 	return c.JSON(http.StatusOK, ss)
 }
 
+func (s Store) GetSite(c echo.Context) error {
+	siteNumber := c.Param("site_number")
+	t, err := models.GetSite(s.Connection, &siteNumber)
+
+	if err != nil {
+		if pgxscan.NotFound(err) {
+			return c.JSON(http.StatusNotFound, messages.DefaultMessageNotFound)
+		}
+		return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
+	}
+	return c.JSON(http.StatusOK, t)
+}
+
 func (s Store) SearchSites(c echo.Context) error {
 	var f models.SiteFilter
 	if err := c.Bind(&f); err != nil {

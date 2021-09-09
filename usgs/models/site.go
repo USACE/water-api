@@ -128,6 +128,26 @@ func ListSitesForIDs(db *pgxpool.Pool, IDs []uuid.UUID) ([]Site, error) {
 	return ss, nil
 }
 
+func GetSite(db *pgxpool.Pool, siteNumber *string) (*Site, error) {
+	// Base Locations Query
+	q, err := ListSitesQuery(nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// Where site_number =
+	q = q.Where("site_number = ?", siteNumber)
+	sql, args, err := q.ToSql()
+	if err != nil {
+		return nil, err
+	}
+	var s Site
+	if err := pgxscan.Get(context.Background(), db, &s, sql, args...); err != nil {
+		return nil, err
+	}
+	return &s, nil
+}
+
 func CreateSites(db *pgxpool.Pool, nn []Site) ([]Site, error) {
 	tx, err := db.Begin(context.Background())
 	if err != nil {

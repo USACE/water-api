@@ -12,6 +12,19 @@ type WatershedSiteParameter struct {
 	ParameterCode string `param:"parameter_code"`
 }
 
+// func ListWatershedSiteParameters(db *pgxpool.Pool) ([]byte, error) {
+
+// 	rows, err := db.Query(context.Background(),
+// 		`SELECT distinct watershed_id, usgs_site_id, usgs_parameter_id
+// 						FROM watershed_usgs_sites`,
+// 	)
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	return json.Marshal(rows)
+// }
+
 func CreateWatershedSiteParameter(db *pgxpool.Pool, w *WatershedSiteParameter) error {
 
 	// var wsp WatershedSiteParameter
