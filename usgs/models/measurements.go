@@ -85,7 +85,7 @@ func CreateOrUpdateMeasurements(db *pgxpool.Pool, c ParameterMeasurementCollecti
 
 // ListMeasurements returns time and value for the USGS location
 // filtered by a time range.
-func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, site_parameter *string, tw *timeseries.TimeWindow) (ParameterMeasurementCollection, error) {
+func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []string, tw *timeseries.TimeWindow) (ParameterMeasurementCollection, error) {
 	tx, err := db.Begin(context.Background())
 	var pc ParameterMeasurementCollection
 	var pm ParameterMeasurements
@@ -94,40 +94,58 @@ func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, site_parameter 
 		return pc, err
 	}
 	defer tx.Rollback(context.Background())
-	rows, err := tx.Query(
-		context.Background(),
-		`WITH s_id AS (
-		SELECT id FROM usgs_site s WHERE s.site_number = $1
-		), p_id AS (
-			SELECT id FROM usgs_parameter p WHERE p.code = $2
-		), site_parameter_id AS (
-			SELECT id FROM usgs_site_parameters sp
-			WHERE parameter_id = (SELECT * FROM p_id) AND site_id = (SELECT * FROM s_id)
+	if len(parameters) == 0 {
+		rows, _ := tx.Query(
+			context.Background(),
+			`WITH s_id AS (
+				SELECT s.* FROM a2w_cwms.usgs_site AS s WHERE s.site_number = $1
+			), s_parameters AS (
+				SELECT sp.* FROM a2w_cwms.usgs_site_parameters AS sp
+				WHERE sp.site_id = (SELECT id FROM s_id)
+			)
+			SELECT p.code FROM a2w_cwms.usgs_parameter p, s_parameters s
+			WHERE p.id = s.parameter_id`,
+			site_number,
 		)
-		SELECT m.time, m.value
-		FROM usgs_measurements m
-		WHERE usgs_site_parameters_id = (SELECT * FROM site_parameter_id)
-		AND time >= $3 AND time <= $4`,
-		site_number,
-		site_parameter,
-		tw.After.Format(time.RFC3339),
-		tw.Before.Format(time.RFC3339),
-	)
-	if err != nil {
-		fmt.Println("Error ata 119")
-		tx.Rollback(context.Background())
-		return pc, err
+		pgxscan.ScanAll(&parameters, rows)
 	}
-	// ms := make([]Measurement, 0)
-	var ms []Measurement
-	if err := pgxscan.ScanAll(&ms, rows); err != nil {
-		fmt.Println("Error at 126")
-		tx.Rollback(context.Background())
-		return pc, err
+	for _, parameter := range parameters {
+		rows, err := tx.Query(
+			context.Background(),
+			`WITH s_id AS (
+			SELECT id FROM usgs_site s WHERE s.site_number = $1
+			), p_id AS (
+				SELECT id FROM usgs_parameter p WHERE p.code = $2
+			), site_parameter_id AS (
+				SELECT id FROM usgs_site_parameters sp
+				WHERE parameter_id = (SELECT * FROM p_id) AND site_id = (SELECT * FROM s_id)
+			)
+			SELECT m.time, m.value
+			FROM usgs_measurements m
+			WHERE usgs_site_parameters_id = (SELECT * FROM site_parameter_id)
+			AND time >= $3 AND time <= $4
+			ORDER BY time ASC`,
+			site_number,
+			parameter,
+			tw.After.Format(time.RFC3339),
+			tw.Before.Format(time.RFC3339),
+		)
+		if err != nil {
+			fmt.Println("Error ata 119")
+			tx.Rollback(context.Background())
+			return pc, err
+		}
+		// ms := make([]Measurement, 0)
+		var ms []Measurement
+		if err := pgxscan.ScanAll(&ms, rows); err != nil {
+			fmt.Println("Error at 126")
+			tx.Rollback(context.Background())
+			return pc, err
+		}
+		pm.ParameterCode = parameter
+		pm.Measurements.Items = ms
+		pc.SiteNumber = *site_number
+		pc.Items = append(pc.Items, pm)
 	}
-	pm.ParameterCode = *site_parameter
-	pm.Measurements.Items = ms
-	pc.SiteNumber = *site_number
-	pc.Items = append(pc.Items, pm)
 	return pc, nil
 }

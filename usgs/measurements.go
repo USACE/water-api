@@ -25,7 +25,8 @@ func (s Store) CreateOrUpdateMeasurements(c echo.Context) error {
 // ListMeasurements
 func (s Store) ListUSGSMeasurements(c echo.Context) error {
 	site_number := c.Param("site_number")
-	site_parameter := c.QueryParam("parameter")
+	parameters := c.QueryParams()["parameter"]
+
 	// Time Window
 	var tw timeseries.TimeWindow
 	a, b := c.QueryParam("after"), c.QueryParam("before")
@@ -47,7 +48,7 @@ func (s Store) ListUSGSMeasurements(c echo.Context) error {
 		}
 		tw.Before = tB
 	}
-	mc, err := models.ListUSGSMeasurements(s.Connection, &site_number, &site_parameter, &tw)
+	mc, err := models.ListUSGSMeasurements(s.Connection, &site_number, parameters, &tw)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
