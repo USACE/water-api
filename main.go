@@ -120,6 +120,7 @@ func main() {
 
 	// USGS Sites
 	public.GET("/usgs/sites", gs.ListSites) // Will accept ?state=xx
+	public.GET("/usgs/sites/:site_number", gs.GetSite)
 	public.GET("/usgs/parameters", gs.ListParameters)
 	//public.GET("/usgs_sites/enabled_parameters", cs.ListParametersEnabled)
 	key.POST("/usgs/sync/sites", gs.SyncSites)
@@ -134,6 +135,8 @@ func main() {
 	// Associate USGS sites/parameters with Watershed
 	key.POST("/watersheds/:watershed_slug/site/:site_number/parameter/:parameter_code", ws.CreateWatershedSiteParameter)
 	key.DELETE("/watersheds/:watershed_slug/site/:site_number/parameter/:parameter_code", ws.DeleteWatershedSiteParameter)
+
+	// public.GET("/watersheds/usgs_sites", ws.ListWatershedSiteParameters)
 
 	// Start server
 	log.Fatal(http.ListenAndServe(":80", e))
