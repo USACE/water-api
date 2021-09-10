@@ -19,7 +19,7 @@ func (s Store) CreateOrUpdateMeasurements(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusAccepted, ss)
+	return c.JSON(http.StatusCreated, ss)
 }
 
 // ListMeasurements
@@ -51,9 +51,9 @@ func (s Store) ListUSGSMeasurements(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	mc, err := models.ListUSGSMeasurements(s.Connection, &site_number, parameters, &tw)
+	mc, err := models.ListUSGSMeasurements2(s.Connection, &site_number, parameters, &tw)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	return c.JSON(http.StatusAccepted, mc)
+	return c.JSON(http.StatusOK, mc)
 }
