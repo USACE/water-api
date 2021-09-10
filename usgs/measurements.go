@@ -1,8 +1,9 @@
 package usgs
 
 import (
+	"fmt"
 	"net/http"
-	"time"
+	"strings"
 
 	"github.com/USACE/water-api/timeseries"
 	"github.com/USACE/water-api/usgs/models"
@@ -25,28 +26,33 @@ func (s Store) CreateOrUpdateMeasurements(c echo.Context) error {
 // ListMeasurements
 func (s Store) ListUSGSMeasurements(c echo.Context) error {
 	site_number := c.Param("site_number")
-	parameters := c.QueryParams()["parameter"]
+	parameters := make([]string, 0)
+	for _, element := range c.QueryParams()["parameter"] {
+		// Split and trim
+		s := strings.Split(element, ",")
+		for i, e := range s {
+			s[i] = strings.TrimSpace(e)
+		}
+		parameters = append(parameters, s...)
+	}
+	fmt.Printf("Original list -> %s", parameters)
+	// Remove duplicates
+	allKeys := make(map[string]bool)
+	filter_list := []string{}
+	for _, item := range parameters {
+		if _, value := allKeys[item]; !value {
+			allKeys[item] = true
+			filter_list = append(filter_list, item)
+		}
+	}
+	parameters = filter_list
+	fmt.Printf("New filtered list -> %s", parameters)
 
 	// Time Window
-	var tw timeseries.TimeWindow
 	a, b := c.QueryParam("after"), c.QueryParam("before")
-	// If after or before are not provided return last 7 days of data from current time
-	if a == "" || b == "" {
-		tw.Before = time.Now()
-		tw.After = tw.Before.AddDate(0, 0, -7)
-	} else {
-		// Attempt to parse query param "after"
-		tA, err := time.Parse(time.RFC3339, a)
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, err)
-		}
-		tw.After = tA
-		// Attempt to parse query param "before"
-		tB, err := time.Parse(time.RFC3339, b)
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, err)
-		}
-		tw.Before = tB
+	tw, err := timeseries.CreateTimeWindow(a, b)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
 	}
 	mc, err := models.ListUSGSMeasurements(s.Connection, &site_number, parameters, &tw)
 	if err != nil {
