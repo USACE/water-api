@@ -9,6 +9,14 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func (s Store) ListWatershedSiteParameters(c echo.Context) error {
+	wsp, err := models.ListWatershedSiteParameters(s.Connection)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSONBlob(http.StatusOK, wsp)
+}
+
 func (s Store) CreateWatershedSiteParameter(c echo.Context) error {
 
 	var wsp models.WatershedSiteParameter

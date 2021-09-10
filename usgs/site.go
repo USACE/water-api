@@ -3,6 +3,7 @@ package usgs
 import (
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/USACE/water-api/messages"
 	"github.com/USACE/water-api/usgs/models"
@@ -23,6 +24,49 @@ func (s Store) ListSites(c echo.Context) error {
 	ss, err := models.ListSites(s.Connection, &sf)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, ss)
+}
+
+func (s Store) GetSite(c echo.Context) error {
+	siteNumber := c.Param("site_number")
+	t, err := models.GetSite(s.Connection, &siteNumber)
+
+	if err != nil {
+		if pgxscan.NotFound(err) {
+			return c.JSON(http.StatusNotFound, messages.DefaultMessageNotFound)
+		}
+		return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
+	}
+	return c.JSON(http.StatusOK, t)
+}
+
+func (s Store) SearchSites(c echo.Context) error {
+	var f models.SiteFilter
+	if err := c.Bind(&f); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	if f.Q == nil || *f.Q == "" {
+		return c.JSON(
+			http.StatusBadRequest,
+			messages.NewMessage("search string must be at one or more chacters long, provided in URL query parameter '?q='"),
+		)
+	}
+
+	// USGS Site Number being queried
+	if _, err := strconv.Atoi(*f.Q); err == nil {
+		// fmt.Printf("%q looks like a number.\n", *f.Q)
+		if len(*f.Q) < 3 {
+			return c.JSON(
+				http.StatusBadRequest,
+				messages.NewMessage("site number must be at least three chacters long, provided in URL query parameter '?q='"),
+			)
+		}
+
+	}
+	ss, err := models.SearchSites(s.Connection, &f)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
 	}
 	return c.JSON(http.StatusOK, ss)
 }
