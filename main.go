@@ -135,8 +135,8 @@ func main() {
 	// Associate USGS sites/parameters with Watershed
 	key.POST("/watersheds/:watershed_slug/site/:site_number/parameter/:parameter_code", ws.CreateWatershedSiteParameter)
 	key.DELETE("/watersheds/:watershed_slug/site/:site_number/parameter/:parameter_code", ws.DeleteWatershedSiteParameter)
-
-	// public.GET("/watersheds/usgs_sites", ws.ListWatershedSiteParameters)
+	// Watershed USGS Site Params enabled for data retrieval.  Primarily used by Airflow.
+	public.GET("/watersheds/usgs_sites", ws.ListWatershedSiteParameters)
 
 	// Start server
 	log.Fatal(http.ListenAndServe(":80", e))
