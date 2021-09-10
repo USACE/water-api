@@ -1,7 +1,6 @@
 package usgs
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -35,7 +34,6 @@ func (s Store) ListUSGSMeasurements(c echo.Context) error {
 		}
 		parameters = append(parameters, s...)
 	}
-	fmt.Printf("Original list -> %s", parameters)
 	// Remove duplicates
 	allKeys := make(map[string]bool)
 	filter_list := []string{}
@@ -46,7 +44,6 @@ func (s Store) ListUSGSMeasurements(c echo.Context) error {
 		}
 	}
 	parameters = filter_list
-	fmt.Printf("New filtered list -> %s", parameters)
 
 	// Time Window
 	a, b := c.QueryParam("after"), c.QueryParam("before")

@@ -42,6 +42,7 @@ type SiteInfo struct {
 
 type SiteFilter struct {
 	StateAbbrev *string `json:"state" query:"state"`
+	Q           *string `query:"q"`
 }
 
 func ListSitesQuery(sf *SiteFilter) (sq.SelectBuilder, error) {
@@ -67,15 +68,33 @@ func ListSitesQuery(sf *SiteFilter) (sq.SelectBuilder, error) {
 			q = q.Where("state_abbrev = ?", strings.ToUpper(*sf.StateAbbrev))
 		}
 	}
-	q = q.OrderBy("name")
 
 	// Unfiltered
 	return q.PlaceholderFormat(sq.Dollar), nil
 }
 
+func SearchSites(db *pgxpool.Pool, f *SiteFilter) ([]Site, error) {
+	q, err := ListSitesQuery(f)
+	if err != nil {
+		return make([]Site, 0), err
+	}
+	// Filter by Query String
+	q = q.Where("name ILIKE '%' || ? || '%' OR site_number LIKE '%' || ? || '%' ORDER BY name LIMIT 10", f.Q, f.Q)
+	sql, args, err := q.ToSql()
+	if err != nil {
+		return make([]Site, 0), err
+	}
+	ss := make([]Site, 0)
+	if err := pgxscan.Select(context.Background(), db, &ss, sql, args...); err != nil {
+		return make([]Site, 0), err
+	}
+	return ss, nil
+}
+
 func ListSites(db *pgxpool.Pool, sf *SiteFilter) ([]Site, error) {
 
 	q, err := ListSitesQuery(sf)
+	q = q.OrderBy("name")
 	if err != nil {
 		return make([]Site, 0), err
 	}
@@ -107,6 +126,26 @@ func ListSitesForIDs(db *pgxpool.Pool, IDs []uuid.UUID) ([]Site, error) {
 		return make([]Site, 0), err
 	}
 	return ss, nil
+}
+
+func GetSite(db *pgxpool.Pool, siteNumber *string) (*Site, error) {
+	// Base Locations Query
+	q, err := ListSitesQuery(nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// Where site_number =
+	q = q.Where("site_number = ?", siteNumber)
+	sql, args, err := q.ToSql()
+	if err != nil {
+		return nil, err
+	}
+	var s Site
+	if err := pgxscan.Get(context.Background(), db, &s, sql, args...); err != nil {
+		return nil, err
+	}
+	return &s, nil
 }
 
 func CreateSites(db *pgxpool.Pool, nn []Site) ([]Site, error) {

@@ -2,7 +2,6 @@ package models
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/USACE/water-api/timeseries"
@@ -90,7 +89,6 @@ func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []st
 	var pc ParameterMeasurementCollection
 	var pm ParameterMeasurements
 	if err != nil {
-		fmt.Println("Error at 95")
 		return pc, err
 	}
 	defer tx.Rollback(context.Background())
@@ -131,14 +129,12 @@ func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []st
 			tw.Before.Format(time.RFC3339),
 		)
 		if err != nil {
-			fmt.Println("Error ata 119")
 			tx.Rollback(context.Background())
 			return pc, err
 		}
 		// ms := make([]Measurement, 0)
 		var ms []Measurement
 		if err := pgxscan.ScanAll(&ms, rows); err != nil {
-			fmt.Println("Error at 126")
 			tx.Rollback(context.Background())
 			return pc, err
 		}
