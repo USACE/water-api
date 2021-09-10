@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2af9965c-3d21-490f-9fd2-55f01bf7c086",
+		"_postman_id": "311a3e2a-fee4-4e4f-8480-383cc65f8d62",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -699,6 +699,82 @@
 					"response": []
 				},
 				{
+					"name": "Search Sites by Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/search/usgs_sites?q=regression",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"search",
+								"usgs_sites"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "regression"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Sites by Number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/search/usgs_sites?q=99999999",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"search",
+								"usgs_sites"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "99999999"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Site Parameters",
 					"event": [
 						{
@@ -1101,6 +1177,38 @@
 								"99999999",
 								"parameter",
 								"00065"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListWatershedSiteParameters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// status code is 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/watersheds/usgs_sites",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"watersheds",
+								"usgs_sites"
 							]
 						}
 					},
