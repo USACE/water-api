@@ -1215,6 +1215,96 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "USGS Time Series",
+			"item": [
+				{
+					"name": "List Measurements",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/usgs/sites/03203600/measurements?after=2020-06-01T01:00:00Z&before=2020-06-01T04:00:00Z&parameter=00060",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usgs",
+								"sites",
+								"03203600",
+								"measurements"
+							],
+							"query": [
+								{
+									"key": "after",
+									"value": "2020-06-01T01:00:00Z"
+								},
+								{
+									"key": "before",
+									"value": "2020-06-01T04:00:00Z"
+								},
+								{
+									"key": "parameter",
+									"value": "00060"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Timeseries Measurements",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"code\": \"00065\",\n        \"measurements\": [\n                {\"time\": \"2020-06-01T00:00:00Z\", \"value\": 10.00},\n                {\"time\": \"2020-06-01T01:00:00Z\", \"value\": 11.10},\n                {\"time\": \"2020-06-01T02:00:00Z\", \"value\": 10.20},\n                {\"time\": \"2020-06-01T03:00:00Z\", \"value\": 10.30},\n                {\"time\": \"2020-06-01T04:00:00Z\", \"value\": 10.40},\n                {\"time\": \"2020-06-01T05:00:00Z\", \"value\": 10.40}\n        ]\n    },\n    {\n        \"code\": \"00060\",\n        \"measurements\": [\n                {\"time\": \"2020-06-01T00:00:00Z\", \"value\": 10000},\n                {\"time\": \"2020-06-01T01:00:00Z\", \"value\": 11010},\n                {\"time\": \"2020-06-01T02:00:00Z\", \"value\": 10020},\n                {\"time\": \"2020-06-01T03:00:00Z\", \"value\": 10030},\n                {\"time\": \"2020-06-01T04:00:00Z\", \"value\": 10040},\n                {\"time\": \"2020-06-01T05:00:00Z\", \"value\": 10040}\n        ]\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/usgs/sites/03203600/measurements",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usgs",
+								"sites",
+								"03203600",
+								"measurements"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
