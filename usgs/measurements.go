@@ -10,16 +10,16 @@ import (
 )
 
 // CreateOrUpdateTimeseriesMeasurements
-func (s Store) CreateOrUpdateMeasurements(c echo.Context) error {
+func (s Store) CreateOrUpdateUSGSMeasurements(c echo.Context) error {
 	var pm models.ParameterMeasurementCollection
 	if err := c.Bind(&pm); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	ss, err := models.CreateOrUpdateMeasurements(s.Connection, pm)
+	ss, err := models.CreateOrUpdateUSGSMeasurements(s.Connection, pm)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusAccepted, ss)
+	return c.JSON(http.StatusCreated, ss)
 }
 
 // ListMeasurements
@@ -55,5 +55,5 @@ func (s Store) ListUSGSMeasurements(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	return c.JSON(http.StatusAccepted, mc)
+	return c.JSON(http.StatusOK, mc)
 }

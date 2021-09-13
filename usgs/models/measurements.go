@@ -28,7 +28,7 @@ type ParameterMeasurements struct {
 }
 
 // CreateOrUpdateTimeseriesMeasurements
-func CreateOrUpdateMeasurements(db *pgxpool.Pool, c ParameterMeasurementCollection) (map[string]string, error) {
+func CreateOrUpdateUSGSMeasurements(db *pgxpool.Pool, c ParameterMeasurementCollection) (map[string]string, error) {
 	// Loop through the array of parameter measurements
 	tx, err := db.Begin(context.Background())
 	if err != nil {
@@ -84,10 +84,10 @@ func CreateOrUpdateMeasurements(db *pgxpool.Pool, c ParameterMeasurementCollecti
 
 // ListMeasurements returns time and value for the USGS location
 // filtered by a time range.
-func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []string, tw *timeseries.TimeWindow) (ParameterMeasurementCollection, error) {
+func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []string, tw *timeseries.TimeWindow) (map[string][]map[string][]map[string]float64, error) {
+	pn := make([]map[string][]map[string]float64, 0)
+	pc := make(map[string][]map[string][]map[string]float64)
 	tx, err := db.Begin(context.Background())
-	var pc ParameterMeasurementCollection
-	var pm ParameterMeasurements
 	if err != nil {
 		return pc, err
 	}
@@ -108,6 +108,7 @@ func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []st
 		pgxscan.ScanAll(&parameters, rows)
 	}
 	for _, parameter := range parameters {
+		tv := make([]map[string]float64, 0)
 		rows, err := tx.Query(
 			context.Background(),
 			`WITH s_id AS (
@@ -138,10 +139,11 @@ func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []st
 			tx.Rollback(context.Background())
 			return pc, err
 		}
-		pm.ParameterCode = parameter
-		pm.Measurements.Items = ms
-		pc.SiteNumber = *site_number
-		pc.Items = append(pc.Items, pm)
+		for _, m := range ms {
+			tv = append(tv, map[string]float64{m.Time.String(): m.Value})
+		}
+		pn = append(pn, map[string][]map[string]float64{parameter: tv})
 	}
+	pc = map[string][]map[string][]map[string]float64{*site_number: pn}
 	return pc, nil
 }

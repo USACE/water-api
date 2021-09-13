@@ -127,7 +127,7 @@ func main() {
 	key.POST("/usgs/site_parameters", gs.CreateSiteParameters)
 
 	// USGS Time Series
-	key.POST("/usgs/sites/:site_number/measurements", gs.CreateOrUpdateMeasurements)
+	key.POST("/usgs/sites/:site_number/measurements", gs.CreateOrUpdateUSGSMeasurements)
 	public.GET("/usgs/sites/:site_number/measurements", gs.ListUSGSMeasurements)
 
 	/////////////////////////////////////////////////////////////////////////////
