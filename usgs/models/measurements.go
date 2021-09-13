@@ -28,7 +28,7 @@ type ParameterMeasurements struct {
 }
 
 // CreateOrUpdateTimeseriesMeasurements
-func CreateOrUpdateMeasurements(db *pgxpool.Pool, c ParameterMeasurementCollection) (map[string]string, error) {
+func CreateOrUpdateUSGSMeasurements(db *pgxpool.Pool, c ParameterMeasurementCollection) (map[string]string, error) {
 	// Loop through the array of parameter measurements
 	tx, err := db.Begin(context.Background())
 	if err != nil {
@@ -84,76 +84,10 @@ func CreateOrUpdateMeasurements(db *pgxpool.Pool, c ParameterMeasurementCollecti
 
 // ListMeasurements returns time and value for the USGS location
 // filtered by a time range.
-func ListUSGSMeasurements1(db *pgxpool.Pool, site_number *string, parameters []string, tw *timeseries.TimeWindow) (ParameterMeasurementCollection, error) {
-	tx, err := db.Begin(context.Background())
-	var pc ParameterMeasurementCollection
-	var pm ParameterMeasurements
-	if err != nil {
-		return pc, err
-	}
-	defer tx.Rollback(context.Background())
-	if len(parameters) == 0 {
-		rows, _ := tx.Query(
-			context.Background(),
-			`WITH s_id AS (
-				SELECT s.* FROM a2w_cwms.usgs_site AS s WHERE s.site_number = $1
-			), s_parameters AS (
-				SELECT sp.* FROM a2w_cwms.usgs_site_parameters AS sp
-				WHERE sp.site_id = (SELECT id FROM s_id)
-			)
-			SELECT p.code FROM a2w_cwms.usgs_parameter p, s_parameters s
-			WHERE p.id = s.parameter_id`,
-			site_number,
-		)
-		pgxscan.ScanAll(&parameters, rows)
-	}
-	for _, parameter := range parameters {
-		rows, err := tx.Query(
-			context.Background(),
-			`WITH s_id AS (
-			SELECT id FROM usgs_site s WHERE s.site_number = $1
-			), p_id AS (
-				SELECT id FROM usgs_parameter p WHERE p.code = $2
-			), site_parameter_id AS (
-				SELECT id FROM usgs_site_parameters sp
-				WHERE parameter_id = (SELECT * FROM p_id) AND site_id = (SELECT * FROM s_id)
-			)
-			SELECT m.time, m.value
-			FROM usgs_measurements m
-			WHERE usgs_site_parameters_id = (SELECT * FROM site_parameter_id)
-			AND time >= $3 AND time <= $4
-			ORDER BY time ASC`,
-			site_number,
-			parameter,
-			tw.After.Format(time.RFC3339),
-			tw.Before.Format(time.RFC3339),
-		)
-		if err != nil {
-			tx.Rollback(context.Background())
-			return pc, err
-		}
-		// ms := make([]Measurement, 0)
-		var ms []Measurement
-		if err := pgxscan.ScanAll(&ms, rows); err != nil {
-			tx.Rollback(context.Background())
-			return pc, err
-		}
-		pm.ParameterCode = parameter
-		pm.Measurements.Items = ms
-		pc.SiteNumber = *site_number
-		pc.Items = append(pc.Items, pm)
-	}
-	return pc, nil
-}
-
-// ListMeasurements returns time and value for the USGS location
-// filtered by a time range.
-func ListUSGSMeasurements2(db *pgxpool.Pool, site_number *string, parameters []string, tw *timeseries.TimeWindow) (map[string][]map[string][]map[string]float64, error) {
+func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []string, tw *timeseries.TimeWindow) (map[string][]map[string][]map[string]float64, error) {
 	pn := make([]map[string][]map[string]float64, 0)
 	pc := make(map[string][]map[string][]map[string]float64)
 	tx, err := db.Begin(context.Background())
-	// var pc ParameterMeasurementCollection
-	// var pm ParameterMeasurements
 	if err != nil {
 		return pc, err
 	}
@@ -209,11 +143,6 @@ func ListUSGSMeasurements2(db *pgxpool.Pool, site_number *string, parameters []s
 			tv = append(tv, map[string]float64{m.Time.String(): m.Value})
 		}
 		pn = append(pn, map[string][]map[string]float64{parameter: tv})
-		// Re-map Measurements to map[string]float64
-		// pm.ParameterCode = parameter
-		// pm.Measurements.Items = ms
-		// pc.SiteNumber = *site_number
-		// pc.Items = append(pc.Items, pm)
 	}
 	pc = map[string][]map[string][]map[string]float64{*site_number: pn}
 	return pc, nil
