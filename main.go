@@ -7,6 +7,7 @@ import (
 	"github.com/USACE/water-api/app"
 	"github.com/USACE/water-api/cwms"
 	"github.com/USACE/water-api/middleware"
+	"github.com/USACE/water-api/nws"
 	"github.com/USACE/water-api/usgs"
 	"github.com/USACE/water-api/water"
 
@@ -129,6 +130,16 @@ func main() {
 	// USGS Time Series
 	key.POST("/usgs/sites/:site_number/measurements", gs.CreateOrUpdateUSGSMeasurements)
 	public.GET("/usgs/sites/:site_number/measurements", gs.ListUSGSMeasurements)
+
+	/////////////////////////////////////////////////////////////////////////////
+	// NWS
+	/////////////////////////////////////////////////////////////////////////////
+	// NWS Store
+	ns := nws.Store{Connection: st.Connection}
+	public.GET("/nws/stages", ns.ListNwsStages)
+	public.GET("/nws/stages/:nwsid", ns.GetNwsStages)
+	key.POST("/nws/stages", ns.CreateNwsStage)
+	key.PUT("/nws/stages/:nwsid", ns.UpdateNwsStages)
 
 	/////////////////////////////////////////////////////////////////////////////
 	// WATER

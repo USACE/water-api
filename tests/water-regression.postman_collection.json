@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "311a3e2a-fee4-4e4f-8480-383cc65f8d62",
+		"_postman_id": "a0e8dbb3-318f-44b4-8f21-1fa91b19805c",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -1299,6 +1299,126 @@
 								"sites",
 								"03203600",
 								"measurements"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "NWS Stages",
+			"item": [
+				{
+					"name": "List Stages",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// status code is 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nws/stages",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nws",
+								"stages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create NWS Stages",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// status code is 201",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nwsid\": \"rgtst\",\n    \"usgs_site_number\": \"99999999\",\n    \"name\": \"Regression Test\",\n    \"action_stage\":5,\n    \"flood_stage\":10,\n    \"moderate_flood_stage\":15,\n    \"major_flood_stage\":20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/nws/stages",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nws",
+								"stages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update NWS Stages",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// status code is 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nwsid\": \"rgtst\",\n    \"name\": \"Regression Test Updated\",\n    \"action_stage\":6,\n    \"flood_stage\":11,\n    \"moderate_flood_stage\":16,\n    \"major_flood_stage\":21\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/nws/stages/rgtst",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nws",
+								"stages",
+								"rgtst"
 							]
 						}
 					},

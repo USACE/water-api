@@ -58,6 +58,7 @@ func ListSitesQuery(sf *SiteFilter) (sq.SelectBuilder, error) {
 					huc,
 					state_abbrev,
 					parameter_codes,
+					nws_stages,
 					state,
 					create_date,
 					update_date`).From("v_usgs_site")
