@@ -17,8 +17,8 @@ CREATE OR REPLACE VIEW v_usgs_site AS (
     s.state_abbrev,
     st.name as state,
     COALESCE(code_agg.parameter_codes, '{}') as parameter_codes,
-    json_build_object('action_stage', ns.action_stage, 'flood_stage', ns.flood_stage, 
-    	'moderate_flood_stage', ns.moderate_flood_stage, 'major_flood_stage', ns.major_flood_stage) AS nws_stages,
+    json_build_object('action', ns.action, 'flood', ns.flood, 
+    	'moderate_flood', ns.moderate_flood, 'major_flood', ns.major_flood) AS nws_stages,
     s.create_date,
     s.update_date
     FROM usgs_site s
