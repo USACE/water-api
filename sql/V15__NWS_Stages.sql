@@ -5,10 +5,10 @@ CREATE TABLE IF NOT EXISTS nws_stages (
     nwsid VARCHAR UNIQUE NOT NULL,
     usgs_site_number VARCHAR UNIQUE NOT NULL REFERENCES usgs_site(site_number),
     name VARCHAR,
-    action_stage DOUBLE PRECISION,
-    flood_stage DOUBLE PRECISION,
-    moderate_flood_stage DOUBLE PRECISION,
-    major_flood_stage DOUBLE PRECISION,
+    action DOUBLE PRECISION,
+    flood DOUBLE PRECISION,
+    moderate_flood DOUBLE PRECISION,
+    major_flood DOUBLE PRECISION,
     create_date TIMESTAMPTZ NOT NULL DEFAULT now(),
     update_date TIMESTAMPTZ
 );
@@ -26,7 +26,7 @@ TO water_writer;
 -- Seed data
 
 -- WV
-INSERT INTO nws_stages (nwsid, usgs_site_number, name, action_stage, flood_stage, moderate_flood_stage,major_flood_stage) VALUES
+INSERT INTO nws_stages (nwsid, usgs_site_number, name, action, flood, moderate_flood,major_flood) VALUES
 ('abrw2', '03070260', 'Albright at Cheat River', 24, 27, 30, 32),
 ('adow2', '03051100', 'Adolph at Middle Fork Tygart Valley River', 9, 10, 11, 14),
 ('adrw2', '03052000', 'Audra at Middle Fork Tygart Valley River', 8, 10, 11, 15),
@@ -127,7 +127,7 @@ INSERT INTO nws_stages (nwsid, usgs_site_number, name, action_stage, flood_stage
 ('wtnw2', '03058020', 'Weston at West Fork River', 15, 17, 23, 25);
 
 -- TN
-INSERT INTO nws_stages (nwsid, usgs_site_number, name, action_stage, flood_stage, moderate_flood_stage,major_flood_stage) VALUES
+INSERT INTO nws_stages (nwsid, usgs_site_number, name, action, flood, moderate_flood,major_flood) VALUES
 ('acit1', '03431790', 'Ashland City at Cumberland River', 24, 28, 32, 36),
 ('acst1', '03431800', 'Ashland City near Sycamore Creek', 10, 14, 17, 20),
 ('arlt1', '07030240', 'Arlington at Loosahatchie River', 19, 20, 22, 24),
@@ -194,7 +194,7 @@ INSERT INTO nws_stages (nwsid, usgs_site_number, name, action_stage, flood_stage
 ('wrtt1', '03597590', 'Wartrace at Wartrace Creek', 9, 14, 17, 20);
 
 -- MN
-INSERT INTO nws_stages (nwsid, usgs_site_number, name, action_stage, flood_stage, moderate_flood_stage,major_flood_stage) VALUES
+INSERT INTO nws_stages (nwsid, usgs_site_number, name, action, flood, moderate_flood,major_flood) VALUES
 ('akam5', '05283500', 'Hwy 169 at Champlin at Mississippi River', 9, 12, 14, 17),
 ('atkm5', '05227500', 'Aitkin near Mississippi River', 12, 13, 15, 18),
 ('clxm5', '05069000', 'Climax at Sandhill River', 15, 20, 25, 30),
