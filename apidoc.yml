@@ -7,12 +7,12 @@ info:
     url: 'https://github.com/USACE/water'
   version: '0.1'
 servers:
+  - url: 'http://localhost'
+    description: Local API Testing
   - url: 'https://water-api.rsgis.dev'
     description: Stable API
   - url: 'https://water-cumulus-api.rsgis.dev'
     description: Development API
-  - url: 'http://localhost'
-    description: Local API Testing
 components:
   schemas:
     location:
@@ -526,6 +526,7 @@ paths:
                   - state_abbrev
       tags:
         - USGS Sites
+      x-internal: true
   /usgs/site_parameters:
     post:
       summary: ''
@@ -572,3 +573,284 @@ paths:
           in: query
           name: key
           required: true
+      x-internal: true
+  /nws/stages:
+    post:
+      summary: ''
+      operationId: post-nws-stages
+      responses:
+        '201':
+          description: Created
+      description: Used by Airflow to add new NWS Location/Site stages.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                nwsid:
+                  type: string
+                  minLength: 1
+                usgs_site_number:
+                  type: string
+                  minLength: 1
+                name:
+                  type: string
+                  minLength: 1
+                action:
+                  type: number
+                flood:
+                  type: number
+                moderate_flood:
+                  type: number
+                major_flood:
+                  type: number
+              required:
+                - nwsid
+                - usgs_site_number
+                - name
+                - action
+                - flood
+                - moderate_flood
+                - major_flood
+              x-examples:
+                example-1:
+                  nwsid: rgtst
+                  usgs_site_number: '99999999'
+                  name: Regression Test
+                  action: 5
+                  flood: 10
+                  moderate_flood: 15
+                  major_flood: 20
+            examples:
+              example-1:
+                value:
+                  nwsid: string
+                  usgs_site_number: string
+                  name: string
+                  action: 0
+                  flood: 0
+                  moderate_flood: 0
+                  major_flood: 0
+      tags:
+        - NWS Stages
+      parameters:
+        - schema:
+            type: string
+            default: appkey
+          in: query
+          name: key
+          required: true
+      x-internal: true
+    get:
+      summary: ''
+      operationId: get-nws-stages
+      responses:
+        '200':
+          description: OK
+      description: Flood Stages for NWS Sites/Locations.  Mainly used for automated syncing.
+      tags:
+        - NWS Stages
+      x-internal: true
+  '/nws/stages/{nwsid}':
+    get:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  nwsid:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                    minLength: 1
+                  action:
+                    type: number
+                  flood:
+                    type: number
+                  moderate_flood:
+                    type: number
+                  major_flood:
+                    type: number
+                required:
+                  - nwsid
+                  - name
+                  - action
+                  - flood
+                  - moderate_flood
+                  - major_flood
+                x-examples:
+                  example-1:
+                    nwsid: rgtst
+                    name: Regression Test Updated
+                    action: 6
+                    flood: 11
+                    moderate_flood: 16
+                    major_flood: 21
+              examples:
+                example-1:
+                  value:
+                    nwsid: string
+                    name: string
+                    action: 0
+                    flood: 0
+                    moderate_flood: 0
+                    major_flood: 0
+      operationId: get-nws-stages-for-site
+      description: Flood Stages for NWS Sites/Locations.  Mainly used for automated syncing.
+      tags:
+        - NWS Stages
+      x-internal: true
+    put:
+      summary: ''
+      operationId: put-nws-stages
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                nwsid:
+                  type: string
+                  minLength: 1
+                name:
+                  type: string
+                  minLength: 1
+                action:
+                  type: number
+                flood:
+                  type: number
+                moderate_flood:
+                  type: number
+                major_flood:
+                  type: number
+              required:
+                - nwsid
+                - name
+                - action
+                - flood
+                - moderate_flood
+                - major_flood
+              x-examples:
+                example-1:
+                  nwsid: rgtst
+                  name: Regression Test Updated
+                  action: 6
+                  flood: 11
+                  moderate_flood: 16
+                  major_flood: 21
+      description: Used by Airflow to update NWS Location/Site stages.
+      tags:
+        - NWS Stages
+      parameters:
+        - schema:
+            type: string
+            default: appkey
+          in: query
+          name: key
+          required: true
+      x-internal: true
+    parameters:
+      - schema:
+          type: string
+          default: adow2
+          minLength: 5
+        name: nwsid
+        in: path
+        description: NWSHB5
+        required: true
+  /watersheds:
+    get:
+      summary: ''
+      tags:
+        - Watersheds
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ''
+                minItems: 1
+                uniqueItems: true
+                x-examples:
+                  example-1:
+                    - id: 3e322a11-b76b-4710-8f9a-b7884cd8ae77
+                      office_symbol: LRH
+                      office_id: 2f160ba7-fd5f-4716-8ced-4a29f75065a6
+                      slug: big-sandy-river
+                      name: Big Sandy River
+                      bbox:
+                        - 1114000
+                        - 1624000
+                        - 1288000
+                        - 1796000
+                    - id: 50372dbc-f254-4584-8345-1c3613d2a102
+                      office_symbol: LRH
+                      office_id: 2f160ba7-fd5f-4716-8ced-4a29f75065a6
+                      slug: guyandotte-river
+                      name: Guyandotte River
+                      bbox:
+                        - 1166000
+                        - 1692000
+                        - 1298000
+                        - 1814000
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      minLength: 1
+                    office_symbol:
+                      type: string
+                      minLength: 1
+                    office_id:
+                      type: string
+                      minLength: 1
+                    slug:
+                      type: string
+                      minLength: 1
+                    name:
+                      type: string
+                      minLength: 1
+                    bbox:
+                      type: array
+                      minItems: 4
+                      maxItems: 4
+                      items:
+                        type: number
+                        minimum: 0
+                  required:
+                    - id
+                    - office_symbol
+                    - office_id
+                    - slug
+                    - name
+                    - bbox
+              examples:
+                example-1:
+                  value:
+                    - id: string
+                      office_symbol: string
+                      office_id: string
+                      slug: string
+                      name: string
+                      bbox:
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+      operationId: get-watersheds
+      description: List all Watersheds
