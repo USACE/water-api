@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a0e8dbb3-318f-44b4-8f21-1fa91b19805c",
+		"_postman_id": "733d26c8-cc56-431d-b893-578d5d794cb1",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -1362,7 +1362,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nwsid\": \"rgtst\",\n    \"usgs_site_number\": \"99999999\",\n    \"name\": \"Regression Test\",\n    \"action_stage\":5,\n    \"flood_stage\":10,\n    \"moderate_flood_stage\":15,\n    \"major_flood_stage\":20\n}",
+							"raw": "{\n    \"nwsid\": \"rgtst\",\n    \"usgs_site_number\": \"99999999\",\n    \"name\": \"Regression Test\",\n    \"action\":5,\n    \"flood\":10,\n    \"moderate_flood\":15,\n    \"major_flood\":20\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1403,7 +1403,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nwsid\": \"rgtst\",\n    \"name\": \"Regression Test Updated\",\n    \"action_stage\":6,\n    \"flood_stage\":11,\n    \"moderate_flood_stage\":16,\n    \"major_flood_stage\":21\n}",
+							"raw": "{\n    \"nwsid\": \"rgtst\",\n    \"name\": \"Regression Test Updated\",\n    \"action\":6,\n    \"flood\":11,\n    \"moderate_flood\":16,\n    \"major_flood\":21\n}",
 							"options": {
 								"raw": {
 									"language": "json"
