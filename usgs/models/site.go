@@ -12,6 +12,7 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 
 	"github.com/USACE/water-api/helpers"
+	nws "github.com/USACE/water-api/nws/models"
 )
 
 type Site struct {
@@ -22,6 +23,7 @@ type Site struct {
 	CreateDate     time.Time  `json:"create_date" db:"create_date"`
 	UpdateDate     *time.Time `json:"update_date" db:"update_date"`
 	SiteInfo
+	NwsStages nws.Stages `json:"nws_stages"`
 }
 
 func (s1 Site) IsEquivalent(s2 Site) bool {
