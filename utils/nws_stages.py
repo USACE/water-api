@@ -63,9 +63,8 @@ for idx, line in enumerate(reader):
 
 for wstate in states:
 
-    sql = f"-- {wstate}\n"
-    sql += 'INSERT INTO nws_stages (nwsid, usgs_site_number, name, action_stage, flood_stage, moderate_flood_stage,'
-    sql += 'major_flood_stage) VALUES\n'
+    sql = '-- '+wstate
+    sql += '\nINSERT INTO nws_stages (nwsid, usgs_site_number, name, action, flood, moderate_flood, major_flood) VALUES\n'
     last_line = len(result)
     for idx, line in enumerate(result):
 
@@ -90,13 +89,13 @@ for wstate in states:
 
                 nwsid                = line['nws shef id'].strip()
                 usgs_id              = line['usgs id'].strip()
-                action_stage         = float(line['action stage'].strip())
-                flood_stage          = float(line['flood stage'].strip())
-                moderate_flood_stage = float(line['moderate flood stage'].strip())
-                major_flood_stage    = float(line['major flood stage'].strip())
+                action         = float(line['action stage'].strip())
+                flood          = float(line['flood stage'].strip())
+                moderate_flood = float(line['moderate flood stage'].strip())
+                major_flood    = float(line['major flood stage'].strip())
 
                 
-                sql += f"('{nwsid}', '{usgs_id}', '{name}', {action_stage}, {flood_stage}, {moderate_flood_stage}, {major_flood_stage}),\n"
+                sql += f"('{nwsid}', '{usgs_id}', '{name}', {action}, {flood}, {moderate_flood}, {major_flood}),\n"
 
                 # API Post Payload
                 if nwsid in existing_stages.keys():
@@ -110,10 +109,10 @@ for wstate in states:
                     payload['nwsid'] = nwsid
                     payload['usgs_site_number'] = usgs_id
                     payload['name'] = name
-                    payload['action_stage'] = action_stage
-                    payload['flood_stage'] = flood_stage
-                    payload['moderate_flood_stage'] = moderate_flood_stage
-                    payload['major_flood_stage'] = major_flood_stage
+                    payload['action'] = action
+                    payload['flood'] = flood
+                    payload['moderate_flood'] = moderate_flood
+                    payload['major_flood'] = major_flood
 
 
                     r = requests.post(
