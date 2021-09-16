@@ -10,14 +10,19 @@ import (
 
 // NwsStages is a NwsStages struct
 type NwsStages struct {
-	ID                 *uuid.UUID `json:"-" db:"id"`
-	NwsID              string     `json:"nwsid" db:"nwsid" param:"nwsid"`
-	UsgsSiteNumber     string     `json:"usgs_site_number" db:"usgs_site_number"`
-	Name               string     `json:"name"`
-	ActionStage        *float64   `json:"action_stage" db:"action_stage"`
-	FloodStage         *float64   `json:"flood_stage" db:"flood_stage"`
-	ModerateFloodStage *float64   `json:"moderate_flood_stage" db:"moderate_flood_stage"`
-	MajorFloodStage    *float64   `json:"major_flood_stage" db:"major_flood_stage"`
+	ID             *uuid.UUID `json:"-" db:"id"`
+	NwsID          string     `json:"nwsid" db:"nwsid" param:"nwsid"`
+	UsgsSiteNumber string     `json:"usgs_site_number" db:"usgs_site_number"`
+	Name           string     `json:"name"`
+	Stages
+}
+
+// Stages is a NwsStages struct
+type Stages struct {
+	Action        *float64 `json:"action" db:"action"`
+	Flood         *float64 `json:"flood" db:"flood"`
+	ModerateFlood *float64 `json:"moderate_flood" db:"moderate_flood"`
+	MajorFlood    *float64 `json:"major_flood" db:"major_flood"`
 }
 
 // WatershedSQL includes common fields selected to build a watershed
@@ -25,10 +30,10 @@ const NwsStagesSQL = `SELECT s.id,
                              s.nwsid,
 							 s.usgs_site_number,
                              s.name,
-							 s.action_stage,
-							 s.flood_stage,
-							 s.moderate_flood_stage,
-							 s.major_flood_stage`
+							 s.action,
+							 s.flood,
+							 s.moderate_flood,
+							 s.major_flood`
 
 // ListNwsStages returns an array of NWS Location Stages
 func ListNwsStages(db *pgxpool.Pool) ([]NwsStages, error) {
@@ -58,9 +63,9 @@ func CreateNwsStage(db *pgxpool.Pool, s *NwsStages) (*NwsStages, error) {
 	// }
 	var sNew NwsStages
 	if err := pgxscan.Get(context.Background(), db, &sNew,
-		`INSERT INTO nws_stages (name, nwsid, usgs_site_number, action_stage, flood_stage, moderate_flood_stage, major_flood_stage) 
+		`INSERT INTO nws_stages (name, nwsid, usgs_site_number, action, flood, moderate_flood, major_flood) 
 		VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, nwsid `,
-		&s.Name, &s.NwsID, &s.UsgsSiteNumber, s.ActionStage, s.FloodStage, s.ModerateFloodStage, s.MajorFloodStage,
+		&s.Name, &s.NwsID, &s.UsgsSiteNumber, s.Action, s.Flood, s.ModerateFlood, s.MajorFlood,
 	); err != nil {
 		return nil, err
 	}
@@ -72,9 +77,9 @@ func CreateNwsStage(db *pgxpool.Pool, s *NwsStages) (*NwsStages, error) {
 func UpdateNwsStages(db *pgxpool.Pool, s *NwsStages) (*NwsStages, error) {
 	var nwsID string
 	if err := pgxscan.Get(context.Background(), db, &nwsID,
-		`UPDATE nws_stages SET name=$1, action_stage=$2, flood_stage=$3, moderate_flood_stage=$4, major_flood_stage=$5, 
+		`UPDATE nws_stages SET name=$1, action=$2, flood=$3, moderate_flood=$4, major_flood=$5, 
 		update_date=CURRENT_TIMESTAMP WHERE nwsid=$6 RETURNING nwsid`,
-		&s.Name, &s.ActionStage, s.FloodStage, s.ModerateFloodStage, s.MajorFloodStage, s.NwsID); err != nil {
+		&s.Name, &s.Action, s.Flood, s.ModerateFlood, s.MajorFlood, s.NwsID); err != nil {
 		return nil, err
 	}
 	return GetNwsStages(db, &nwsID)
