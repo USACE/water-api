@@ -84,9 +84,9 @@ func CreateOrUpdateUSGSMeasurements(db *pgxpool.Pool, c ParameterMeasurementColl
 
 // ListMeasurements returns time and value for the USGS location
 // filtered by a time range.
-func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []string, tw *timeseries.TimeWindow) (map[string][]map[string][]map[string]float64, error) {
-	pn := make([]map[string][]map[string]float64, 0)
-	pc := make(map[string][]map[string][]map[string]float64)
+func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []string, tw *timeseries.TimeWindow) (map[string]map[string][]map[string]float64, error) {
+	pn := make(map[string][]map[string]float64)
+	pc := make(map[string]map[string][]map[string]float64)
 	tx, err := db.Begin(context.Background())
 	if err != nil {
 		return pc, err
@@ -142,8 +142,8 @@ func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []st
 		for _, m := range ms {
 			tv = append(tv, map[string]float64{m.Time.String(): m.Value})
 		}
-		pn = append(pn, map[string][]map[string]float64{parameter: tv})
+		pn[parameter] = tv
+		pc[*site_number] = pn
 	}
-	pc = map[string][]map[string][]map[string]float64{*site_number: pn}
 	return pc, nil
 }
