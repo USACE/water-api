@@ -18,7 +18,7 @@ func ListWatershedSiteParameters(db *pgxpool.Pool) ([]byte, error) {
 	var b []byte
 	err := pgxscan.Get(context.Background(), db, &b,
 		`SELECT
-		json_agg(json_build_object('sites', sites, 'state_abbrev', sites.state_abbrev))
+		COALESCE(json_agg(json_build_object('sites', sites, 'state_abbrev', sites.state_abbrev)), '[]')
 	FROM
 		(
 		SELECT
@@ -32,23 +32,27 @@ func ListWatershedSiteParameters(db *pgxpool.Pool) ([]byte, error) {
 				s.state_abbrev AS state_abbrev,
 				COALESCE(code_agg.parameter_codes, '{}') AS parameter_codes
 			FROM
-				watershed_usgs_sites w
+				watershed_usgs_sites w				
+			JOIN usgs_site_parameters usp ON
+				usp.id = w.usgs_site_parameter_id			
 			JOIN usgs_parameter p ON
-				p.id = w.usgs_parameter_id
+				p.id = usp.parameter_id
 			JOIN usgs_site s ON
-				s.id = w.usgs_site_id
-			LEFT JOIN (
+				s.id = usp.site_id
+			LEFT JOIN (			
 				SELECT
 					array_agg(code) AS parameter_codes,
-					b.usgs_site_id
+					usp.site_id
 				FROM
 					usgs_parameter a
+				JOIN usgs_site_parameters usp ON
+					usp.parameter_id = a.id
 				JOIN watershed_usgs_sites b ON
-					b.usgs_parameter_id = a.id
+					b.usgs_site_parameter_id = usp.id
 				GROUP BY
-					b.usgs_site_id
-				) code_agg ON
-				code_agg.usgs_site_id = w.usgs_site_id
+					usp.site_id					
+					) code_agg ON
+				code_agg.site_id = usp.site_id
 		) AS t
 		GROUP BY
 			t.state_abbrev
@@ -66,10 +70,15 @@ func CreateWatershedSiteParameter(db *pgxpool.Pool, w *WatershedSiteParameter) e
 	// var wsp WatershedSiteParameter
 	if _, err := db.Exec(
 		context.Background(),
-		`INSERT INTO watershed_usgs_sites (watershed_id, usgs_site_id, usgs_parameter_id) VALUES
+		`INSERT INTO watershed_usgs_sites (watershed_id, usgs_site_parameter_id) VALUES
 		((select id from watershed where slug = $1), 
-		(select id from usgs_site where site_number = $2),
-		(select id from usgs_parameter where code = $3))
+		(
+			SELECT usp.id FROM a2w_cwms.usgs_site_parameters usp
+			JOIN a2w_cwms.usgs_site us ON us.id = usp.site_id 
+			JOIN a2w_cwms.usgs_parameter up ON up.id = usp.parameter_id 
+			WHERE us.site_number = $2
+			AND up.code = $3)
+		)
 		`, w.WatershedSlug, w.SiteNumber, w.ParameterCode,
 	); err != nil {
 		return err
@@ -84,8 +93,12 @@ func DeleteWatershedSiteParameter(db *pgxpool.Pool, w *WatershedSiteParameter) e
 		context.Background(),
 		`DELETE FROM watershed_usgs_sites
 		WHERE watershed_id = (select id from watershed where slug = $1)
-		AND usgs_site_id = (select id from usgs_site where site_number = $2)
-		AND usgs_parameter_id = (select id from usgs_parameter where code = $3)
+		AND usgs_site_parameter_id = (
+			SELECT usp.id FROM a2w_cwms.usgs_site_parameters usp
+			JOIN a2w_cwms.usgs_site us ON us.id = usp.site_id 
+			JOIN a2w_cwms.usgs_parameter up ON up.id = usp.parameter_id 
+			WHERE us.site_number = $2
+			AND up.code = $3)
 		`, w.WatershedSlug, w.SiteNumber, w.ParameterCode,
 	); err != nil {
 		return err
