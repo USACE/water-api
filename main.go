@@ -107,6 +107,7 @@ func main() {
 	public.GET("/watersheds/:watershed_id", cs.GetWatershed)
 	key.POST("/watersheds", cs.CreateWatershed)
 	key.PUT("/watersheds/:watershed_id", cs.UpdateWatershed)
+	key.PUT("/watersheds/geometry/:watershed_id", cs.UpdateWatershedGeometry)
 	key.DELETE("/watersheds/:watershed_id", cs.DeleteWatershed)
 	key.POST("/watersheds/:watershed_id/undelete", cs.UndeleteWatershed)
 
