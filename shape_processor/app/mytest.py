@@ -1,4 +1,6 @@
 import json
+import boto3
+from fiona.session import AWSSession
 import fiona                                                                                                       
 from shapely.ops import unary_union, transform                                                                           
 from shapely.geometry import shape, mapping  
@@ -7,15 +9,30 @@ from fiona.crs import to_string
 import shapefile
 from geojson_rewind import rewind
 from pyproj import Proj, Transformer, CRS
+import config as CONFIG
 
-src = 'zip:///test_shapes/LRH_Scioto.zip'
+print(CONFIG.AWS_SECRET_ACCESS_KEY)
+
+# src = 'zip:///test_shapes/LRH_Scioto.zip'
+src = "zip+s3://cwbi-data-develop/water/test-watershed/LRH_Scioto.zip"
+# src = "s3://cwbi-data-develop/water/test.txt"
 dst = '/test_shapes/fixed_LRH_Scioto.shp'
 
+
+# fiona.Env(
+#     session=AWSSession(
+#         aws_access_key_id=CONFIG.AWS_ACCESS_KEY_ID, 
+#         aws_secret_access_key=CONFIG.AWS_SECRET_ACCESS_KEY,
+#         region_name=CONFIG.AWS_REGION
+#         )
+#     )
 
 with fiona.open(src, 'r') as ds_in:                                                                                                                                                                                                                   
     crs = ds_in.crs 
     dst_crs = fiona.crs.from_epsg(4326)
     drv = ds_in.driver  
+
+    
    
         
     # print(ds_in.schema)
