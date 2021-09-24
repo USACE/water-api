@@ -7,6 +7,7 @@ import (
 	"github.com/USACE/water-api/messages"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
+	"github.com/paulmach/orb/geojson"
 
 	"github.com/labstack/echo/v4"
 )
@@ -51,6 +52,27 @@ func (s Store) CreateWatershed(c echo.Context) error {
 }
 
 // UpdateWatershed creates a new watershed
+func (s Store) UpdateWatershedGeometry(c echo.Context) error {
+	var (
+		err error
+		id  uuid.UUID
+		ws  *models.Watershed
+		wf  geojson.Feature
+	)
+	p1 := c.ParamNames()[0] // Just incase the parameter name is changed for the watershed id
+	if id, err = uuid.Parse(c.Param(p1)); err != nil {
+		return c.JSON(http.StatusBadRequest, "UUID parsing error: "+err.Error())
+	}
+	// var wf geojson.Feature
+	if err = c.Bind(&wf); err != nil {
+		return c.JSON(http.StatusBadRequest, "Binding error: "+err.Error())
+	}
+	if ws, err = models.UpdateWatershedGeometry(s.Connection, &id, &wf); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	return c.JSON(http.StatusOK, ws)
+}
+
 func (s Store) UpdateWatershed(c echo.Context) error {
 	// Watershed Slug from route params
 	wID, err := uuid.Parse(c.Param("watershed_id"))
