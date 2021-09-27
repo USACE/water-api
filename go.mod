@@ -12,5 +12,8 @@ require (
 	github.com/jackc/pgerrcode v0.0.0-20201024163028-a0d42d470451
 	github.com/jackc/pgx/v4 v4.11.0
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/labstack/echo/v4 v4.3.0
+	github.com/labstack/echo/v4 v4.6.1
+	github.com/paulmach/orb v0.2.2
+	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb
+	golang.org/x/net v0.0.0-20210924151903-3ad01bbaa167 // indirect
 )
