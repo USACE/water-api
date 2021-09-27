@@ -27,5 +27,4 @@ services:
       - AWS_VIRTUAL_HOSTING=FALSE
       - AWS_HTTPS=NO
     volumes:
-      - ./test_shapes:/test_shapes
       - ./app:/usr/src/app

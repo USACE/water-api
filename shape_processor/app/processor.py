@@ -16,7 +16,7 @@ print(CONFIG.AWS_SECRET_ACCESS_KEY)
 # src = 'zip:///test_shapes/LRH_Scioto.zip'
 src = "zip+s3://cwbi-data-develop/water/test-watershed/LRH_Scioto.zip"
 # src = "s3://cwbi-data-develop/water/test.txt"
-dst = '/test_shapes/fixed_LRH_Scioto.shp'
+# dst = '/test_shapes/fixed_LRH_Scioto.shp'
 
 
 # fiona.Env(
@@ -99,9 +99,9 @@ geojson_data = json.loads(geojson_data_string)
 geojson_data['properties'] = None
 
 # Write to geojson file
-with open('/test_shapes/LRH_Scioto.json', 'w') as outfile:
-    outfile.write(json.dumps(geojson_data, indent = 4))
+# with open('/test_shapes/LRH_Scioto.json', 'w') as outfile:
+#     outfile.write(json.dumps(geojson_data, indent = 4))
 
 # Write to "fixed" shapefile
-with fiona.open(dst, 'w', driver=drv, schema=schema, crs=dst_crs) as ds_dst:
-    ds_dst.write({"geometry": mapping(simple_shape), "properties": {"id": 1}})
+# with fiona.open(dst, 'w', driver=drv, schema=schema, crs=dst_crs) as ds_dst:
+#     ds_dst.write({"geometry": mapping(simple_shape), "properties": {"id": 1}})
