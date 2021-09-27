@@ -3,6 +3,9 @@ package main
 import (
 	"log"
 	"net/http"
+	"time"
+
+	"golang.org/x/net/http2"
 
 	"github.com/USACE/water-api/app"
 	"github.com/USACE/water-api/cwms"
@@ -104,6 +107,7 @@ func main() {
 	public.GET("/watersheds/:watershed_id", cs.GetWatershed)
 	key.POST("/watersheds", cs.CreateWatershed)
 	key.PUT("/watersheds/:watershed_id", cs.UpdateWatershed)
+	key.PUT("/watersheds/geometry/:watershed_id", cs.UpdateWatershedGeometry)
 	key.DELETE("/watersheds/:watershed_id", cs.DeleteWatershed)
 	key.POST("/watersheds/:watershed_id/undelete", cs.UndeleteWatershed)
 
@@ -153,6 +157,13 @@ func main() {
 	// Watershed USGS Site Params enabled for data retrieval.  Primarily used by Airflow.
 	public.GET("/watersheds/usgs_sites", ws.ListWatershedSiteParameters)
 
-	// Start server
-	log.Fatal(http.ListenAndServe(":80", e))
+	// Server
+	s := &http2.Server{
+		MaxConcurrentStreams: 250,     // http2 default 250
+		MaxReadFrameSize:     1048576, // http2 default 1048576
+		IdleTimeout:          10 * time.Second,
+	}
+	if err := e.StartH2CServer(":80", s); err != http.ErrServerClosed {
+		log.Fatal(err)
+	}
 }

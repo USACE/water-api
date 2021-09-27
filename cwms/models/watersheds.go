@@ -2,11 +2,14 @@ package models
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/USACE/water-api/helpers"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/paulmach/orb/geojson"
+	jsonpointer "github.com/xeipuuv/gojsonpointer"
 )
 
 // Watershed is a watershed struct
@@ -67,6 +70,63 @@ func CreateWatershed(db *pgxpool.Pool, w *Watershed) (*Watershed, error) {
 	}
 	return GetWatershed(db, &wNew.ID)
 	//return &wNew, nil
+}
+
+// UpdateWatershedGeometry
+func UpdateWatershedGeometry(db *pgxpool.Pool, id *uuid.UUID, wf *geojson.Feature) (*Watershed, error) {
+	// Database transaction
+	tx, err := db.Begin(context.Background())
+	defer tx.Rollback(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	// Extract the GeoJSON from the Feature
+	j, err := wf.MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	var json_doc map[string]interface{}
+	if err = json.Unmarshal(j, &json_doc); err != nil {
+		return nil, err
+	}
+	pointer_string := "/geometry/coordinates"
+	pointer, _ := jsonpointer.NewJsonPointer(pointer_string)
+	geo, _, err := pointer.Get(json_doc)
+	if err != nil {
+		return nil, err
+	}
+	geo_coords, err := json.Marshal(geo)
+	if err != nil {
+		return nil, err
+	}
+	// Build the query and UPDATE geometry
+	geo_type := wf.Geometry.GeoJSONType()
+	qs := "{\"type\":\"" + geo_type + "\","
+	qs += "\"coordinates\":" + string(geo_coords)
+	qs += "}"
+
+	rows, err := tx.Query(
+		context.Background(),
+		`UPDATE watershed SET geometry = ST_Transform(ST_GeomFromGeoJSON($1),4326) WHERE id = $2 RETURNING id`,
+		qs,
+		id,
+	)
+	if err != nil {
+		return nil, err
+	}
+	var rid uuid.UUID
+	if err = pgxscan.ScanOne(&rid, rows); err != nil {
+		return nil, err
+	}
+	// Commit and then get the updated watersed to return
+	if err = tx.Commit(context.Background()); err != nil {
+		return nil, err
+	}
+	ws, err := GetWatershed(db, &rid)
+	if err != nil {
+		return nil, err
+	}
+	return ws, err
 }
 
 // UpdateWatershed updates a watershed
