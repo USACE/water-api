@@ -1,0 +1,12 @@
+FROM python:3
+
+ENV PYTHONUNBUFFERED=1 GDAL_DISABLE_READDIR_ON_OPEN=EMPTY_DIR
+
+WORKDIR /usr/src/app
+
+COPY ./app/ ./
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+# CMD [ "python", "./test-script.py" ]
+CMD [ "python", "./processor.py" ]
