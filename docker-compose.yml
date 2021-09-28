@@ -8,6 +8,9 @@ services:
     environment:
       - AUTH_MOCKED=true
       - APPLICATION_KEY=appkey
+      - AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+      - AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      - AWS_REGION=us-east-1
       - WATER_DB_USER=water_user
       - WATER_DB_PASS=water_pass
       - WATER_DB_NAME=postgres

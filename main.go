@@ -110,6 +110,7 @@ func main() {
 	key.PUT("/watersheds/geometry/:watershed_id", cs.UpdateWatershedGeometry)
 	key.DELETE("/watersheds/:watershed_id", cs.DeleteWatershed)
 	key.POST("/watersheds/:watershed_id/undelete", cs.UndeleteWatershed)
+	key.POST("/watersheds/upload/:slug", cs.UploadWatersheds)
 
 	// Maintenance/Automation
 	key.POST("/automation/assign_states_to_locations", cs.AssignStatesToLocations)

@@ -1,10 +1,16 @@
 package models
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"mime/multipart"
+	"net/http"
 
 	"github.com/USACE/water-api/helpers"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -154,4 +160,45 @@ func UndeleteWatershed(db *pgxpool.Pool, watershedID *uuid.UUID) (*Watershed, er
 		return nil, err
 	}
 	return GetWatershed(db, &wID)
+}
+
+// UploadWatersheds uploads watershed(s) to S3
+func UploadWatersheds(db *pgxpool.Pool, slug string, file *multipart.FileHeader) error {
+	fs := file.Size
+	fn := file.Filename
+	s, err := session.NewSession(
+		&aws.Config{
+			Endpoint: aws.String("http://localhost:9000"),
+		},
+	)
+	if err != nil {
+		return err
+	}
+	f, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	buffer := make([]byte, fs)
+	_, err = f.Read(buffer)
+	if err != nil {
+		return err
+	}
+
+	_, err = s3.New(s).PutObject(
+		&s3.PutObjectInput{
+			ACL:                  aws.String("private"),
+			Body:                 bytes.NewReader(buffer),
+			Bucket:               aws.String("cwbi-data-develop"),
+			ContentDisposition:   aws.String("attachment"),
+			ContentLength:        aws.Int64(fs),
+			ContentType:          aws.String(http.DetectContentType(buffer)),
+			Key:                  aws.String("water/" + slug + "/" + fn),
+			ServerSideEncryption: aws.String("AES256"),
+		})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
