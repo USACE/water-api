@@ -1,0 +1,10 @@
+# shapely = Cleanup shapes, buffer, simplify
+shapely>=1.8a1
+# fiona = Open shapefile
+fiona
+fiona[s3]
+# pyshp = geojson export
+pyshp
+geojson-rewind
+pyproj
+requests
