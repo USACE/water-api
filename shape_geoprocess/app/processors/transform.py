@@ -1,3 +1,16 @@
+'''
+Cleanup uses Shapely and pyproj
+https://shapely.readthedocs.io/en/stable/manual.html?highlight=transform#other-transformations
+Applies func to all coordinates of geom and returns a new geometry of the same type from the transformed 
+coordinates.  func maps x, y, and optionally z to output xp, yp, zp. The input parameters may be 
+iterable types like lists or arrays or single values. The output shall be of the same type: scalars 
+in, scalars out; lists in, lists out.
+
+transform tries to determine which kind of function was passed in by calling func first with n 
+iterables of coordinates, where n is the dimensionality of the input geometry. If func raises a 
+TypeError when called with iterables as arguments, then it will instead call func on each individual 
+coordinate in the geometry.
+'''
 from shapely.ops import transform 
 from pyproj import Proj, Transformer, CRS
 
