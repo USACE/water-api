@@ -57,7 +57,11 @@ def handle_message(msg):
     output_target = body['output_target']
     
     # Read in S3 Zip, load into shapes object
-    shapes, crs = read_s3_zip(f'{bucket}/{key}')
+    try:
+        shapes, crs = read_s3_zip(f'{bucket}/{key}')
+    except:
+        logger.error(f'file not found: {bucket}/{key}')
+        return
     
     # Process based on list of processes in sqs message
     for p in processes:
@@ -79,9 +83,7 @@ def handle_message(msg):
     json=geojson)
     if r.status_code != 200:
         logger.info(r.status_code)
-        logger.info(r.text)
-
-    
+        logger.info(r.text)    
     
     
 
