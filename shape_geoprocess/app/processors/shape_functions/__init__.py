@@ -1,6 +1,13 @@
+import importlib
 import json
+
 from geojson_rewind import rewind
 import shapefile #pyshp
+
+def get_function(name):
+    """Import library for processing a given product_name"""
+    
+    return importlib.import_module(f'.{name}')
 
 def shape_to_geojson(shape):
     

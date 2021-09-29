@@ -14,10 +14,6 @@ def read_s3_zip(s3_path):
         crs = collection.crs
     return (shapes, crs)
 
-# src = "cwbi-data-develop/water/test-watershed/LRH_Scioto.zip"
-# shapes = read_s3_zip(src)
-# print(shapes)
-
 def write_geojson(geojson_dict, fileout):
     # Write to geojson file
     with open(fileout, 'w') as outfile:

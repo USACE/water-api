@@ -10,18 +10,18 @@
 ## Sample SQS Body Payload
 ```json
 {
-    "handler": "shape-geoprocess",
+    "processor": "watershed_shapefile_upload",
     "input": {
         "bucket": "cwbi-data-develop",
         "key": "water/test-watershed/LRH_Scioto.zip",
     },
-    "processes": [
-        {"process":"cleanup"},
-        {"process":"dissolve"},
-        {"process":"simplify"},
-        {"process":"transform"}
+    "functions": [
+        {"function": "cleanup"},
+        {"function": "dissolve"},
+        {"function": "simplify"},
+        {"function": "transform"},
     ],
-    "output_target":"http://api/watersheds/geometry/5758d0dc-c8bf-4e37-a5e7-44ff3f4b8677"
+    "output_target": "http://api/watersheds/geometry/5758d0dc-c8bf-4e37-a5e7-44ff3f4b8677",
 }
 ```
 
