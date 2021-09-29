@@ -26,6 +26,7 @@ services:
       - DB_POOL_MIN_CONNS=5
     ports:
       - '80:80'
+  # --------------------------------
   db:
     image: postgis/postgis:13-3.1
     restart: always
@@ -33,6 +34,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - '5432:5432'
+  # --------------------------------
   tiger-data:
     restart: on-failure
     depends_on:
@@ -45,6 +47,7 @@ services:
       - DB_PASS=postgres
       - DB_NAME=postgres
       - DB_HOST=db
+  # --------------------------------
   flyway:
     image: flyway/flyway
     restart: on-failure
@@ -55,6 +58,7 @@ services:
       - ./sql:/flyway/sql
     depends_on:
       - db
+  # --------------------------------
   pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -62,6 +66,7 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=postgres
     ports:
       - '8081:80'
+  # --------------------------------
   swagger-ui:
     image: swaggerapi/swagger-ui
     container_name: swagger-ui
@@ -71,3 +76,12 @@ services:
       - ./apidoc.yml:/usr/share/nginx/html/swagger/api.yaml
     environment:
       API_URL: swagger/api.yaml
+  # --------------------------------
+  elasticmq:
+    image: softwaremill/elasticmq
+    volumes:
+      - ./elasticmq.conf:/opt/elasticmq.conf
+    ports:
+      - "9324:9324"
+      - "9325:9325"
+    restart: always

@@ -1,4 +1,9 @@
 {
     "editor.defaultFormatter": "golang.go",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python"
+    }
 }
