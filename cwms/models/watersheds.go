@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"mime/multipart"
-	"net/http"
 
+	"github.com/USACE/water-api/app"
 	"github.com/USACE/water-api/helpers"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -162,43 +163,43 @@ func UndeleteWatershed(db *pgxpool.Pool, watershedID *uuid.UUID) (*Watershed, er
 	return GetWatershed(db, &wID)
 }
 
-// UploadWatersheds uploads watershed(s) to S3
-func UploadWatersheds(db *pgxpool.Pool, slug string, file *multipart.FileHeader) error {
-	fs := file.Size
+// UploadWatersheds
+func UploadWatersheds(db *pgxpool.Pool, slug string, file *multipart.FileHeader) (map[string]string, error) {
 	fn := file.Filename
-	s, err := session.NewSession(
-		&aws.Config{
-			Endpoint: aws.String("http://localhost:9000"),
-		},
-	)
-	if err != nil {
-		return err
-	}
+	fs := file.Size
+	key := aws.String("water/" + slug + "/" + fn)
 	f, err := file.Open()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer f.Close()
+
 	buffer := make([]byte, fs)
 	_, err = f.Read(buffer)
 	if err != nil {
-		return err
+		return nil, err
 	}
-
-	_, err = s3.New(s).PutObject(
-		&s3.PutObjectInput{
-			ACL:                  aws.String("private"),
-			Body:                 bytes.NewReader(buffer),
-			Bucket:               aws.String("cwbi-data-develop"),
-			ContentDisposition:   aws.String("attachment"),
-			ContentLength:        aws.Int64(fs),
-			ContentType:          aws.String(http.DetectContentType(buffer)),
-			Key:                  aws.String("water/" + slug + "/" + fn),
-			ServerSideEncryption: aws.String("AES256"),
-		})
+	cfg, err := app.GetConfig()
 	if err != nil {
-		return err
+		return nil, err
 	}
+	bucket := aws.String(cfg.AWSS3Bucket)
+	s3Config := app.AWSConfig(*cfg)
+	newSession, _ := session.NewSession(&s3Config)
+	s3Client := s3.New(newSession)
+	_, err = s3Client.PutObject(&s3.PutObjectInput{
+		Body:   bytes.NewReader(buffer),
+		Bucket: bucket,
+		Key:    key,
+	})
+	if err != nil {
+		return nil, err
+	}
+	result := map[string]string{}
+	result["Filename"] = fn
+	result["FileSize"] = fmt.Sprint(fs) + " bytes"
+	result["Key"] = *key
+	result["Bucket"] = *bucket
 
-	return nil
+	return result, nil
 }
