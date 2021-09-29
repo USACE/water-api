@@ -6,6 +6,14 @@ services:
       context: ./
     restart: always
     environment:
+      - AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+      - AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      - AWS_REGION=us-east-1
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_S3_BUCKET=cwbi-data-develop
+      - AWS_S3_ENDPOINT=http://minio:9000
+      - AWS_S3_DISABLE_SSL=True
+      - AWS_S3_FORCE_PATH_STYLE=True
       - AUTH_MOCKED=true
       - APPLICATION_KEY=appkey
       - WATER_DB_USER=water_user

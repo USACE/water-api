@@ -1,10 +1,17 @@
 package models
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
+	"mime/multipart"
 
+	"github.com/USACE/water-api/app"
 	"github.com/USACE/water-api/helpers"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -154,4 +161,45 @@ func UndeleteWatershed(db *pgxpool.Pool, watershedID *uuid.UUID) (*Watershed, er
 		return nil, err
 	}
 	return GetWatershed(db, &wID)
+}
+
+// UploadWatersheds
+func UploadWatersheds(db *pgxpool.Pool, slug string, file *multipart.FileHeader) (map[string]string, error) {
+	fn := file.Filename
+	fs := file.Size
+	key := aws.String("water/" + slug + "/" + fn)
+	f, err := file.Open()
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	buffer := make([]byte, fs)
+	_, err = f.Read(buffer)
+	if err != nil {
+		return nil, err
+	}
+	cfg, err := app.GetConfig()
+	if err != nil {
+		return nil, err
+	}
+	bucket := aws.String(cfg.AWSS3Bucket)
+	s3Config := app.AWSConfig(*cfg)
+	newSession, _ := session.NewSession(&s3Config)
+	s3Client := s3.New(newSession)
+	_, err = s3Client.PutObject(&s3.PutObjectInput{
+		Body:   bytes.NewReader(buffer),
+		Bucket: bucket,
+		Key:    key,
+	})
+	if err != nil {
+		return nil, err
+	}
+	result := map[string]string{}
+	result["Filename"] = fn
+	result["FileSize"] = fmt.Sprint(fs) + " bytes"
+	result["Key"] = *key
+	result["Bucket"] = *bucket
+
+	return result, nil
 }
