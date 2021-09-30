@@ -126,13 +126,16 @@ func (s Store) UndeleteWatershed(c echo.Context) error {
 // UploadWatersheds handler for models.UploadWatersheds
 // slug and the file.zip are the two parameter
 func (s Store) UploadWatersheds(c echo.Context) error {
-	slug := c.Param("slug")
+	wid, err := uuid.Parse(c.Param("watershed_id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
 	// Source
 	file, err := c.FormFile("file")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	r, err := models.UploadWatersheds(s.Connection, slug, file)
+	r, err := models.UploadWatersheds(s.Connection, wid, file)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
