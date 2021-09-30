@@ -11,7 +11,7 @@ servers:
     description: Local API Testing
   - url: 'https://water-api.rsgis.dev'
     description: Stable API
-  - url: 'https://water-cumulus-api.rsgis.dev'
+  - url: 'https://develop-water-api.rsgis.dev'
     description: Development API
 components:
   schemas:
