@@ -178,7 +178,7 @@ func UploadWatersheds(db *pgxpool.Pool, wid uuid.UUID, file *multipart.FileHeade
 	// Upload file and add record to database
 	fn := file.Filename
 	fs := file.Size
-	key := aws.String("water/" + slug + "/" + fn)
+	key := aws.String("water/watersheds/" + slug + "/" + fn)
 	f, err := file.Open()
 	if err != nil {
 		return nil, err
@@ -209,8 +209,8 @@ func UploadWatersheds(db *pgxpool.Pool, wid uuid.UUID, file *multipart.FileHeade
 	// Add record to database
 	var id uuid.UUID
 	if err = db.QueryRow(context.Background(),
-		`INSERT INTO watershed_shapefile_uploads (watershed_id, key, time, size)
-		VALUES($1, $2, CURRENT_TIMESTAMP, $3)
+		`INSERT INTO watershed_shapefile_uploads (watershed_id, file, file_size)
+		VALUES($1, $2, $3)
 		RETURNING id`,
 		wid, key, fs,
 	).Scan(&id); err != nil {
@@ -218,6 +218,7 @@ func UploadWatersheds(db *pgxpool.Pool, wid uuid.UUID, file *multipart.FileHeade
 	}
 
 	result := map[string]string{}
+	result["id"] = id.String()
 	result["Filename"] = fn
 	result["FileSize"] = fmt.Sprint(fs) + " bytes"
 	result["Key"] = *key
