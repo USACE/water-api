@@ -164,7 +164,18 @@ func UndeleteWatershed(db *pgxpool.Pool, watershedID *uuid.UUID) (*Watershed, er
 }
 
 // UploadWatersheds
-func UploadWatersheds(db *pgxpool.Pool, slug string, file *multipart.FileHeader) (map[string]string, error) {
+func UploadWatersheds(db *pgxpool.Pool, wid uuid.UUID, file *multipart.FileHeader) (map[string]string, error) {
+	// Begin DB transaction getting the watershed slug from the uuid
+	tx, err := db.Begin(context.Background())
+	defer tx.Rollback(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	var slug string
+	if err = pgxscan.Get(context.Background(), db, &slug, `SELECT slug FROM watershed WHERE id = $1`, wid); err != nil {
+		return nil, err
+	}
+	// Upload file and add record to database
 	fn := file.Filename
 	fs := file.Size
 	key := aws.String("water/" + slug + "/" + fn)
@@ -195,6 +206,17 @@ func UploadWatersheds(db *pgxpool.Pool, slug string, file *multipart.FileHeader)
 	if err != nil {
 		return nil, err
 	}
+	// Add record to database
+	var id uuid.UUID
+	if err = db.QueryRow(context.Background(),
+		`INSERT INTO watershed_shapefile_uploads (watershed_id, key, time, size)
+		VALUES($1, $2, CURRENT_TIMESTAMP, $3)
+		RETURNING id`,
+		wid, key, fs,
+	).Scan(&id); err != nil {
+		return nil, err
+	}
+
 	result := map[string]string{}
 	result["Filename"] = fn
 	result["FileSize"] = fmt.Sprint(fs) + " bytes"
