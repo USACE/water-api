@@ -3,7 +3,7 @@ version: '3'
 services:
   api:
     build:
-      context: ./
+      context: api
     restart: always
     environment:
       - AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
@@ -26,6 +26,8 @@ services:
       - DB_POOL_MIN_CONNS=5
     ports:
       - '80:80'
+    depends_on:
+      - db
   # --------------------------------
   db:
     image: postgis/postgis:13-3.1
@@ -84,4 +86,25 @@ services:
     ports:
       - "9324:9324"
       - "9325:9325"
+    restart: always
+  # --------------------------------
+  listener:
+    build:
+      context: async_listener
+    environment:
+      - AWS_ACCESS_KEY_ID=x
+      - AWS_SECRET_ACCESS_KEY=x
+      - AWS_REGION=us-east-1
+      - WATER_DB_USER=water_user
+      - WATER_DB_PASS=water_pass
+      - WATER_DB_NAME=postgres
+      - WATER_DB_HOST=db
+      - WATER_DB_SSLMODE=disable
+      - WATER_ASYNC_ENGINE_GEOPROCESS=AWSSQS
+      - WATER_ASYNC_ENGINE_GEOPROCESS_TARGET=local/http://elasticmq:9324/queue/water-geoprocess
+      - WATER_MIN_RECONN=10s
+      - WATER_MAX_RECONN=1m
+    depends_on:
+      - elasticmq
+      - db
     restart: always
