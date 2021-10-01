@@ -79,6 +79,13 @@ func main() {
 	key.PUT("/offices/:office_symbol/locations/:location_slug", cs.UpdateLocationByOffice)
 	key.DELETE("/offices/:office_symbol/locations/:location_slug", cs.DeleteLocationByOffice)
 
+	// Location Levels
+	public.GET("/levels/kind", cs.ListLevelKind)
+	// public.GET("/levels/:level_id/values", cs.ListLevelValues)
+	// key.POST("/levels", cs.CreateLevelKind)
+	// key.POST("/levels", cs.CreateLocationLevel)
+	// key.POST("/levels/values", cs.CreateOrUpdateValues)
+
 	// Statistics
 	public.GET("/stats/states", cs.ListStatsStates)
 	public.GET("/stats/states/:state_id", cs.GetStatsState)
