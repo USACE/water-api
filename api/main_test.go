@@ -9,8 +9,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/USACE/water-api/app"
-	"github.com/USACE/water-api/cwms"
+	"github.com/USACE/water-api/api/app"
+	"github.com/USACE/water-api/api/cwms"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"

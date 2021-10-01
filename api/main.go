@@ -7,12 +7,12 @@ import (
 
 	"golang.org/x/net/http2"
 
-	"github.com/USACE/water-api/app"
-	"github.com/USACE/water-api/cwms"
-	"github.com/USACE/water-api/middleware"
-	"github.com/USACE/water-api/nws"
-	"github.com/USACE/water-api/usgs"
-	"github.com/USACE/water-api/water"
+	"github.com/USACE/water-api/api/app"
+	"github.com/USACE/water-api/api/cwms"
+	"github.com/USACE/water-api/api/middleware"
+	"github.com/USACE/water-api/api/nws"
+	"github.com/USACE/water-api/api/usgs"
+	"github.com/USACE/water-api/api/water"
 
 	_ "github.com/jackc/pgx/v4"
 	"github.com/kelseyhightower/envconfig"

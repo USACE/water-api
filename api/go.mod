@@ -1,4 +1,4 @@
-module github.com/USACE/water-api
+module github.com/USACE/water-api/api
 
 go 1.15
 
