@@ -3,7 +3,9 @@ FROM golang:1.16.4-alpine AS builder
 RUN apk update && apk add --no-cache git
 # Copy In Source Code
 WORKDIR /go/src/app
-COPY . .
+COPY api .
+# Copy sql into subdir for flyaway
+COPY sql ./sql
 
 # Install Dependencies
 RUN go get -d -v
@@ -15,6 +17,6 @@ RUN go get -d -v \
 # SCRATCH IMAGE
 FROM scratch
 COPY --from=builder /go/bin/water-api /go/bin/water-api
-# COPY --from=builder /go/src/app/sql /sql/
-# VOLUME [ "/sql" ]
+COPY --from=builder /go/src/app/sql /sql/
+VOLUME [ "/sql" ]
 ENTRYPOINT ["/go/bin/water-api"]

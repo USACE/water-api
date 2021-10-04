@@ -48,5 +48,5 @@ else:
     # If CUMULUS_MOCK_S3_UPLOAD environment variable is unset then CUMULUS_MOCK_S3_UPLOAD will equal False
     WATER_MOCK_S3_UPLOAD = False
 
-WATER_API_URL = os.getenv("CUMULUS_API_URL", default="http://api:80")
+WATER_API_URL = os.getenv("WATER_API_URL", default="http://api")
 WATER_API_HOST_HEADER = os.getenv("WATER_API_HOST_HEADER", default=None)
