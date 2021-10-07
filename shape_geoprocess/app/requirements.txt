@@ -1,7 +1,7 @@
 # shapely = Cleanup shapes, buffer, simplify
 shapely>=1.8a1
 # fiona = Open shapefile
-fiona
+fiona>=1.8.20
 fiona[s3]
 # pyshp = geojson export
 pyshp
