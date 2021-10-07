@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS config (
 );
 
 INSERT INTO config (config_name, config_value) VALUES
-('write_to_bucket', 'cwbi-data-develop');
+('write_to_bucket', 'castle-data-develop');
