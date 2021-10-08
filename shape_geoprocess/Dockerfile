@@ -6,11 +6,11 @@ RUN useradd -ms /bin/bash appuser
 
 WORKDIR /usr/src/app
 
-USER appuser
-
 COPY ./app/ ./
 
 RUN pip install --no-cache-dir -r requirements.txt
+
+USER appuser
 
 # CMD [ "python", "./run_container.py" ]
 CMD [ "python", "./processor.py" ]
