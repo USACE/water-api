@@ -1,14 +1,14 @@
-name: Build Async Listener
+name: Build Listener
 on:
   push:
     branches: [develop]
     paths:
-      - 'async_listener/**'
-      - '.github/workflows/async-listener-develop.yml'
+      - 'listener/**'
+      - '.github/workflows/listener-develop.yml'
   workflow_dispatch:
 jobs:
   DockerImage:
-    name: Async Listener Image
+    name: Listener Image
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -27,12 +27,12 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push image to Amazon ECR (water-async-listener)
+      - name: Build, tag, and push image to Amazon ECR (water-listener)
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: water-async-listener
+          ECR_REPOSITORY: water-listener
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest async_listener
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest listener
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
       - name: Logout of Amazon ECR

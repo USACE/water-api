@@ -90,7 +90,7 @@ services:
   # --------------------------------
   listener:
     build:
-      context: async_listener
+      context: listener
     environment:
       - AWS_ACCESS_KEY_ID=x
       - AWS_SECRET_ACCESS_KEY=x

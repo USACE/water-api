@@ -1,14 +1,14 @@
-name: Build Shape Geoprocess
+name: Build Geoprocess Image
 on:
   push:
     branches: [develop]
     paths:
-      - 'shape_geoprocess/**'
-      - '.github/workflows/shape-geoprocess-develop.yml'
+      - 'geoprocess/**'
+      - '.github/workflows/geoprocess-develop.yml'
   workflow_dispatch:
 jobs:
   DockerImage:
-    name: Shape Geoprocess Image
+    name: Geoprocess Image
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -27,12 +27,12 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push image to Amazon ECR (water-shape-geoprocess)
+      - name: Build, tag, and push image to Amazon ECR (water-geoprocess)
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: water-shape-geoprocess
+          ECR_REPOSITORY: water-geoprocess
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest shape_geoprocess
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest geoprocess
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
       - name: Logout of Amazon ECR
