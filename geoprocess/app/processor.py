@@ -55,10 +55,17 @@ def handle_message(msg):
     processor.process(body)
 
 
-while 1:
-    messages = queue_packager.receive_messages(WaitTimeSeconds=CONFIG.WAIT_TIME_SECONDS)
-    print(f"shapeprocessor message count: {len(messages)}")
+def main():
+    while 1:
+        messages = queue_packager.receive_messages(
+            WaitTimeSeconds=CONFIG.WAIT_TIME_SECONDS
+        )
+        print(f"shapeprocessor message count: {len(messages)}")
 
-    for message in messages:
-        handle_message(message)
-        message.delete()
+        for message in messages:
+            handle_message(message)
+            message.delete()
+
+
+if __name__ == "__main__":
+    main()

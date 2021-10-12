@@ -66,3 +66,5 @@ def process(body):
             logger.info(r.text)
     except:
         logger.error(f"\nUnable to POST to: {api_target}\n")
+
+    logger.info("Done")
