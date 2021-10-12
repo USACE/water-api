@@ -104,12 +104,13 @@ func main() {
 
 	// Watersheds
 	public.GET("/watersheds", cs.ListWatersheds)
-	public.GET("/watersheds/:watershed_id", cs.GetWatershed)
+	public.GET("/watersheds/:watershed_slug", cs.GetWatershed)
 	key.POST("/watersheds", cs.CreateWatershed)
-	key.PUT("/watersheds/:watershed_id", cs.UpdateWatershed)
+	key.PUT("/watersheds/:watershed_slug", cs.UpdateWatershed)
+	public.GET("/watersheds/:watershed_slug/geometry", cs.GetWatershedGeometry)
 	key.PUT("/watersheds/:watershed_id/update_geometry", cs.UpdateWatershedGeometry)
-	key.DELETE("/watersheds/:watershed_id", cs.DeleteWatershed)
-	key.POST("/watersheds/:watershed_id/undelete", cs.UndeleteWatershed)
+	key.DELETE("/watersheds/:watershed_slug", cs.DeleteWatershed)
+	key.POST("/watersheds/:watershed_slug/undelete", cs.UndeleteWatershed)
 	key.POST("/watersheds/:watershed_id/shapefile_uploads", cs.UploadWatersheds)
 
 	// Maintenance/Automation
