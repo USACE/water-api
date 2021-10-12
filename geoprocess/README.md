@@ -12,7 +12,7 @@
 {
     "processor": "watershed_shapefile_upload",
     "input": {
-        "bucket": "cwbi-data-develop",
+        "bucket": "castle-data-develop",
         "key": "water/test-watershed/LRH_Scioto.zip",
     },
     "functions": [

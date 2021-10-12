@@ -39,7 +39,7 @@ USE_SSL = os.getenv("USE_SSL", default=False)
 
 WAIT_TIME_SECONDS = os.getenv("WAIT_TIME_SECONDS", default=20)
 
-WRITE_TO_BUCKET = os.getenv("WRITE_TO_BUCKET", default="cwbi-data-develop")
+WRITE_TO_BUCKET = os.getenv("WRITE_TO_BUCKET", default="castle-data-develop")
 
 # MOCK File Uploads to S3 (i.e. print) or actually upload
 if os.getenv("WATER_MOCK_S3_UPLOAD", default="False").upper() == "TRUE":
@@ -48,5 +48,5 @@ else:
     # If CUMULUS_MOCK_S3_UPLOAD environment variable is unset then CUMULUS_MOCK_S3_UPLOAD will equal False
     WATER_MOCK_S3_UPLOAD = False
 
-WATER_API_URL = os.getenv("CUMULUS_API_URL", default="http://api:80")
+WATER_API_URL = os.getenv("WATER_API_URL", default="http://api")
 WATER_API_HOST_HEADER = os.getenv("WATER_API_HOST_HEADER", default=None)

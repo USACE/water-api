@@ -12,7 +12,7 @@ import config as CONFIG
 INCOMING_SHAPEFILE_TO_SINGLE_SHAPE = {
     "processor": "watershed_shapefile_upload",
     "input": {
-        "bucket": "cwbi-data-develop",
+        "bucket": "castle-data-develop",
         "key": "water/test-watershed/LRH_Scioto.zip",
     },
     "functions": [
@@ -21,7 +21,7 @@ INCOMING_SHAPEFILE_TO_SINGLE_SHAPE = {
         {"function": "simplify"},
         {"function": "transform"},
     ],
-    "output_target": "http://api/watersheds/geometry/5758d0dc-c8bf-4e37-a5e7-44ff3f4b8677",
+    "output_target": "watersheds/5758d0dc-c8bf-4e37-a5e7-44ff3f4b8677/update_geometry",
 }
 
 CLIENT = boto3.resource(

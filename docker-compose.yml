@@ -1,33 +1,33 @@
 version: '3'
 
 services:
-  # api:
-  #   build:
-  #     context: api
-  #   restart: always
-  #   environment:
-  #     - AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
-  #     - AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-  #     - AWS_REGION=us-east-1
-  #     - AWS_DEFAULT_REGION=us-east-1
-  #     - AWS_S3_BUCKET=cwbi-data-develop
-  #     - AWS_S3_ENDPOINT=http://minio:9000
-  #     - AWS_S3_DISABLE_SSL=True
-  #     - AWS_S3_FORCE_PATH_STYLE=True
-  #     - AUTH_MOCKED=true
-  #     - APPLICATION_KEY=appkey
-  #     - WATER_DB_USER=water_user
-  #     - WATER_DB_PASS=water_pass
-  #     - WATER_DB_NAME=postgres
-  #     - WATER_DB_HOST=db
-  #     - WATER_DB_SSLMODE=disable
-  #     - DB_POOL_MAX_CONNS=10
-  #     - DB_POOL_MAX_CONN_IDLE_TIME=30m
-  #     - DB_POOL_MIN_CONNS=5
-  #   ports:
-  #     - '80:80'
-  #   depends_on:
-  #     - db
+  api:
+    build:
+      context: ./
+    restart: always
+    environment:
+      - AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+      - AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      - AWS_REGION=us-east-1
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_S3_BUCKET=cwbi-data-develop
+      - AWS_S3_ENDPOINT=http://minio:9000
+      - AWS_S3_DISABLE_SSL=True
+      - AWS_S3_FORCE_PATH_STYLE=True
+      - AUTH_MOCKED=true
+      - APPLICATION_KEY=appkey
+      - WATER_DB_USER=water_user
+      - WATER_DB_PASS=water_pass
+      - WATER_DB_NAME=postgres
+      - WATER_DB_HOST=db
+      - WATER_DB_SSLMODE=disable
+      - DB_POOL_MAX_CONNS=10
+      - DB_POOL_MAX_CONN_IDLE_TIME=30m
+      - DB_POOL_MIN_CONNS=5
+    ports:
+      - '80:80'
+    depends_on:
+      - db
   # --------------------------------
   db:
     image: postgis/postgis:13-3.1
@@ -90,7 +90,7 @@ services:
   # --------------------------------
   listener:
     build:
-      context: async_listener
+      context: listener
     environment:
       - AWS_ACCESS_KEY_ID=x
       - AWS_SECRET_ACCESS_KEY=x
