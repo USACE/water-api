@@ -4,8 +4,7 @@ networks:
   default:
     name: water-api_default
 
-services:
-  
+services:  
   shape_processor:
     build:
       context: ./
