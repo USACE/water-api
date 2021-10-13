@@ -69,7 +69,7 @@ func GetWatershedGeometry(db *pgxpool.Pool, watershedSlug *string) ([]byte, erro
 		context.Background(), db, &j, ` 
 			select json_build_object(
 				'type', 'FeatureCollection',
-				'features', json_agg(ST_AsGeoJSON(t.*)::json)
+				'features', json_agg(ST_AsGeoJSON(t.*, 'geom', 6, false)::json)
 			)
 			from (SELECT w.id, w.name, ST_ForcePolygonCCW(ST_Transform(w.geometry,4326)) 
 				  FROM a2w_cwms.watershed w WHERE slug = $1
