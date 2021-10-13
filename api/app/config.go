@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -38,10 +37,10 @@ func GetConfig() (*Config, error) {
 
 // AWSConfig
 func AWSConfig(cfg Config) aws.Config {
-	s3Config := aws.NewConfig().WithCredentials(credentials.NewEnvCredentials())
-	s3Config.WithDisableSSL(cfg.AWSS3DisableSSL)
-	s3Config.WithS3ForcePathStyle(cfg.AWSS3ForcePathStyle)
-	s3Config.WithRegion(cfg.AWSS3Region)
+	s3Config := aws.NewConfig().
+		WithRegion(cfg.AWSS3Region).
+		WithDisableSSL(cfg.AWSS3DisableSSL).
+		WithS3ForcePathStyle(cfg.AWSS3ForcePathStyle)
 	if cfg.AWSS3Endpoint != "" {
 		s3Config.WithEndpoint(cfg.AWSS3Endpoint)
 	}
