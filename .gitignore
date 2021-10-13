@@ -9,6 +9,9 @@ vendor
 *.dylib
 *.zip
 
+# Allow watershed zip files
+!media/water/test-watershed/*.zip
+
 # Exception to above for raw data sample files
 !*bil.zip
 
