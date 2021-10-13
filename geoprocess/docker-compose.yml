@@ -17,7 +17,6 @@ services:
       - AWS_ACCESS_KEY_ID_SQS=x
       - AWS_SECRET_ACCESS_KEY_SQS=x
       - AWS_REGION_SQS=elasticmq
-      - WATER_MOCK_S3_UPLOAD=FALSE
       - QUEUE_NAME=water-geoprocess
       - WATER_API_URL=http://api
       - ENDPOINT_URL_SQS=http://elasticmq:9324
