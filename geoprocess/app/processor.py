@@ -11,7 +11,13 @@ import config as CONFIG
 if CONFIG.AWS_ACCESS_KEY_ID == "x":
     # Running in AWS
     # Using IAM Role for Credentials
-    CLIENT = boto3.resource("sqs")
+    if CONFIG.ENDPOINT_URL_SQS:
+        CLIENT = boto3.resource(
+            "sqs",
+            endpoint_url=CONFIG.ENDPOINT_URL_SQS,
+        )
+    else:
+        CLIENT = boto3.resource("sqs")
 else:
     # Local Testing
     # ElasticMQ with Credentials via AWS_ environment variables

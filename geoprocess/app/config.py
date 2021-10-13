@@ -11,8 +11,7 @@ AWS_HTTPS=NO
 import os
 
 APPLICATION_KEY = os.getenv("APPLICATION_KEY", default="appkey")
-# AWS_S3_ENDPOINT = os.getenv('AWS_S3_ENDPOINT', default='minio:9000')
-ENDPOINT_URL_SQS = os.getenv("ENDPOINT_URL_SQS", default="http://elasticmq:9324")
+ENDPOINT_URL_SQS = os.getenv("ENDPOINT_URL_SQS", default=None)
 QUEUE_NAME = os.getenv("QUEUE_NAME", default="water-geoprocess")
 
 #
