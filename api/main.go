@@ -81,10 +81,11 @@ func main() {
 
 	// Location Levels
 	public.GET("/levels/kind", cs.ListLevelKind)
-	// public.GET("/levels/:level_id/values", cs.ListLevelValues)
-	// key.POST("/levels", cs.CreateLevelKind)
-	// key.POST("/levels", cs.CreateLocationLevel)
-	// key.POST("/levels/values", cs.CreateOrUpdateValues)
+	key.POST("/levels/kind/:name", cs.CreateLevelKind)
+	key.DELETE("/levels/kind/:slug", cs.DeleteLevelKind)
+	public.GET("/levels/:location_slug/:level_kind", cs.ListLevelValues)
+	key.POST("/levels/:location_id", cs.CreateLocationLevels)
+	key.POST("/levels/:location_id", cs.UpdateLocationLevels)
 
 	// Statistics
 	public.GET("/stats/states", cs.ListStatsStates)

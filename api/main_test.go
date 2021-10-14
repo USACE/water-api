@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/USACE/water-api/api/app"
@@ -64,6 +65,132 @@ func TestListOffices(t *testing.T) {
 	c.SetPath("/offices")
 
 	if assert.NoError(t, cs.ListOffices(c)) {
+		b := rec.Body.String()
+		var out bytes.Buffer
+		json.Indent(&out, []byte(b), "", "    ")
+		fmt.Printf("%s", out.Bytes())
+	}
+}
+
+// TestListLevelKind
+func TestListLevelKind(t *testing.T) {
+	_, rec, c := Setup()
+	c.SetPath("/levels/kind")
+
+	if assert.NoError(t, cs.ListLevelKind(c)) {
+		b := rec.Body.String()
+		var out bytes.Buffer
+		json.Indent(&out, []byte(b), "", "    ")
+		fmt.Printf("%s", out.Bytes())
+	}
+}
+
+// TestCreateLevelKind
+func TestCreateLevelKind(t *testing.T) {
+	_, rec, c := Setup()
+	c.SetPath("/levels/kind/:name")
+	c.SetParamNames("name")
+	c.SetParamValues("Test Location Level")
+
+	if assert.NoError(t, cs.CreateLevelKind(c)) {
+		b := rec.Body.String()
+		var out bytes.Buffer
+		json.Indent(&out, []byte(b), "", "    ")
+		fmt.Printf("%s", out.Bytes())
+	}
+}
+
+// TestDeleteLevelKind
+func TestDeleteLevelKind(t *testing.T) {
+	_, rec, c := Setup()
+	c.SetPath("/levels/kind/:slug")
+	c.SetParamNames("slug")
+	c.SetParamValues("test-location-level")
+
+	if assert.NoError(t, cs.DeleteLevelKind(c)) {
+		b := rec.Body.String()
+		var out bytes.Buffer
+		json.Indent(&out, []byte(b), "", "    ")
+		fmt.Printf("%s", out.Bytes())
+	}
+}
+
+// CreateLocationLevels
+func TestCreateLocationLevels(t *testing.T) {
+	var (
+		levelResponse = `[{"kind_id": "43e6ecff-32d0-4e03-ba79-f05a9ed5924d","levels": [{"time": "1900-01-01T06:00:00-06:00", "value": 663},{"time": "1900-12-31T06:00:00-06:00", "value": 663}]},{"kind_id": "b3e8fbb0-ae51-4f56-b2b0-b39658f72375","levels": [{"time": "1900-01-01T06:00:00-06:00", "value": 651},{"time": "1900-12-31T06:00:00-06:00", "value": 651}]}]`
+	)
+	var request = struct {
+		path        string
+		contenttype string
+		body        string
+	}{
+		path:        "/levels/:location_id",
+		contenttype: "application/json",
+		body:        levelResponse,
+	}
+	// Setup the request parameters and body
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(levelResponse))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	req.Header.Set(echo.HeaderAccept, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	c.SetPath(request.path)
+	c.SetParamNames("location_id")
+	c.SetParamValues("67d388ca-0c28-44b3-bc43-018e85e939be")
+
+	if assert.NoError(t, cs.CreateLocationLevels(c)) {
+		b := rec.Body.String()
+		var out bytes.Buffer
+		json.Indent(&out, []byte(b), "", "    ")
+		fmt.Printf("%s", out.Bytes())
+	}
+}
+
+// TestUpdateLocationLevels
+func TestUpdateLocationLevels(t *testing.T) {
+	var (
+		levelResponse = `[{"kind_id": "43e6ecff-32d0-4e03-ba79-f05a9ed5924d","levels": [{"time": "1900-01-01T06:00:00-06:00", "value": 999},{"time": "1900-12-31T06:00:00-06:00", "value": 999}]},{"kind_id": "b3e8fbb0-ae51-4f56-b2b0-b39658f72375","levels": [{"time": "1900-01-01T06:00:00-06:00", "value": 999},{"time": "1900-12-31T06:00:00-06:00", "value": 999}]}]`
+	)
+	var request = struct {
+		path        string
+		contenttype string
+		body        string
+	}{
+		path:        "/levels/:location_id",
+		contenttype: "application/json",
+		body:        levelResponse,
+	}
+	// Setup the request parameters and body
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(levelResponse))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	req.Header.Set(echo.HeaderAccept, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	c.SetPath(request.path)
+	c.SetParamNames("location_id")
+	c.SetParamValues("67d388ca-0c28-44b3-bc43-018e85e939be")
+
+	if assert.NoError(t, cs.UpdateLocationLevels(c)) {
+		b := rec.Body.String()
+		var out bytes.Buffer
+		json.Indent(&out, []byte(b), "", "    ")
+		fmt.Printf("%s", out.Bytes())
+	}
+}
+
+// TestListLevelValues
+func TestListLevelValues(t *testing.T) {
+	_, rec, c := Setup()
+	c.SetPath("/levels/:location_slug/:level_kind")
+	c.SetParamNames("location_slug", "level_kind")
+	c.SetParamValues("dale-hollow", "top-of-flood-control")
+
+	if assert.NoError(t, cs.ListLevelValues(c)) {
 		b := rec.Body.String()
 		var out bytes.Buffer
 		json.Indent(&out, []byte(b), "", "    ")
