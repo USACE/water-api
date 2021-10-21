@@ -41,7 +41,7 @@ func ListWatershedSiteParameters(db *pgxpool.Pool) ([]byte, error) {
 				s.id = usp.site_id
 			LEFT JOIN (			
 				SELECT
-					array_agg(code) AS parameter_codes,
+					array_agg(DISTINCT code) AS parameter_codes,
 					usp.site_id
 				FROM
 					usgs_parameter a
