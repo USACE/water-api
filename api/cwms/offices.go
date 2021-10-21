@@ -3,7 +3,7 @@ package cwms
 import (
 	"net/http"
 
-	"github.com/USACE/water-api/cwms/models"
+	"github.com/USACE/water-api/api/cwms/models"
 
 	"github.com/labstack/echo/v4"
 )

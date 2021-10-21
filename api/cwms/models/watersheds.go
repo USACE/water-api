@@ -52,14 +52,33 @@ func ListWatersheds(db *pgxpool.Pool) ([]Watershed, error) {
 }
 
 // GetWatershed returns a single watershed using slug
-func GetWatershed(db *pgxpool.Pool, watershedID *uuid.UUID) (*Watershed, error) {
+func GetWatershed(db *pgxpool.Pool, watershedSlug *string) (*Watershed, error) {
 	var w Watershed
 	if err := pgxscan.Get(
-		context.Background(), db, &w, WatershedSQL+` FROM v_watershed w WHERE w.id = $1`, watershedID,
+		context.Background(), db, &w, WatershedSQL+` FROM v_watershed w WHERE w.slug = $1`, watershedSlug,
 	); err != nil {
 		return nil, err
 	}
 	return &w, nil
+}
+
+// GetWatershedGeometry returns a single watershed geometry (as GeoJSON) using slug
+func GetWatershedGeometry(db *pgxpool.Pool, watershedSlug *string) ([]byte, error) {
+	var j []byte
+	if err := pgxscan.Get(
+		context.Background(), db, &j, ` 
+			select json_build_object(
+				'type', 'FeatureCollection',
+				'features', json_agg(ST_AsGeoJSON(t.*, 'geom', 6, false)::json)
+			)
+			from (SELECT w.id, w.name, ST_ForcePolygonCCW(ST_Transform(w.geometry,4326)) 
+				  FROM a2w_cwms.watershed w WHERE slug = $1
+			) as t(id, name, geom)
+			`, watershedSlug,
+	); err != nil {
+		return nil, err
+	}
+	return j, nil
 }
 
 // CreateWatershed creates a new watershed
@@ -75,7 +94,7 @@ func CreateWatershed(db *pgxpool.Pool, w *Watershed) (*Watershed, error) {
 	); err != nil {
 		return nil, err
 	}
-	return GetWatershed(db, &wNew.ID)
+	return GetWatershed(db, &wNew.Slug)
 	//return &wNew, nil
 }
 
@@ -114,22 +133,22 @@ func UpdateWatershedGeometry(db *pgxpool.Pool, id *uuid.UUID, wf *geojson.Featur
 
 	rows, err := tx.Query(
 		context.Background(),
-		`UPDATE watershed SET geometry = ST_Transform(ST_GeomFromGeoJSON($1),4326) WHERE id = $2 RETURNING id`,
+		`UPDATE watershed SET geometry = ST_Transform(ST_GeomFromGeoJSON($1),4326) WHERE id = $2 RETURNING slug`,
 		qs,
 		id,
 	)
 	if err != nil {
 		return nil, err
 	}
-	var rid uuid.UUID
-	if err = pgxscan.ScanOne(&rid, rows); err != nil {
+	var slug string
+	if err = pgxscan.ScanOne(&slug, rows); err != nil {
 		return nil, err
 	}
 	// Commit and then get the updated watersed to return
 	if err = tx.Commit(context.Background()); err != nil {
 		return nil, err
 	}
-	ws, err := GetWatershed(db, &rid)
+	ws, err := GetWatershed(db, &slug)
 	if err != nil {
 		return nil, err
 	}
@@ -138,29 +157,30 @@ func UpdateWatershedGeometry(db *pgxpool.Pool, id *uuid.UUID, wf *geojson.Featur
 
 // UpdateWatershed updates a watershed
 func UpdateWatershed(db *pgxpool.Pool, w *Watershed) (*Watershed, error) {
-	var wID uuid.UUID
-	if err := pgxscan.Get(context.Background(), db, &wID, `UPDATE watershed SET name=$1, office_id=$3 WHERE id=$2 RETURNING id`, &w.Name, &w.ID, &w.OfficeID); err != nil {
+	var wSlug string
+	if err := pgxscan.Get(context.Background(), db, &wSlug, `UPDATE watershed SET name=$1, office_id=$3 WHERE slug=$2 RETURNING slug`, &w.Name, &w.Slug, &w.OfficeID); err != nil {
 		return nil, err
 	}
-	return GetWatershed(db, &wID)
+	fmt.Println(wSlug)
+	return GetWatershed(db, &wSlug)
 }
 
-// DeleteWatershed deletes a watershed by slug
-func DeleteWatershed(db *pgxpool.Pool, watershedID *uuid.UUID) error {
-	if _, err := db.Exec(context.Background(), `UPDATE watershed SET deleted=true WHERE id=$1`, watershedID); err != nil {
+// DeleteWatershed deletes a watershed by id
+func DeleteWatershed(db *pgxpool.Pool, watershedSlug *string) error {
+	if _, err := db.Exec(context.Background(), `UPDATE watershed SET deleted=true WHERE slug=$1`, watershedSlug); err != nil {
 		return err
 	}
 	return nil
 }
 
-func UndeleteWatershed(db *pgxpool.Pool, watershedID *uuid.UUID) (*Watershed, error) {
-	var wID uuid.UUID
+func UndeleteWatershed(db *pgxpool.Pool, watershedSlug *string) (*Watershed, error) {
+	var wSlug string
 	if err := pgxscan.Get(
-		context.Background(), db, &wID, `UPDATE watershed SET deleted=false WHERE id=$1 RETURNING id`, watershedID,
+		context.Background(), db, &wSlug, `UPDATE watershed SET deleted=false WHERE slug=$1 RETURNING slug`, watershedSlug,
 	); err != nil {
 		return nil, err
 	}
-	return GetWatershed(db, &wID)
+	return GetWatershed(db, &wSlug)
 }
 
 // UploadWatersheds

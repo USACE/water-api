@@ -24,11 +24,11 @@ func (s Store) ListWatersheds(c echo.Context) error {
 
 // GetWatershed returns a single Watershed
 func (s Store) GetWatershed(c echo.Context) error {
-	id, err := uuid.Parse(c.Param("watershed_id"))
-	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
-	}
-	w, err := models.GetWatershed(s.Connection, &id)
+	slug := c.Param("watershed_slug")
+	// if err != nil {
+	// 	return c.String(http.StatusBadRequest, err.Error())
+	// }
+	w, err := models.GetWatershed(s.Connection, &slug)
 	if err != nil {
 		if pgxscan.NotFound(err) {
 			return c.JSON(http.StatusNotFound, messages.DefaultMessageNotFound)
@@ -49,6 +49,23 @@ func (s Store) CreateWatershed(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusCreated, newWatershed)
+}
+
+// GetWatershed returns a single Watershed
+func (s Store) GetWatershedGeometry(c echo.Context) error {
+	slug := c.Param("watershed_slug")
+	// if err != nil {
+	// 	return c.String(http.StatusBadRequest, err.Error())
+	// }
+	w, err := models.GetWatershedGeometry(s.Connection, &slug)
+	if err != nil {
+		if pgxscan.NotFound(err) {
+			return c.JSON(http.StatusNotFound, messages.DefaultMessageNotFound)
+		}
+		//return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSONBlob(http.StatusOK, w)
 }
 
 // UpdateWatershed creates a new watershed
@@ -75,17 +92,17 @@ func (s Store) UpdateWatershedGeometry(c echo.Context) error {
 
 func (s Store) UpdateWatershed(c echo.Context) error {
 	// Watershed Slug from route params
-	wID, err := uuid.Parse(c.Param("watershed_id"))
-	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
-	}
+	wSlug := c.Param("watershed_slug")
+	// if err != nil {
+	// 	return c.String(http.StatusBadRequest, err.Error())
+	// }
 	// Payload
 	var w models.Watershed
 	if err := c.Bind(&w); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 	// Check route params v. payload
-	if wID != w.ID {
+	if wSlug != w.Slug {
 		return c.String(http.StatusBadRequest, "watershed_id in URL does not match request body")
 	}
 	wUpdated, err := models.UpdateWatershed(s.Connection, &w)
@@ -98,11 +115,9 @@ func (s Store) UpdateWatershed(c echo.Context) error {
 
 // DeleteWatershed creates a new watershed
 func (s Store) DeleteWatershed(c echo.Context) error {
-	wID, err := uuid.Parse(c.Param("watershed_id"))
-	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
-	}
-	err = models.DeleteWatershed(s.Connection, &wID)
+	wSlug := c.Param("watershed_slug")
+
+	err := models.DeleteWatershed(s.Connection, &wSlug)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
@@ -111,11 +126,9 @@ func (s Store) DeleteWatershed(c echo.Context) error {
 
 // UndeleteWatershed restores a deleted watershed
 func (s Store) UndeleteWatershed(c echo.Context) error {
-	wID, err := uuid.Parse(c.Param("watershed_id"))
-	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
-	}
-	w, err := models.UndeleteWatershed(s.Connection, &wID)
+	wSlug := c.Param("watershed_slug")
+
+	w, err := models.UndeleteWatershed(s.Connection, &wSlug)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}

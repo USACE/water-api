@@ -11,8 +11,7 @@ AWS_HTTPS=NO
 import os
 
 APPLICATION_KEY = os.getenv("APPLICATION_KEY", default="appkey")
-# AWS_S3_ENDPOINT = os.getenv('AWS_S3_ENDPOINT', default='minio:9000')
-ENDPOINT_URL_SQS = os.getenv("ENDPOINT_URL_SQS", default="http://elasticmq:9324")
+ENDPOINT_URL_SQS = os.getenv("ENDPOINT_URL_SQS", default=None)
 QUEUE_NAME = os.getenv("QUEUE_NAME", default="water-geoprocess")
 
 #
@@ -40,13 +39,6 @@ USE_SSL = os.getenv("USE_SSL", default=False)
 WAIT_TIME_SECONDS = os.getenv("WAIT_TIME_SECONDS", default=20)
 
 WRITE_TO_BUCKET = os.getenv("WRITE_TO_BUCKET", default="castle-data-develop")
-
-# MOCK File Uploads to S3 (i.e. print) or actually upload
-if os.getenv("WATER_MOCK_S3_UPLOAD", default="False").upper() == "TRUE":
-    WATER_MOCK_S3_UPLOAD = True
-else:
-    # If CUMULUS_MOCK_S3_UPLOAD environment variable is unset then CUMULUS_MOCK_S3_UPLOAD will equal False
-    WATER_MOCK_S3_UPLOAD = False
 
 WATER_API_URL = os.getenv("WATER_API_URL", default="http://api")
 WATER_API_HOST_HEADER = os.getenv("WATER_API_HOST_HEADER", default=None)

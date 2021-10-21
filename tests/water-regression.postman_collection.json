@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "557ac54b-dbff-47d2-9692-a0565d83f376",
+		"_postman_id": "5fe80462-23e7-41b2-8362-e75ad08d3b5a",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -904,7 +904,8 @@
 									"});",
 									"",
 									"let r = JSON.parse(responseBody);",
-									"pm.environment.set(\"new_create_watershed1_id\", r.id);"
+									"pm.environment.set(\"new_create_watershed1_id\", r.id);",
+									"pm.environment.set(\"new_create_watershed1_slug\", r.slug);"
 								],
 								"type": "text/javascript"
 							}
@@ -998,7 +999,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"{{new_create_watershed1_id}}\",\n    \"name\": \"Regression Test 1 - Changed to LRN\",\n    \"office_id\": \"552e59f7-c0cc-4689-8a4d-e791c028430a\"\n}",
+							"raw": "{\n    \"slug\": \"{{new_create_watershed1_slug}}\",\n    \"name\": \"Regression Test 1 - Changed to LRN\",\n    \"office_id\": \"552e59f7-c0cc-4689-8a4d-e791c028430a\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1006,13 +1007,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/watersheds/{{new_create_watershed1_id}}",
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed1_slug}}",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"watersheds",
-								"{{new_create_watershed1_id}}"
+								"{{new_create_watershed1_slug}}"
 							]
 						}
 					},
@@ -1080,13 +1081,46 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/watersheds/{{new_create_watershed1_id}}",
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed1_slug}}",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"watersheds",
-								"{{new_create_watershed1_id}}"
+								"{{new_create_watershed1_slug}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Watershed #1 Geometry",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// status code is 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed1_slug}}/geometry",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"watersheds",
+								"{{new_create_watershed1_slug}}",
+								"geometry"
 							]
 						}
 					},
@@ -1121,13 +1155,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/watersheds/{{new_create_watershed1_id}}",
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed1_slug}}",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"watersheds",
-								"{{new_create_watershed1_id}}"
+								"{{new_create_watershed1_slug}}"
 							]
 						}
 					},
@@ -1162,13 +1196,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/watersheds/{{new_create_watershed1_id}}/undelete",
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed1_slug}}/undelete",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"watersheds",
-								"{{new_create_watershed1_id}}",
+								"{{new_create_watershed1_slug}}",
 								"undelete"
 							]
 						}
