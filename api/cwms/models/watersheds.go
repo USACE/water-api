@@ -6,9 +6,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"mime/multipart"
+	"time"
 
 	"github.com/USACE/water-api/api/app"
 	"github.com/USACE/water-api/api/helpers"
+	"github.com/USACE/water-api/api/timeseries"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -27,6 +29,16 @@ type Watershed struct {
 	Slug         string    `json:"slug"`
 	Name         string    `json:"name"`
 	Bbox         []float64 `json:"bbox" db:"bbox"`
+}
+
+// Extract struct for the return of measurements for a watershed
+type Extract struct {
+	SiteNumber  string      `json:"site_number"`
+	Code        string      `json:"code"`
+	SiteID      uuid.UUID   `json:"site_id"`
+	ParameterID uuid.UUID   `json:"paramter_id"`
+	Times       []time.Time `json:"times"`
+	Values      []float64   `json:"values"`
 }
 
 // WatershedSQL includes common fields selected to build a watershed
@@ -245,4 +257,39 @@ func UploadWatersheds(db *pgxpool.Pool, wid uuid.UUID, file *multipart.FileHeade
 	result["Bucket"] = *bucket
 
 	return result, nil
+}
+
+// TimeseriesExtractWatershed
+func TimeseriesExtractWatershed(db *pgxpool.Pool, slug string, tw *timeseries.TimeWindow) ([]Extract, error) {
+	ext := make([]Extract, 0)
+	rows, err := db.Query(context.Background(),
+		`SELECT us.site_number, up.code, r1.site_id, r1.parameter_id, array_agg(r1."time") AS times, array_agg(r1.value) AS values 
+		FROM
+		(
+			SELECT *
+			FROM a2w_cwms.watershed_usgs_sites wus
+			JOIN
+			a2w_cwms.usgs_measurements um
+			ON wus.usgs_site_parameter_id = um.usgs_site_parameters_id
+			JOIN
+			a2w_cwms.usgs_site_parameters usp 
+			ON usgs_site_parameters_id = usp.id 
+			WHERE "time" BETWEEN $2::timestamptz AND $3::timestamptz AND
+			watershed_id = (SELECT id FROM a2w_cwms.watershed w WHERE slug = $1)
+		) AS r1
+		LEFT JOIN a2w_cwms.usgs_site us 
+		ON r1.site_id = us.id 
+		LEFT JOIN a2w_cwms.usgs_parameter up 
+		ON r1.parameter_id = up.id
+		GROUP BY us.site_number, up.code , r1.site_id, r1.parameter_id`,
+		slug, tw.After, tw.Before,
+	)
+	if err != nil {
+		return nil, err
+	}
+	if err = pgxscan.ScanAll(&ext, rows); err != nil {
+		return nil, err
+	}
+
+	return ext, nil
 }

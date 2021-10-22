@@ -112,6 +112,8 @@ func main() {
 	key.DELETE("/watersheds/:watershed_slug", cs.DeleteWatershed)
 	key.POST("/watersheds/:watershed_slug/undelete", cs.UndeleteWatershed)
 	key.POST("/watersheds/:watershed_id/shapefile_uploads", cs.UploadWatersheds)
+	// Extract timeseries values using locations grouped with a watershed defined by its slug
+	public.GET("watersheds/:watershed_slug/extract", cs.TimeseriesExtractWatershed)
 
 	// Maintenance/Automation
 	key.POST("/automation/assign_states_to_locations", cs.AssignStatesToLocations)

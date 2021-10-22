@@ -7,7 +7,9 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
+	"unsafe"
 
 	"github.com/USACE/water-api/api/app"
 	"github.com/USACE/water-api/api/cwms"
@@ -69,4 +71,29 @@ func TestListOffices(t *testing.T) {
 		json.Indent(&out, []byte(b), "", "    ")
 		fmt.Printf("%s", out.Bytes())
 	}
+}
+
+// TestTimeseriesExtractWatershed
+func TestTimeseriesExtractWatershed(t *testing.T) {
+	e := echo.New() // All Routes
+
+	q := make(url.Values)
+	q.Set("after", "2021-10-15T00:00:00Z")
+	q.Set("before", "2021-10-22T23:00:00Z")
+
+	req := httptest.NewRequest(http.MethodGet, "/watersheds/:watershed_slug/extract?"+q.Encode(), nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	c.SetParamNames("watershed_slug")
+	c.SetParamValues("kanawha-river")
+
+	if assert.NoError(t, cs.TimeseriesExtractWatershed(c)) {
+		b := rec.Body.String()
+		var out bytes.Buffer
+		json.Indent(&out, []byte(b), "", "    ")
+		fmt.Printf("%s", out.Bytes())
+		fmt.Printf("Body size: %T, %d\n", b, unsafe.Sizeof(b))
+	}
+
 }
