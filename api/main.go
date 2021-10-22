@@ -85,7 +85,7 @@ func main() {
 	key.DELETE("/levels/kind/:slug", cs.DeleteLevelKind)
 	public.GET("/levels/:location_slug/:level_kind", cs.ListLevelValues)
 	key.POST("/levels/:location_id", cs.CreateLocationLevels)
-	key.POST("/levels/:location_id", cs.UpdateLocationLevels)
+	key.PUT("/levels/:location_id", cs.UpdateLocationLevels)
 
 	// Statistics
 	public.GET("/stats/states", cs.ListStatsStates)
