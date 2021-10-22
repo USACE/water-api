@@ -4,9 +4,8 @@ go 1.15
 
 require (
 	github.com/Masterminds/squirrel v1.5.0
+	github.com/USACE/water-api v0.0.0-20210929200709-814b8def2d75
 	github.com/aws/aws-sdk-go v1.40.50
-	github.com/aws/aws-sdk-go-v2 v1.9.1
-	github.com/aws/aws-sdk-go-v2/config v1.8.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/georgysavva/scany v0.2.9
 	github.com/google/uuid v1.0.0
@@ -17,7 +16,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/labstack/echo/v4 v4.6.1
 	github.com/paulmach/orb v0.2.2
-	github.com/stretchr/testify v1.5.1 // indirect
+	github.com/stretchr/testify v1.5.1
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb
-	golang.org/x/net v0.0.0-20210924151903-3ad01bbaa167 // indirect
+	golang.org/x/net v0.0.0-20210924151903-3ad01bbaa167
 )

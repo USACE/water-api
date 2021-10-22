@@ -5,6 +5,7 @@ import (
 
 	"github.com/USACE/water-api/api/cwms/models"
 	"github.com/USACE/water-api/api/messages"
+	"github.com/USACE/water-api/api/timeseries"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
 	"github.com/paulmach/orb/geojson"
@@ -153,4 +154,25 @@ func (s Store) UploadWatersheds(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, r)
+}
+
+// TimeseriesExtractWatershed
+func (s Store) TimeseriesExtractWatershed(c echo.Context) error {
+	wslug := c.Param("watershed_slug")
+
+	// Time Window
+	ab := map[string]string{}
+	if err := (&echo.DefaultBinder{}).BindQueryParams(c, &ab); err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	tw, err := timeseries.CreateTimeWindow(ab["after"], ab["before"])
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	ext, err := models.TimeseriesExtractWatershed(s.Connection, wslug, &tw)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	return c.JSON(http.StatusOK, ext)
 }
