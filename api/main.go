@@ -43,7 +43,7 @@ func main() {
 	if config.AuthMocked {
 		private.Use(middleware.JWTMock)
 	} else {
-		private.Use(middleware.JWT)
+		private.Use(middleware.JWT, middleware.AttachUserInfo)
 	}
 
 	// App Routes (Intended to be used by application only)
@@ -119,7 +119,8 @@ func main() {
 	key.PUT("/watersheds/:watershed_id/update_geometry", cs.UpdateWatershedGeometry)
 	key.DELETE("/watersheds/:watershed_slug", cs.DeleteWatershed)
 	key.POST("/watersheds/:watershed_slug/undelete", cs.UndeleteWatershed)
-	key.POST("/watersheds/:watershed_id/shapefile_uploads", cs.UploadWatersheds)
+	private.POST("/watersheds/:watershed_id/shapefile_uploads", cs.UploadWatersheds, middleware.IsAdmin)
+
 	// Extract timeseries values using locations grouped with a watershed defined by its slug
 	public.GET("watersheds/:watershed_slug/extract", cs.TimeseriesExtractWatershed)
 
