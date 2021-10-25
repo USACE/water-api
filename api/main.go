@@ -79,6 +79,14 @@ func main() {
 	key.PUT("/offices/:office_symbol/locations/:location_slug", cs.UpdateLocationByOffice)
 	key.DELETE("/offices/:office_symbol/locations/:location_slug", cs.DeleteLocationByOffice)
 
+	// Location Levels
+	public.GET("/levels/kind", cs.ListLevelKind)
+	key.POST("/levels/kind/:name", cs.CreateLevelKind)
+	key.DELETE("/levels/kind/:slug", cs.DeleteLevelKind)
+	public.GET("/levels/:location_slug/:level_kind", cs.ListLevelValues)
+	key.POST("/levels/:location_id", cs.CreateLocationLevels)
+	key.PUT("/levels/:location_id", cs.UpdateLocationLevels)
+
 	// Statistics
 	public.GET("/stats/states", cs.ListStatsStates)
 	public.GET("/stats/states/:state_id", cs.GetStatsState)
@@ -111,8 +119,10 @@ func main() {
 	key.PUT("/watersheds/:watershed_id/update_geometry", cs.UpdateWatershedGeometry)
 	key.DELETE("/watersheds/:watershed_slug", cs.DeleteWatershed)
 	key.POST("/watersheds/:watershed_slug/undelete", cs.UndeleteWatershed)
-
 	private.POST("/watersheds/:watershed_id/shapefile_uploads", cs.UploadWatersheds, middleware.IsAdmin)
+
+	// Extract timeseries values using locations grouped with a watershed defined by its slug
+	public.GET("watersheds/:watershed_slug/extract", cs.TimeseriesExtractWatershed)
 
 	// Maintenance/Automation
 	key.POST("/automation/assign_states_to_locations", cs.AssignStatesToLocations)

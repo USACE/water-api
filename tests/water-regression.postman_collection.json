@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5fe80462-23e7-41b2-8362-e75ad08d3b5a",
+		"_postman_id": "9d4923cc-6bde-4250-adde-23371ebce07f",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -795,7 +795,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n\t{\n\t\t\"site_number\": \"99999999\",\n\t\t\"parameter_codes\": [\n\t\t\t\"00065\"\n\t\t]\n\t},\n\t{\n\t\t\"site_number\": \"99999999\",\n\t\t\"parameter_codes\":[\n\t\t\t\"00060\"\n\t\t]\n\t}\n]",
+							"raw": "[\n\t{\n\t\t\"site_number\": \"99999999\",\n\t\t\"parameter_codes\": [\n\t\t\t\"00065\"\n\t\t]\n\t},\n\t{\n\t\t\"site_number\": \"99999999\",\n\t\t\"parameter_codes\":[\n\t\t\t\"00061\"\n\t\t]\n\t}\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -836,7 +836,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n\t{\n\t\t\"site_number\": \"99999999\",\n\t\t\"parameter_codes\": [\n\t\t\t\"00065\"\n\t\t]\n\t},\n\t{\n\t\t\"site_number\": \"99999999\",\n\t\t\"parameter_codes\":[\n\t\t\t\"00060\"\n\t\t]\n\t}\n]",
+							"raw": "[\n\t{\n\t\t\"site_number\": \"99999999\",\n\t\t\"parameter_codes\": [\n\t\t\t\"00065\"\n\t\t]\n\t},\n\t{\n\t\t\"site_number\": \"99999999\",\n\t\t\"parameter_codes\":[\n\t\t\t\"00061\"\n\t\t]\n\t}\n]",
 							"options": {
 								"raw": {
 									"language": "json"
