@@ -10,7 +10,7 @@ WATERSHED_SLUG = "tennessee-river"
 # param_map = {"Stage": "00065", "Flow": "00061"}
 
 param_cwms_names = ["Stage", "Flow"]
-param_usgs_codes = ["00065", "00061"]
+param_usgs_codes = ["00065", "00060"]
 
 param_map = dict(zip(param_cwms_names, param_usgs_codes))
 

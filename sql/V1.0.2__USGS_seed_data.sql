@@ -1,31 +1,5 @@
-
--- Create usgs_site table
-CREATE TABLE IF NOT EXISTS usgs_site (
-    id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-    usgs_id VARCHAR UNIQUE NOT NULL,
-    name VARCHAR,
-    geometry geometry,
-    elevation REAL,
-    horizontal_datum_id INTEGER NOT NULL REFERENCES public.spatial_ref_sys(srid),
-    vertical_datum_id INTEGER NOT NULL REFERENCES vertical_datum(id), 
-    huc VARCHAR,
-    state_abbrev VARCHAR(2) NOT NULL,
-    create_date TIMESTAMPTZ NOT NULL DEFAULT now(),
-    update_date TIMESTAMPTZ
-);
-
--- Grant read
-GRANT SELECT ON
-    usgs_site
-TO water_reader;
-
--- Grant write
-GRANT INSERT,UPDATE,DELETE ON
-    usgs_site
-TO water_writer;
-
 -- TN sites
-INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES
+INSERT INTO usgs_site (site_number, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES
 ('03408500','NEW RIVER AT NEW RIVER, TN', ST_GeomFromText('POINT(-84.5547174 36.3855167)',4326), 1092.43, 4269,'2', '05130104', 'TN'),
 ('03409500','CLEAR FORK NEAR ROBBINS, TN', ST_GeomFromText('POINT(-84.6301881 36.38828757)',4326), 1081.01, 4269,'3', '05130104', 'TN'),
 ('03410210','SOUTH FK CUMBERLAND RIVER AT LEATHERWOOD FORD, TN', ST_GeomFromText('POINT(-84.6693676 36.47738108)',4326), 862.1, 4269,'3', '05130104', 'TN'),
@@ -174,7 +148,7 @@ INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, 
 
 
 -- MN sites
-INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES
+INSERT INTO usgs_site (site_number, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES
 ('04010500','PIGEON RIVER AT MIDDLE FALLS NR GRAND PORTAGE MN', ST_GeomFromText('POINT(-89.6161984 48.01210765)',4326), 787.58, 4269,'2', '04010101', 'MN'),
 ('04010510','GRAND PORTAGE RIVER AT GRAND PORTAGE MN', ST_GeomFromText('POINT(-89.6834233 47.9634982)',4326), 598.45, 4269,'3', '04010101', 'MN'),
 ('04015330','KNIFE RIVER NEAR TWO HARBORS, MN', ST_GeomFromText('POINT(-91.7924013 46.94688005)',4326), NULL, 4269,'0', '04010102', 'MN'),
@@ -318,7 +292,7 @@ INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, 
 
 
 -- WV sites
-INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES
+INSERT INTO usgs_site (site_number, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES
 ('01595300','ABRAM CREEK AT OAKMONT, WV', ST_GeomFromText('POINT(-79.17892449 39.36676569)',4326), 1834.9, 4269,'3', '02070002', 'WV'),
 ('01595800','NORTH BRANCH POTOMAC RIVER AT BARNUM, WV', ST_GeomFromText('POINT(-79.1108056 39.4451111)',4326), 1151.28, 4269,'3', '02070002', 'WV'),
 ('01599200','LINTON CREEK NEAR LAUREL DALE, WV', ST_GeomFromText('POINT(-79.13138889 39.26944444)',4326), 1599.5, 4269,'3', '02070002', 'WV'),
@@ -506,7 +480,7 @@ INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, 
 
 
 -- GA sites
-INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES
+INSERT INTO usgs_site (site_number, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES
 ('02176930','CHATTOOGA RIVER AT BURRELLS FORD, NR PINE MTN, GA', ST_GeomFromText('POINT(-83.1161667 34.97452778)',4326), 2050.0, 4269,'2', '03060102', 'GA'),
 ('02178400','TALLULAH RIVER NEAR CLAYTON, GA', ST_GeomFromText('POINT(-83.530441 34.89037075)',4326), 1898.9, 4269,'3', '03060102', 'GA'),
 ('02180400','TIGER CREEK NEAR LAKEMONT, GA', ST_GeomFromText('POINT(-83.4159976 34.78426005)',4326), NULL, 4269,'0', '03060102', 'GA'),
@@ -884,7 +858,7 @@ INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, 
 
 
 -- SC sites
-INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES
+INSERT INTO usgs_site (site_number, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES
 ('02110400','BUCK CREEK NEAR LONGS, SC', ST_GeomFromText('POINT(-78.71973988 33.953505)',4326), 5.3, 4269,'3', '03040206', 'SC'),
 ('02110500','WACCAMAW RIVER NEAR LONGS, SC', ST_GeomFromText('POINT(-78.7150175 33.9126719)',4326), 4.22, 4269,'3', '03040206', 'SC'),
 ('02110550','WACCAMAW RIVER ABOVE CONWAY, SC', ST_GeomFromText('POINT(-78.8972222 33.8508333)',4326), 0.0, 4269,'3', '03040206', 'SC'),
@@ -1098,7 +1072,7 @@ INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, 
 
 
 -- NC sites
-INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES
+INSERT INTO usgs_site (site_number, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES
 ('0204382800','PASQUOTANK RIVER NEAR SOUTH MILLS, NC', ST_GeomFromText('POINT(-76.3425 36.42138889)',4326), -5.5, 4269,'3', '03010205', 'NC'),
 ('02053200','POTECASI CREEK NEAR UNION, NC', ST_GeomFromText('POINT(-77.0255556 36.3708333)',4326), 3.53, 4269,'2', '03010204', 'NC'),
 ('02053500','AHOSKIE CREEK AT AHOSKIE, NC', ST_GeomFromText('POINT(-76.9994444 36.28027778)',4326), 17.46, 4269,'2', '03010203', 'NC'),
@@ -1395,7 +1369,7 @@ INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, 
 
 
 -- AL sites
-INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES
+INSERT INTO usgs_site (site_number, name, geometry, elevation, horizontal_datum_id, vertical_datum_id, huc, state_abbrev) VALUES
 ('02339495','OSELIGEE CREEK NEAR LANETT AL', ST_GeomFromText('POINT(-85.1963308 32.9015159)',4326), NULL, 4269,'0', '03130002', 'AL'),
 ('02342500','UCHEE CREEK NEAR FORT MITCHELL, AL.', ST_GeomFromText('POINT(-85.014931 32.31681467)',4326), 201.76, 4269,'2', '03130003', 'AL'),
 ('02342937','South Fork Cowikee Creek nr Howe, AL', ST_GeomFromText('POINT(-85.2138 32.0167861)',4326), 196.0, 4269,'3', '03130003', 'AL'),
@@ -1596,3 +1570,60 @@ INSERT INTO usgs_site (usgs_id, name, geometry, elevation, horizontal_datum_id, 
 ('03590000','CYPRESS CREEK NEAR FLORENCE AL', ST_GeomFromText('POINT(-87.7005847 34.8078655)',4326), 423.78, 4269,'2', '06030005', 'AL'),
 ('03592000','BEAR CREEK AT REDBAY, AL', ST_GeomFromText('POINT(-88.1155963 34.4439866)',4326), 520.0, 4269,'2', '06030006', 'AL'),
 ('03592500','BEAR CREEK AT BISHOP,AL.', ST_GeomFromText('POINT(-88.1225408 34.65592635)',4326), 419.91, 4269,'2', '06030006', 'AL');
+
+-- usgs_site_parameters seed data for testing
+INSERT INTO usgs_site_parameters (id, site_id, parameter_id) VALUES
+-- LRH -- GUYANDOTTE RIVER AT LOGAN, WV - Stage and Flow
+('2a8c983a-2210-490b-a18d-55533a048f4a', (select id from usgs_site where site_number = '03206600'), 'a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28'),
+('fb9de58d-be97-4073-b590-a657e34ce306', (select id from usgs_site where site_number = '03206600'), 'ba29fc34-6315-4424-838f-9b1863715fad'),
+-- LRH -- GUYANDOTTE RIVER AT BRANCHLAND, WV - Stage and Precip
+('fc59fc37-eba0-4289-9fbf-987f30d7463c', (select id from usgs_site where site_number = '03207020'), 'a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28'),
+('38e47945-2870-4cf8-b177-86e7ee56e6fc', (select id from usgs_site where site_number = '03207020'), '738eb4df-b34b-45cc-a5aa-f2136384244f'),
+-- LRH - PINEY CREEK AT RALEIGH, WV (stage, flow)
+('b82eb0c0-a825-45ad-a944-5f686ab10402', (select id from usgs_site where site_number='03185000'), 'a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28'),
+('99c938d2-6296-431b-a0dc-928bd15e7da3', (select id from usgs_site where site_number='03185000'), 'ba29fc34-6315-4424-838f-9b1863715fad');
+
+
+-- Same type of seed data, auto-generated id
+INSERT INTO usgs_site_parameters (site_id, parameter_id) VALUES
+-- LRH - BLUESTONE LAKE NEAR HINTON, WV (elev NGVD29)
+((select id from usgs_site where site_number='03179800'), 'f739b4af-1c96-437c-a788-901f59d177fb'),
+-- LRH - NEW RIVER AT HINTON, WV
+((select id from usgs_site where site_number='03184500'), 'a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28'),
+((select id from usgs_site where site_number='03184500'), 'ba29fc34-6315-4424-838f-9b1863715fad'),
+((select id from usgs_site where site_number='03184500'), '0fa9993d-6674-4ba3-ac8a-f02830beea1e'),
+-- LRH - NEW RIVER AT THURMOND, WV (stage, flow, water temp, precip)
+((select id from usgs_site where site_number = '03185400'), 'a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28'),
+((select id from usgs_site where site_number = '03185400'), 'ba29fc34-6315-4424-838f-9b1863715fad'),
+((select id from usgs_site where site_number = '03185400'), '0fa9993d-6674-4ba3-ac8a-f02830beea1e'),
+((select id from usgs_site where site_number = '03185400'), '738eb4df-b34b-45cc-a5aa-f2136384244f'),
+-- LRH - NEW RIVER BELOW HAWKS NEST DAM, WV (stage)
+((select id from usgs_site where site_number = '380649081083301'), 'a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28'),
+-- LRH - KANAWHA RIVER AT KANAWHA FALLS, WV (stage, flow, water temp)
+((select id from usgs_site where site_number = '03193000'), 'a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28'),
+((select id from usgs_site where site_number = '03193000'), 'ba29fc34-6315-4424-838f-9b1863715fad'),
+((select id from usgs_site where site_number = '03193000'), '0fa9993d-6674-4ba3-ac8a-f02830beea1e'),
+-- LRN - CUMBERLAND RIVER AT NASHVILLE, TN (stage, flow)
+((select id from usgs_site where site_number = '03431500'), 'a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28'),
+((select id from usgs_site where site_number = '03431500'), 'ba29fc34-6315-4424-838f-9b1863715fad'),
+-- MVP - MISSISSIPPI RIVER AT ST. PAUL, MN (stage, flow, water temp)
+((select id from usgs_site where site_number = '05331000'), 'a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28'),
+((select id from usgs_site where site_number = '05331000'), 'ba29fc34-6315-4424-838f-9b1863715fad'),
+((select id from usgs_site where site_number = '05331000'), '0fa9993d-6674-4ba3-ac8a-f02830beea1e'),
+-- MVP - MISSISSIPPI RIVER BELOW L&D #2 AT HASTINGS, MN (stage, flow)
+((select id from usgs_site where site_number = '05331580'), 'a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28'),
+((select id from usgs_site where site_number = '05331580'), 'ba29fc34-6315-4424-838f-9b1863715fad');
+
+
+-- Enable data acquisition for Watershed/Site/Parameter
+
+INSERT into watershed_usgs_sites (watershed_id, usgs_site_parameter_id) VALUES
+-- LRH - GUYANDOTTE RIVER AT LOGAN, WV - Stage and Flow
+('4d3083d1-101c-4b76-9311-1154917ffbf1', '2a8c983a-2210-490b-a18d-55533a048f4a'),
+('4d3083d1-101c-4b76-9311-1154917ffbf1', 'fb9de58d-be97-4073-b590-a657e34ce306'),
+-- LRH - GUYANDOTTE RIVER AT BRANCHLAND, WV - Stage and Precip
+('4d3083d1-101c-4b76-9311-1154917ffbf1', 'fc59fc37-eba0-4289-9fbf-987f30d7463c'),
+('4d3083d1-101c-4b76-9311-1154917ffbf1', '38e47945-2870-4cf8-b177-86e7ee56e6fc'),
+-- LRH - PINEY CREEK AT RALEIGH, WV (stage, flow)
+('65a93467-c9b4-4166-acb6-58e8ec06ed3b', 'b82eb0c0-a825-45ad-a944-5f686ab10402'),
+('65a93467-c9b4-4166-acb6-58e8ec06ed3b', '99c938d2-6296-431b-a0dc-928bd15e7da3');

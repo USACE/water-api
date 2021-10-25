@@ -1,1 +1,0 @@
-ALTER TABLE usgs_parameter RENAME COLUMN uid TO id;

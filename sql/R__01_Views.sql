@@ -1,8 +1,7 @@
--- add NWS Flood stages to USGS Sites View
+--------------
+-- V_USGS_SITE
+--------------
 
-DROP VIEW v_usgs_site;
-
--- REPLACE VIEW v_usgs_site
 CREATE OR REPLACE VIEW v_usgs_site AS (
     SELECT 
     s.id,
@@ -33,5 +32,17 @@ CREATE OR REPLACE VIEW v_usgs_site AS (
         ) code_agg ON code_agg.site_id = s.id
 );
 
--- Grant read
-GRANT SELECT ON v_usgs_site TO water_reader;
+--------------
+-- V_WATERSHED
+--------------
+CREATE OR REPLACE VIEW v_watershed AS (
+    SELECT w.id,
+           w.slug,
+           w.name,
+           w.geometry AS geometry,
+           w.office_id,
+           f.symbol AS office_symbol
+	FROM   watershed w
+    LEFT JOIN office f ON w.office_id = f.id
+	WHERE NOT w.deleted
+);

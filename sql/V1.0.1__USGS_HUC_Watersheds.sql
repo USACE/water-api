@@ -1,3 +1,4 @@
+
 -- HUC2 Watersheds
 -- QGIS Export to PostGIS Format Using File:
 BEGIN;
@@ -102,14 +103,3 @@ COMMIT;
 
 -- SIMPLIFIED HUC8 WATERSHEDS WITH SAME DATA SCHEMA
 CREATE TABLE a2w_cwms.usgs_huc8_simple AS TABLE a2w_cwms.usgs_huc8;
-
-GRANT SELECT ON
-    usgs_huc2,
-    usgs_huc2_simple,
-    usgs_huc4,
-    usgs_huc4_simple,
-    usgs_huc6,
-    usgs_huc6_simple,
-    usgs_huc8,
-    usgs_huc8_simple
-TO water_reader;

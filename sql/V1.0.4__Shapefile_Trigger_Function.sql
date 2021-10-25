@@ -1,14 +1,3 @@
--- Async Listener Function JSON Format
--- {
---   "fn": "new-download",
---   "details": "{\"geoprocess\" : \"inco...}"
--- }
--- Note: ^^^ value of "details": must be a string. A native JSON object for "details" can be converted
--- to a string using Postgres type casting, for example: json_build_object('id', NEW.id)::text
--- will produce string like "{\"id\" : \"f1105618-047e-40bc-bd2e-961ad0e05084\"}"
--- where required JSON special characters are escaped.
-
-
 -- Shared Function to Notify Cumulus Async Listener Functions (ALF) Listener
 CREATE OR REPLACE FUNCTION notify_async_listener(t text) RETURNS void AS $$
     BEGIN
