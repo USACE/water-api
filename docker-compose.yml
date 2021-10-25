@@ -10,11 +10,11 @@ services:
       - AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
       - AWS_REGION=us-east-1
       - AWS_DEFAULT_REGION=us-east-1
-      - AWS_S3_BUCKET=cwbi-data-develop
+      - AWS_S3_BUCKET=castle-data-develop
       - AWS_S3_ENDPOINT=http://minio:9000
       - AWS_S3_DISABLE_SSL=True
       - AWS_S3_FORCE_PATH_STYLE=True
-      - AUTH_MOCKED=true
+      - AUTH_MOCKED=false
       - APPLICATION_KEY=appkey
       - WATER_DB_USER=water_user
       - WATER_DB_PASS=water_pass
