@@ -1,2 +1,0 @@
-INSERT INTO location (id, office_id, name, public_name, slug, geometry, kind_id) VALUES
-	('45cd0d9f-6751-434f-afe4-9da0690793be','91cf44dc-6384-4622-bd9f-0f36e4343413','RegressionTestLocation01','Regression Test Location 01','regression-test-location-01',ST_GeomFromText('POINT(-82.35583 38.87361)',4326),'83726bc6-82ca-423b-97d2-0309bee76fa7');
