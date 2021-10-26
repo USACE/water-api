@@ -1,6 +1,5 @@
 name: Build API Develop
 
-
 on:
   push:
     branches: [develop]
@@ -8,7 +7,7 @@ on:
       - 'api/**'
       - 'sql/**'
       - './Dockerfile'
-      - './.github/workflows/api-develop.yml'
+      - '.github/workflows/api-develop.yml'
   workflow_dispatch:
 jobs:
 
@@ -23,7 +22,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Docker Compose; Test API
-        run: docker compose up -d && docker compose up -d tiger-data && ./run_tests.sh
+        run: docker compose up --build -d && docker compose up -d tiger-data && sleep 30 && ./run_tests.sh
     
       - name: Configure AWS credentials
         if: ${{ always() }}
