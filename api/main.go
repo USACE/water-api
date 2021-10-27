@@ -41,7 +41,9 @@ func main() {
 	// Private Routes w/ Access Control
 	private := e.Group("")
 	if config.AuthMocked {
-		private.Use(middleware.JWTMock)
+		// @todo. re-add JWTMock
+		// private.Use(middleware.JWTMock)
+		log.Info("Auth is Disabled...")
 	} else {
 		private.Use(middleware.JWT, middleware.AttachUserInfo)
 	}
@@ -113,12 +115,12 @@ func main() {
 	// Watersheds
 	public.GET("/watersheds", cs.ListWatersheds)
 	public.GET("/watersheds/:watershed_slug", cs.GetWatershed)
-	key.POST("/watersheds", cs.CreateWatershed)
-	key.PUT("/watersheds/:watershed_slug", cs.UpdateWatershed)
+	private.POST("/watersheds", cs.CreateWatershed)
+	private.PUT("/watersheds/:watershed_slug", cs.UpdateWatershed)
 	public.GET("/watersheds/:watershed_slug/geometry", cs.GetWatershedGeometry)
 	key.PUT("/watersheds/:watershed_id/update_geometry", cs.UpdateWatershedGeometry)
-	key.DELETE("/watersheds/:watershed_slug", cs.DeleteWatershed)
-	key.POST("/watersheds/:watershed_slug/undelete", cs.UndeleteWatershed)
+	private.DELETE("/watersheds/:watershed_slug", cs.DeleteWatershed)
+	private.POST("/watersheds/:watershed_slug/undelete", cs.UndeleteWatershed)
 	private.POST("/watersheds/:watershed_id/shapefile_uploads", cs.UploadWatersheds, middleware.IsAdmin)
 
 	// Extract timeseries values using locations grouped with a watershed defined by its slug
@@ -165,8 +167,8 @@ func main() {
 	ws := water.Store{Connection: st.Connection}
 
 	// Associate USGS sites/parameters with Watershed
-	key.POST("/watersheds/:watershed_slug/site/:site_number/parameter/:parameter_code", ws.CreateWatershedSiteParameter)
-	key.DELETE("/watersheds/:watershed_slug/site/:site_number/parameter/:parameter_code", ws.DeleteWatershedSiteParameter)
+	private.POST("/watersheds/:watershed_slug/site/:site_number/parameter/:parameter_code", ws.CreateWatershedSiteParameter)
+	private.DELETE("/watersheds/:watershed_slug/site/:site_number/parameter/:parameter_code", ws.DeleteWatershedSiteParameter)
 	// Watershed USGS Site Params enabled for data retrieval.  Primarily used by Airflow.
 	public.GET("/watersheds/usgs_sites", ws.ListWatershedSiteParameters)
 
