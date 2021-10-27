@@ -43,7 +43,7 @@ func main() {
 	if config.AuthMocked {
 		// @todo. re-add JWTMock
 		// private.Use(middleware.JWTMock)
-		log.Info("Auth is Disabled...")
+		log.Println("Auth is Disabled...")
 	} else {
 		private.Use(middleware.JWT, middleware.AttachUserInfo)
 	}
