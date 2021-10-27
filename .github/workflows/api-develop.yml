@@ -25,7 +25,7 @@ jobs:
         run: docker compose up --build -d
 
       - name: Run Tests
-        run: ./run_tests.sh
+        run: sleep 90 && ./run_tests.sh
     
       - name: Configure AWS credentials
         if: ${{ always() }}
