@@ -14,7 +14,7 @@ services:
       - AWS_S3_ENDPOINT=http://minio:9000
       - AWS_S3_DISABLE_SSL=True
       - AWS_S3_FORCE_PATH_STYLE=True
-      - AUTH_MOCKED=false
+      - AUTH_MOCKED=true
       - APPLICATION_KEY=appkey
       - WATER_DB_USER=water_user
       - WATER_DB_PASS=water_pass
