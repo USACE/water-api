@@ -3,7 +3,6 @@ package cwms
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 
 	"github.com/USACE/water-api/api/cwms/models"
 	"github.com/USACE/water-api/api/messages"
@@ -158,8 +157,8 @@ func (s Store) UploadWatersheds(c echo.Context) error {
 	return c.JSON(http.StatusOK, r)
 }
 
-// TimeseriesExtractWatershed
-func (s Store) TimeseriesExtractWatershed(c echo.Context) error {
+// WatershedExtract
+func (s Store) WatershedExtract(c echo.Context) error {
 	wslug := c.Param("watershed_slug")
 
 	// Time Window
@@ -172,7 +171,7 @@ func (s Store) TimeseriesExtractWatershed(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	rows, err := models.TimeseriesExtractWatershed(s.Connection, wslug, &tw)
+	rows, err := models.WatershedExtract(s.Connection, wslug, &tw)
 
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())

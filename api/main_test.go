@@ -199,8 +199,8 @@ func TestListLevelValues(t *testing.T) {
 	}
 }
 
-// TestTimeseriesExtractWatershed
-func TestTimeseriesExtractWatershed(t *testing.T) {
+// TestWatershedExtract
+func TestWatershedExtract(t *testing.T) {
 	e := echo.New() // All Routes
 
 	q := make(url.Values)
@@ -214,7 +214,7 @@ func TestTimeseriesExtractWatershed(t *testing.T) {
 	c.SetParamNames("watershed_slug")
 	c.SetParamValues("kanawha-river")
 
-	if assert.NoError(t, cs.TimeseriesExtractWatershed(c)) {
+	if assert.NoError(t, cs.WatershedExtract(c)) {
 		b := rec.Body.String()
 		var out bytes.Buffer
 		json.Indent(&out, []byte(b), "", "    ")

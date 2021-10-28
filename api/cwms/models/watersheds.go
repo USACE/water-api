@@ -259,8 +259,8 @@ func UploadWatersheds(db *pgxpool.Pool, wid uuid.UUID, file *multipart.FileHeade
 	return result, nil
 }
 
-// TimeseriesExtractWatershed
-func TimeseriesExtractWatershed(db *pgxpool.Pool, slug string, tw *timeseries.TimeWindow) ([]Extract, error) {
+// WatershedExtract
+func WatershedExtract(db *pgxpool.Pool, slug string, tw *timeseries.TimeWindow) ([]Extract, error) {
 	ext := make([]Extract, 0)
 	rows, err := db.Query(context.Background(),
 		`SELECT us.site_number, up.code, r1.site_id, r1.parameter_id, array_agg(r1."time") AS times, array_agg(r1.value) AS values 
@@ -281,7 +281,7 @@ func TimeseriesExtractWatershed(db *pgxpool.Pool, slug string, tw *timeseries.Ti
 		ON r1.site_id = us.id 
 		LEFT JOIN a2w_cwms.usgs_parameter up 
 		ON r1.parameter_id = up.id
-		GROUP BY us.site_number, up.code , r1.site_id, r1.parameter_id`,
+		GROUP BY us.site_number, up.code, r1.site_id, r1.parameter_id`,
 		slug, tw.After, tw.Before,
 	)
 	if err != nil {

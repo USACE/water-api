@@ -124,7 +124,7 @@ func main() {
 	private.POST("/watersheds/:watershed_id/shapefile_uploads", cs.UploadWatersheds, middleware.IsAdmin)
 
 	// Extract timeseries values using locations grouped with a watershed defined by its slug
-	public.GET("watersheds/:watershed_slug/extract", cs.TimeseriesExtractWatershed)
+	public.GET("watersheds/:watershed_slug/extract", cs.WatershedExtract)
 
 	// Maintenance/Automation
 	key.POST("/automation/assign_states_to_locations", cs.AssignStatesToLocations)
