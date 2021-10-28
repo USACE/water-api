@@ -184,7 +184,6 @@ func (s Store) TimeseriesExtractWatershed(c echo.Context) error {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
 		c.Response().Flush()
-		time.Sleep(500 * time.Millisecond)
 	}
-	return c.JSON(http.StatusOK, map[string]string{"message": "streaming complete"})
+	return c.NoContent(http.StatusOK)
 }
