@@ -10,7 +10,6 @@ import (
 	"net/url"
 	"strings"
 	"testing"
-	"unsafe"
 
 	"github.com/USACE/water-api/api/app"
 	"github.com/USACE/water-api/api/cwms"
@@ -206,7 +205,7 @@ func TestTimeseriesExtractWatershed(t *testing.T) {
 
 	q := make(url.Values)
 	q.Set("after", "2021-10-15T00:00:00Z")
-	q.Set("before", "2021-10-22T23:00:00Z")
+	q.Set("before", "2021-10-15T23:00:00Z")
 
 	req := httptest.NewRequest(http.MethodGet, "/watersheds/:watershed_slug/extract?"+q.Encode(), nil)
 	rec := httptest.NewRecorder()
@@ -220,7 +219,7 @@ func TestTimeseriesExtractWatershed(t *testing.T) {
 		var out bytes.Buffer
 		json.Indent(&out, []byte(b), "", "    ")
 		fmt.Printf("%s", out.Bytes())
-		fmt.Printf("Body size: %T, %d\n", b, unsafe.Sizeof(b))
+		// fmt.Printf("Body size: %T, %d\n", b, unsafe.Sizeof(b))
 	}
 
 }

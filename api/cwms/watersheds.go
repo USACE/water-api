@@ -1,7 +1,9 @@
 package cwms
 
 import (
+	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/USACE/water-api/api/cwms/models"
 	"github.com/USACE/water-api/api/messages"
@@ -170,9 +172,18 @@ func (s Store) TimeseriesExtractWatershed(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	ext, err := models.TimeseriesExtractWatershed(s.Connection, wslug, &tw)
+	rows, err := models.TimeseriesExtractWatershed(s.Connection, wslug, &tw)
+
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	return c.JSON(http.StatusOK, ext)
+
+	enc := json.NewEncoder(c.Response())
+	for _, row := range rows {
+		if err := enc.Encode(row); err != nil {
+			return c.JSON(http.StatusBadRequest, err.Error())
+		}
+		c.Response().Flush()
+	}
+	return c.NoContent(http.StatusOK)
 }
