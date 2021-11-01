@@ -1,34 +1,43 @@
 # Python 3
 
 import csv
-import requests
+import httpx  # need httpx and httpx[http2] installed
 
-WATER_API_ROOT = "http://localhost"
-APP_KEY = "appkey"
-WATERSHED_SLUG = "tennessee-river"
+WATER_API_ROOT = "https://develop-water-api.corps.cloud"
+# WATER_API_ROOT = "http://localhost"
+WATERSHED_SLUG = "savannah-river-basin"
+AUTH_TOKEN = ""
 
-# param_map = {"Stage": "00065", "Flow": "00061"}
 
-param_cwms_names = ["Stage", "Flow"]
-param_usgs_codes = ["00065", "00060"]
+param_cwms_names = ["Stage", "Flow", "Elev-Pool", "Elevation"]
+param_usgs_codes = ["00065", "00060", "00062", "00062"]
 
 param_map = dict(zip(param_cwms_names, param_usgs_codes))
 
 
 def get_water_usgs_params():
-    r = requests.get(f"{WATER_API_ROOT}/usgs/parameters")
+    r = httpx.get(f"{WATER_API_ROOT}/usgs/parameters")
     return r.json()
 
 
 def post_watershed_site_param_config(ws_slug, site_number, param_code):
-    url = f"{WATER_API_ROOT}/watersheds/{ws_slug}/site/{site_number}/parameter/{param_code}?key={APP_KEY}"
-    r = requests.post(url)
+
+    url = f"{WATER_API_ROOT}/watersheds/{ws_slug}/site/{site_number}/parameter/{param_code}"
+
+    if WATER_API_ROOT == "localhost":
+        url = f"{url}?key=appkey"
+
+    headers = {"Authorization": "Bearer " + AUTH_TOKEN}
+    client = httpx.Client(http2=True)
+    r = client.post(url=url, headers=headers)
     print(f"{url} -> {r.status_code}")
+    if r.status_code not in ["201", "422"]:
+        print(f"{r.text}")
     return {"status_code": r.status_code, "text": r.text}
 
 
 # open file for reading
-with open("lrn_usgs_locations.csv") as csvDataFile:
+with open("sas_usgs_locations.csv") as csvDataFile:
 
     # read file as csv file
     csvReader = csv.reader(csvDataFile)
