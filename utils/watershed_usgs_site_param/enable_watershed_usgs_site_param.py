@@ -3,8 +3,8 @@
 import csv
 import httpx  # need httpx and httpx[http2] installed
 
-WATER_API_ROOT = "https://develop-water-api.corps.cloud"
-# WATER_API_ROOT = "http://localhost"
+# WATER_API_ROOT = "https://develop-water-api.corps.cloud"
+WATER_API_ROOT = "http://localhost"
 WATERSHED_SLUG = "savannah-river-basin"
 AUTH_TOKEN = ""
 
@@ -24,10 +24,13 @@ def post_watershed_site_param_config(ws_slug, site_number, param_code):
 
     url = f"{WATER_API_ROOT}/watersheds/{ws_slug}/site/{site_number}/parameter/{param_code}"
 
-    if WATER_API_ROOT == "localhost":
+    if WATER_API_ROOT == "http://localhost":
         url = f"{url}?key=appkey"
+        headers = None
 
-    headers = {"Authorization": "Bearer " + AUTH_TOKEN}
+    else:
+        headers = {"Authorization": "Bearer " + AUTH_TOKEN}
+
     client = httpx.Client(http2=True)
     r = client.post(url=url, headers=headers)
     print(f"{url} -> {r.status_code}")
