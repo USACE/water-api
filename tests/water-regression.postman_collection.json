@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "9d4923cc-6bde-4250-adde-23371ebce07f",
+		"_postman_id": "f5f87e48-968c-4fa0-9b8d-755a152b0d13",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -1375,6 +1375,49 @@
 								"sites",
 								"03203600",
 								"measurements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Watershed Extract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// status code is 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/watersheds/kanawha-river/extract?after=2021-10-15T00:00:00Z&before=2021-10-15T10:00:00Z",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"watersheds",
+								"kanawha-river",
+								"extract"
+							],
+							"query": [
+								{
+									"key": "after",
+									"value": "2021-10-15T00:00:00Z"
+								},
+								{
+									"key": "before",
+									"value": "2021-10-15T10:00:00Z"
+								}
 							]
 						}
 					},

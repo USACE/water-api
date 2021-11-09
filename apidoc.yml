@@ -128,6 +128,100 @@ components:
           coordinates:
             - -82.445
             - 38.419
+    Watershed-Extract:
+      value:
+        site_number: '02176930'
+        code: '00060'
+        site_id: 2a9b9aea-c700-487b-b68b-eb1e8af79478
+        paramter_id: ba29fc34-6315-4424-838f-9b1863715fad
+        times:
+          - '2021-10-27T16:15:00Z'
+          - '2021-10-27T17:00:00Z'
+          - '2021-10-27T16:45:00Z'
+          - '2021-10-27T16:30:00Z'
+        values:
+          - 166
+          - 163
+          - 163
+          - 163
+  requestBodies: {}
+  parameters:
+    after:
+      name: after
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date-time
+        example: '2021-10-27T22:15:00Z'
+        default: '''before'' - 7 days'
+      description: Start of a time window
+    before:
+      name: before
+      in: query
+      required: false
+      schema:
+        type: string
+        example: '2021-10-28T22:15:00Z'
+        default: Current time
+        format: date-time
+      description: End of a time window
+    watershed_slug:
+      name: watershed_slug
+      in: path
+      required: true
+      schema:
+        type: string
+        example: kanawha-river
+      description: Watershed Slug
+  responses:
+    Watershed-Extract:
+      description: Response streaming multiple JSON objects
+      content:
+        application/json:
+          schema:
+            description: ''
+            type: object
+            x-examples:
+              example-1:
+                site_number: '02176930'
+                code: '00060'
+                site_id: 2a9b9aea-c700-487b-b68b-eb1e8af79478
+                paramter_id: ba29fc34-6315-4424-838f-9b1863715fad
+                times:
+                  - '2021-10-27T16:15:00Z'
+                  - '2021-10-27T17:00:00Z'
+                  - '2021-10-27T16:45:00Z'
+                  - '2021-10-27T16:30:00Z'
+                values:
+                  - 166
+                  - 163
+                  - 163
+                  - 163
+            properties:
+              site_number:
+                type: string
+                minLength: 1
+              code:
+                type: string
+                minLength: 1
+              site_id:
+                type: string
+                minLength: 1
+              paramter_id:
+                type: string
+                minLength: 1
+              times:
+                type: array
+                items:
+                  type: string
+              values:
+                type: array
+                items:
+                  type: number
+          examples:
+            Site/parameter:
+              $ref: '#/components/examples/Watershed-Extract'
 paths:
   /location_kind:
     get:
@@ -854,3 +948,18 @@ paths:
                         - 0
       operationId: get-watersheds
       description: List all Watersheds
+  '/watersheds/{watershed_slug}/extract':
+    parameters:
+      - $ref: '#/components/parameters/watershed_slug'
+    get:
+      summary: ''
+      tags:
+        - Watersheds
+      responses:
+        '200':
+          $ref: '#/components/responses/Watershed-Extract'
+      operationId: get-watersheds-watershed_slug-extract
+      description: Stream JSON object for each site/parameter combination associated with the watershed
+      parameters:
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
