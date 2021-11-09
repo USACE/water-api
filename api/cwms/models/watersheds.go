@@ -263,48 +263,28 @@ func UploadWatersheds(db *pgxpool.Pool, wid uuid.UUID, file *multipart.FileHeade
 func WatershedExtract(db *pgxpool.Pool, slug string, tw *timeseries.TimeWindow) ([]Extract, error) {
 	ext := make([]Extract, 0)
 	rows, err := db.Query(context.Background(),
-		// `SELECT us.site_number, up.code, r1.site_id, r1.parameter_id, array_agg(r1."time") AS times, array_agg(r1.value) AS values
-		// FROM
-		// (
-		// 	SELECT *
-		// 	FROM a2w_cwms.watershed_usgs_sites wus
-		// 	JOIN
-		// 	a2w_cwms.usgs_measurements um
-		// 	ON wus.usgs_site_parameter_id = um.usgs_site_parameters_id
-		// 	JOIN
-		// 	a2w_cwms.usgs_site_parameters usp
-		// 	ON usgs_site_parameters_id = usp.id
-		// 	WHERE "time" BETWEEN $2::timestamptz AND $3::timestamptz AND
-		// 	watershed_id = (SELECT id FROM a2w_cwms.watershed w WHERE slug = $1)
-		// ) AS r1
-		// LEFT JOIN a2w_cwms.usgs_site us
-		// ON r1.site_id = us.id
-		// LEFT JOIN a2w_cwms.usgs_parameter up
-		// ON r1.parameter_id = up.id
-		// GROUP BY us.site_number, up.code , r1.site_id, r1.parameter_id`,
-		`
-		SELECT r1.site_number, r1.code, r1.site_id, r1.parameter_id, array_agg(r1."time") AS times, array_agg(r1.value) AS values
+		`SELECT r1.site_number, r1.code, r1.site_id, r1.parameter_id, array_agg(r1."time") AS times, array_agg(r1.value) AS values
 		FROM
 		(
 			SELECT us.site_number, up.code, usp.site_id, usp.parameter_id, um."time", um.value 
-			FROM a2w_cwms.watershed_usgs_sites wus
+			FROM watershed_usgs_sites wus
 			JOIN
 			(
-			select time, value, usgs_site_parameters_id from a2w_cwms.usgs_measurements
-			where "time" BETWEEN $2::timestamptz AND $3::timestamptz
-			order by usgs_site_parameters_id, "time" desc
-			) as um on um.usgs_site_parameters_id = wus.usgs_site_parameter_id
+			SELECT time, value, usgs_site_parameters_id from usgs_measurements
+			WHERE "time" >= $2::timestamptz AND "time" <= $3::timestamptz
+			ORDER BY usgs_site_parameters_id, "time" desc
+			) AS um on um.usgs_site_parameters_id = wus.usgs_site_parameter_id
 		JOIN
-		a2w_cwms.usgs_site_parameters usp 
+		usgs_site_parameters usp 
 		ON usgs_site_parameters_id = usp.id
-		JOIN a2w_cwms.usgs_site us 
+		JOIN usgs_site us 
 		ON us.id = usp.site_id
-		JOIN a2w_cwms.usgs_parameter up
+		JOIN usgs_parameter up
 		ON up.id = usp.parameter_id
-		WHERE wus.watershed_id = (SELECT id FROM a2w_cwms.watershed w WHERE slug = $1)
-		order by us.site_number, up.code, um."time"		
+		WHERE wus.watershed_id = (SELECT id FROM watershed w WHERE slug = $1)
+		ORDER BY us.site_number, up.code, um."time"		
 		) r1
-		group by r1.site_number, r1.code, r1.site_id, r1.parameter_id`,
+		GROUP BY r1.site_number, r1.code, r1.site_id, r1.parameter_id`,
 		slug, tw.After, tw.Before,
 	)
 	if err != nil {
