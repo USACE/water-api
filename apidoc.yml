@@ -172,9 +172,8 @@ components:
       required: true
       schema:
         type: string
-        pattern: a-z
         example: kanawha-river
-      description: Watershed slug ID
+      description: Watershed Slug
   responses:
     Watershed-Extract:
       description: Response streaming multiple JSON objects
