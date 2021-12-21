@@ -1,0 +1,6 @@
+[USGS-raw_LOC],SHEF_LOC,DSS_A-PART,DSS_B-PART,DSS_F-PART,DSS_SUB-LOCATIONS,DSS_SUB-PARAMETERS,CWMS_LOC,CWMS_VER,CWMS_SUB-LOCATIONS,CWMS_SUB-PARAMETERS,PARAMETERS
+[03280800],Buckhorn-Lake,UPPER KENTUCKY,Buckhorn-Lake,USGS-raw,,,Buckhorn-Lake,USGS-raw,,,"Res Elevation,Stage,Precip"
+[03277446],CarrCreek-Lake,UPPER KENTUCKY,CarrCreek-Lake,USGS-raw,,,CarrCreek-Lake,USGS-raw,,,"Res Elevation,Stage,Precip"
+[03249500],CaveRunTW,UPPER KENTUCKY,CaveRunTW,USGS-raw,,,CaveRunTW,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03249505],Farmers,UPPER KENTUCKY,Farmers,USGS-raw,,,Farmers,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03295597],Taylorsville-Lake,UPPER KENTUCKY,Taylorsville-Lake,USGS-raw,,,Taylorsville-Lake,USGS-raw,,,"Res Elevation,Precip"

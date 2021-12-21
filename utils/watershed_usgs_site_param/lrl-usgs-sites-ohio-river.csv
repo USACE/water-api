@@ -1,0 +1,27 @@
+[USGS-raw_LOC],SHEF_LOC,DSS_A-PART,DSS_B-PART,DSS_F-PART,DSS_SUB-LOCATIONS,DSS_SUB-PARAMETERS,CWMS_LOC,CWMS_VER,CWMS_SUB-LOCATIONS,CWMS_SUB-PARAMETERS,PARAMETERS
+[03275000],Alpine,OHIO,Alpine,USGS-raw,,,Alpine,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03275990],Brookville-Lake,OHIO,Brookville-Lake,USGS-raw,,,Brookville-Lake,USGS-raw,,,Res Elevation
+[03276500],Brookville,OHIO,Brookville,USGS-raw,,,Brookville,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03276000],BrookvilleTW,OHIO,BrookvilleTW,USGS-raw,,,BrookvilleTW,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03242340],CaesarCreek-Lake,OHIO,CaesarCreek-Lake,USGS-raw,,,CaesarCreek-Lake,USGS-raw,,,Res Elevation
+[03303280],Cannelton,OHIO,Cannelton,USGS-raw,,,Cannelton,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03259000],Carthage,OHIO,Carthage,USGS-raw,,,Carthage,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03255000],Cincinnati,OHIO,Cincinnati,USGS-raw,,,Cincinnati,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03268090],CJBrown-Lake,OHIO,CJBrown-Lake,USGS-raw,,,CJBrown-Lake,USGS-raw,,,"Res Elevation,Stage,Precip"
+[03322000],Evansville,OHIO,Evansville,USGS-raw,,,Evansville,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03384500],Golconda,OHIO,Golconda,USGS-raw,,,Golconda,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03612500],GrandChain,OHIO,GrandChain,USGS-raw,,,GrandChain,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03247040],WHHarsha-Lake,OHIO,WHHarsha-Lake,USGS-raw,,,WHHarsha-Lake,USGS-raw,,,"Res Elevation,Stage,Precip"
+[03322420],JTMyers,OHIO,JTMyers,USGS-raw,,,JTMyers,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03294600],Kosmosdale,OHIO,Kosmosdale,USGS-raw,,,Kosmosdale,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03277200],Markland,OHIO,Markland,USGS-raw,,,Markland,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03294500],McAlpineLWR,OHIO,McAlpineLWR,USGS-raw,,,McAlpineLWR,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03245500],Milford,OHIO,Milford,USGS-raw,,,Milford,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03304300],Newburgh,OHIO,Newburgh,USGS-raw,,,Newburgh,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03611000],Paducah,OHIO,Paducah,USGS-raw,,,Paducah,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03247500],Perintown,OHIO,Perintown,USGS-raw,,,Perintown,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03399800],SmithlandDam,OHIO,SmithlandDam,USGS-raw,"60470=HW,60471=TW",,SmithlandDam,USGS-raw,"60470=HW,60471=TW",,Stage
+[03242050],SpringValley,OHIO,SpringValley,USGS-raw,,,SpringValley,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03242350],Wellman,OHIO,Wellman,USGS-raw,,,Wellman,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03256500],WestFork-Lake,OHIO,WestFork-Lake,USGS-raw,,,WestFork-Lake,USGS-raw,,,"Res Elevation,Stage,Precip"
+[03247041],WHHarshaTW,OHIO,WHHarshaTW,USGS-raw,,,WHHarshaTW,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
