@@ -3,9 +3,10 @@
 import csv
 import httpx  # need httpx and httpx[http2] installed
 
+CONFIG_FILE = "lrl-usgs-sites-green-river.csv"
 # WATER_API_ROOT = "https://develop-water-api.corps.cloud"
 WATER_API_ROOT = "http://localhost"
-WATERSHED_SLUG = "savannah-river-basin"
+WATERSHED_SLUG = "green-river-1"
 AUTH_TOKEN = ""
 
 
@@ -40,7 +41,7 @@ def post_watershed_site_param_config(ws_slug, site_number, param_code):
 
 
 # open file for reading
-with open("sas_usgs_locations.csv") as csvDataFile:
+with open(CONFIG_FILE) as csvDataFile:
 
     # read file as csv file
     csvReader = csv.reader(csvDataFile)
@@ -52,7 +53,8 @@ with open("sas_usgs_locations.csv") as csvDataFile:
     for row in csvReader:
         # print(row[0], row[5])
         site_number = row[0].strip()[1:][:-1]
-        param_list = row[5]
+        # param_list = row[5]
+        param_list = row[-1]
         for param in param_list.split(","):
             # print(param)
             if param.strip() in param_cwms_names:
