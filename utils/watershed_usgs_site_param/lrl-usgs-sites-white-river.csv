@@ -1,0 +1,11 @@
+[USGS-raw_LOC],SHEF_LOC,DSS_A-PART,DSS_B-PART,DSS_F-PART,DSS_SUB-LOCATIONS,DSS_SUB-PARAMETERS,CWMS_LOC,CWMS_VER,CWMS_SUB-LOCATIONS,CWMS_SUB-PARAMETERS,PARAMETERS
+[03358000],Cataract,WHITE,Cataract,USGS-raw,,,Cataract,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03354000],Centerton,WHITE,Centerton,USGS-raw,,,Centerton,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03359000],Manhattan,WHITE,Manhattan,USGS-raw,,,Manhattan,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03360500],Newberry,WHITE,Newberry,USGS-raw,,,Newberry,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03374000],Petersburg,WHITE,Petersburg,USGS-raw,,,Petersburg,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03357500],Reelsville,WHITE,Reelsville,USGS-raw,,,Reelsville,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03357000],Spencer,WHITE,Spencer,USGS-raw,,,Spencer,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03275600],Abington,WHITE RIVER,Abington,USGS-raw,,,Abington,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03371500],Bedford,WHITE RIVER,Bedford,USGS-raw,,,Bedford,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03358900],CaglesMill-Lake,WHITE RIVER,CaglesMill-Lake,USGS-raw,,,CaglesMill-Lake,USGS-raw,,,"Res Elevation,Stage,Precip"

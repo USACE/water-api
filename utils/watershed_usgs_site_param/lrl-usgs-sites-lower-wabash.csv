@@ -1,0 +1,6 @@
+[USGS-raw_LOC],SHEF_LOC,DSS_A-PART,DSS_B-PART,DSS_F-PART,DSS_SUB-LOCATIONS,DSS_SUB-PARAMETERS,CWMS_LOC,CWMS_VER,CWMS_SUB-LOCATIONS,CWMS_SUB-PARAMETERS,PARAMETERS
+[03374500],Cuzco,LOWER WABASH,Cuzco,USGS-raw,,,Cuzco,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03375500],Jasper,LOWER WABASH,Jasper,USGS-raw,,,Jasper,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03374498],Patoka-Lake,LOWER WABASH,Patoka-Lake,USGS-raw,,,Patoka-Lake,USGS-raw,,,"Res Elevation,Flow,Stage,Precip,Water Temp"
+[03376500],Princeton,LOWER WABASH,Princeton,USGS-raw,,,Princeton,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
+[03342000],Riverton,LOWER WABASH,Riverton,USGS-raw,,,Riverton,USGS-raw,,,"Flow,Stage,Precip,Water Temp"
