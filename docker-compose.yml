@@ -24,6 +24,7 @@ services:
       - DB_POOL_MAX_CONNS=10
       - DB_POOL_MAX_CONN_IDLE_TIME=30m
       - DB_POOL_MIN_CONNS=5
+      - PG_FEATURESERV_URL=http://featureserv:8080
     ports:
       - '80:80'
     depends_on:
@@ -108,3 +109,15 @@ services:
       - elasticmq
       - db
     restart: always
+  featureserv:
+    image: pramsey/pg_featureserv
+    restart: always
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+      - PGFS_SERVER_HTTPPORT=8080
+      - PGFS_SERVER_HTTPSPORT=8443
+      - PGFS_SERVER_URLBASE=http://localhost/features
+      - PGFS_SERVER_BASEPATH=/features
+      - PGFS_SERVER_DEBUG=true
+      - PGFS_WEBSITE_BASEMAPURL=http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
+

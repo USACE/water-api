@@ -48,6 +48,10 @@ func main() {
 		private.Use(middleware.JWT, middleware.AttachUserInfo)
 	}
 
+	// Routes to Serve Feature Data
+	features := public.Group("/features")
+	features.Use(middleware.PgFeatureservProxy(config.PgFeatureservUrl))
+
 	// App Routes (Intended to be used by application only)
 	key := e.Group("")
 	key.Use(middleware.KeyAuth(config.ApplicationKey))
