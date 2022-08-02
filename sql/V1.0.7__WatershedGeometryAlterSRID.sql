@@ -11,14 +11,6 @@ ALTER TABLE watershed
         SET DEFAULT ST_GeomFromText('POLYGON ((0 0, 0 0, 0 0, 0 0, 0 0))',4326);
 
 
-CREATE OR REPLACE VIEW v_watershed AS (
-    SELECT w.id,
-           w.slug,
-           w.name,
-           w.geometry AS geometry,
-           w.office_id,
-           f.symbol AS office_symbol
-	FROM   watershed w
-    LEFT JOIN office f ON w.office_id = f.id
-	WHERE NOT w.deleted
-);
+-- The view should get replaced in R__01_Views.sql
+-- Need to make minor change (just a comment) to force
+-- a new file hash.
