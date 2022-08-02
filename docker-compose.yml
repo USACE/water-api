@@ -1,9 +1,56 @@
 version: '3'
 
+networks:
+  default:
+    name: water-api_default
+  cumulus:
+    name: cumulus-api_default
+
+
 services:
-  api:
+  water-db:
+    image: postgis/postgis:13-3.1
+    container_name: water-db
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+  # --------------------------------  
+  water-tiger-data:
+    build:
+      context: ./postgis-tiger-data-init
+    container_name: water-tiger-data
+    restart: on-failure
+    depends_on:
+      water-db:
+        condition: service_started    
+    environment:
+      - DB_USER=postgres
+      - DB_PASS=postgres
+      - DB_NAME=postgres
+      - DB_HOST=water-db
+    # profiles: ["init"]
+  # --------------------------------
+  water-flyway:
+    image: flyway/flyway
+    container_name: water-flyway
+    restart: on-failure
+    command: -url=jdbc:postgresql://water-db:5432/postgres -schemas=a2w_cwms -user=postgres -password=postgres -connectRetries=60 migrate
+    environment:
+      - FLYWAY_EDITION=community
+    volumes:
+      - ./sql:/flyway/sql
+    depends_on:
+      water-db:
+        condition: service_started
+      water-tiger-data:
+        condition: service_completed_successfully
+  # --------------------------------
+  water-api:
     build:
       context: ./
+    container_name: water-api
     restart: always
     environment:
       - AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
@@ -19,69 +66,25 @@ services:
       - WATER_DB_USER=water_user
       - WATER_DB_PASS=water_pass
       - WATER_DB_NAME=postgres
-      - WATER_DB_HOST=db
+      - WATER_DB_HOST=water-db
       - WATER_DB_SSLMODE=disable
       - DB_POOL_MAX_CONNS=10
       - DB_POOL_MAX_CONN_IDLE_TIME=30m
       - DB_POOL_MIN_CONNS=5
-      - PG_FEATURESERV_URL=http://featureserv:8080
+      - PG_FEATURESERV_URL=http://water-featureserv:8080
     ports:
       - '80:80'
     depends_on:
-      - db
+      water-db:
+        condition: service_started
+      water-flyway:
+        condition: service_completed_successfully
+      water-tiger-data:
+        condition: service_completed_successfully        
   # --------------------------------
-  db:
-    image: postgis/postgis:13-3.1
-    restart: always
-    environment:
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - '5432:5432'
-  # --------------------------------
-  tiger-data:
-    restart: on-failure
-    depends_on:
-      - db
-    # profiles: ["init"]
-    build:
-      context: ./postgis-tiger-data-init
-    environment:
-      - DB_USER=postgres
-      - DB_PASS=postgres
-      - DB_NAME=postgres
-      - DB_HOST=db
-  # --------------------------------
-  flyway:
-    image: flyway/flyway
-    restart: on-failure
-    command: -url=jdbc:postgresql://db:5432/postgres -schemas=a2w_cwms -user=postgres -password=postgres -connectRetries=60 migrate
-    environment:
-      - FLYWAY_EDITION=community
-    volumes:
-      - ./sql:/flyway/sql
-    depends_on:
-      - db
-  # --------------------------------
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=postgres@postgres.com
-      - PGADMIN_DEFAULT_PASSWORD=postgres
-    ports:
-      - '8081:80'
-  # --------------------------------
-  swagger-ui:
-    image: swaggerapi/swagger-ui
-    container_name: swagger-ui
-    ports:
-      - "8001:8080"
-    volumes:
-      - ./apidoc.yml:/usr/share/nginx/html/swagger/api.yaml
-    environment:
-      API_URL: swagger/api.yaml
-  # --------------------------------
-  elasticmq:
+  water-elasticmq:
     image: softwaremill/elasticmq
+    container_name: water-elasticmq
     volumes:
       - ./elasticmq.conf:/opt/elasticmq.conf
     ports:
@@ -89,9 +92,10 @@ services:
       - "9325:9325"
     restart: always
   # --------------------------------
-  listener:
+  water-listener:
     build:
       context: listener
+    container_name: water-listener
     environment:
       - AWS_ACCESS_KEY_ID=x
       - AWS_SECRET_ACCESS_KEY=x
@@ -99,25 +103,46 @@ services:
       - WATER_DB_USER=water_user
       - WATER_DB_PASS=water_pass
       - WATER_DB_NAME=postgres
-      - WATER_DB_HOST=db
+      - WATER_DB_HOST=water-db
       - WATER_DB_SSLMODE=disable
       - WATER_ASYNC_ENGINE_GEOPROCESS=AWSSQS
       - WATER_ASYNC_ENGINE_GEOPROCESS_TARGET=local/http://elasticmq:9324/queue/water-geoprocess
       - WATER_MIN_RECONN=10s
       - WATER_MAX_RECONN=1m
     depends_on:
-      - elasticmq
-      - db
+      water-db:
+        condition: service_started
+      water-elasticmq:
+        condition: service_started
+      water-flyway:
+        condition: service_completed_successfully
     restart: always
-  featureserv:
+  # --------------------------------
+  water-featureserv:
     image: pramsey/pg_featureserv
+    container_name: water-featureserv
     restart: always
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+      - DATABASE_URL=postgres://postgres:postgres@water-db:5432/postgres
       - PGFS_SERVER_HTTPPORT=8080
       - PGFS_SERVER_HTTPSPORT=8443
       - PGFS_SERVER_URLBASE=http://localhost/features
       - PGFS_SERVER_BASEPATH=/features
       - PGFS_SERVER_DEBUG=true
       - PGFS_WEBSITE_BASEMAPURL=http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
+    depends_on:
+      water-db:
+        condition: service_started
+      water-api:
+        condition: service_started
+  # --------------------------------
+  # water-swagger-ui:
+  #   image: swaggerapi/swagger-ui
+  #   container_name: water-swagger-ui
+  #   ports:
+  #     - "8001:8080"
+  #   volumes:
+  #     - ./apidoc.yml:/usr/share/nginx/html/swagger/api.yaml
+  #   environment:
+  #     API_URL: swagger/api.yaml
 
