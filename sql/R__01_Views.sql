@@ -35,6 +35,7 @@ CREATE OR REPLACE VIEW v_usgs_site AS (
 --------------
 -- V_WATERSHED
 --------------
+-- This should rebuild after being deleted in 1.0.7
 CREATE OR REPLACE VIEW v_watershed AS (
     SELECT w.id,
            w.slug,
