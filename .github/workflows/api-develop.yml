@@ -8,6 +8,7 @@ on:
       - 'sql/**'
       - './Dockerfile'
       - '.github/workflows/api-develop.yml'
+      - 'test/**'
   workflow_dispatch:
 jobs:
 
