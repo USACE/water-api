@@ -41,4 +41,7 @@ $$;
 ALTER ROLE water_user SET search_path TO a2w_cwms,topology,tiger,tiger_data,public;
 
 -- Add State Column to Location
-ALTER TABLE a2w_cwms.location ADD COLUMN state_id integer REFERENCES tiger_data.state_all(gid);
+/*
+This should be moved if/when we restructure the migrations
+*/
+ALTER TABLE a2w_cwms.location ADD COLUMN IF NOT EXISTS state_id integer REFERENCES tiger_data.state_all(gid);
