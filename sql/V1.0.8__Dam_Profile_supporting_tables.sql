@@ -40,11 +40,15 @@ INSERT into datasource(id, slug, name, uri) VALUES
 ('fa89f10d-8111-405b-8b93-4645ce10b4ac', 'sas-file-reader', 'SAS S3 File Consumer', 'S3://mybucket/mypath/to/sas/file');
 
 INSERT into timeseries(id, datasource_id, datasource_key, latest_time, latest_value) VALUES
-('4c4d08d9-356e-4a29-9867-d6c48ca1b7ff', 'a138e363-30ea-4e0d-8d8f-cce03cb8e1d0', 'AlumCr-Lake.Elev.Inst.15Minutes.0.OBS', '2022-09-08 20:00:00-00', 888.22);
+('4c4d08d9-356e-4a29-9867-d6c48ca1b7ff', 'a138e363-30ea-4e0d-8d8f-cce03cb8e1d0', 'AlumCr-Lake.Elev.Inst.15Minutes.0.OBS', '2022-09-08 20:00:00-00', 888.22),
+('dc158cb4-45b4-42ed-8d8e-9e1cc57aa37c', 'a138e363-30ea-4e0d-8d8f-cce03cb8e1d0', 'AlumCr-Lake.Flow.Inst.15Minutes.0.OBS', '2022-09-08 20:00:00-00', 19.28),
+('6af8bdaf-8759-43ef-85ec-070bc8f04220', 'a138e363-30ea-4e0d-8d8f-cce03cb8e1d0', 'AlumCr-Outflow.Flow.Inst.15Minutes.0.OBS', '2022-09-08 20:00:00-00', 12.28);
 
 INSERT INTO visualization(id, location_id, slug, name, type_id) VALUES
 ('ff03ac20-439c-4504-8c33-8819db2acb23', (SELECT id from location where slug = 'alumcr'), 'lrh-alum-creek-dam-profile', 'Alum Creek Dam Profile Chart', '53da77d0-6550-4f02-abf8-4bcd1a596a7c');
 
 INSERT INTO visualization_variable_mapping(visualization_id, variable, timeseries_id) VALUES
-('ff03ac20-439c-4504-8c33-8819db2acb23', 'pool', '4c4d08d9-356e-4a29-9867-d6c48ca1b7ff');
+('ff03ac20-439c-4504-8c33-8819db2acb23', 'pool', '4c4d08d9-356e-4a29-9867-d6c48ca1b7ff'),
+('ff03ac20-439c-4504-8c33-8819db2acb23', 'inflow', 'dc158cb4-45b4-42ed-8d8e-9e1cc57aa37c'),
+('ff03ac20-439c-4504-8c33-8819db2acb23', 'outflow', '6af8bdaf-8759-43ef-85ec-070bc8f04220');
 
