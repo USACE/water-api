@@ -27,7 +27,8 @@
         "AWS_DEFAULT_REGION": "us-east-1",
         "DB_POOL_MAX_CONNS": "10",
         "DB_POOL_MAX_CONN_IDLE_TIME": "30m",
-        "DB_POOL_MIN_CONNS": "5"
+        "DB_POOL_MIN_CONNS": "5",
+        "CHARTSERVER_URL":"http://localhost:3000"
       },
       "args": []
     }
