@@ -18,6 +18,8 @@ GRANT SELECT ON tiger_data.state_all TO water_user;
 
 GRANT SELECT ON
     config,
+    datasource,
+    datasource_type,
     location,
     location_kind,
     level,
@@ -25,6 +27,8 @@ GRANT SELECT ON
     level_value,
     nws_stages,
     office,
+    provider,
+    timeseries,
     upload_status,  
     usgs_site,
     usgs_huc2,
@@ -39,22 +43,28 @@ GRANT SELECT ON
     usgs_site_parameters,
     usgs_parameter,
     vertical_datum,
+    visualization,
+    visualization_variable_mapping,
     watershed,
     watershed_shapefile_uploads,
-    watershed_usgs_sites,
+    watershed_usgs_sites,    
     v_usgs_site,
     v_watershed
 TO water_reader;
 
--- Role cumulus_writer
--- Tables specific to instrumentation app
+-- Role water_writer
+-- Tables specific to water app
 GRANT INSERT,UPDATE,DELETE ON
     config,
+    datasource,
+    datasource_type,
     location,
     location_kind,
     level,
     level_kind,
     level_value,
+    provider,
+    timeseries,
     vertical_datum,
     nws_stages,
     upload_status,
@@ -62,6 +72,8 @@ GRANT INSERT,UPDATE,DELETE ON
     usgs_measurements,
     usgs_site_parameters,
     usgs_parameter,
+    visualization,
+    visualization_variable_mapping,
     watershed,
     watershed_shapefile_uploads,
     watershed_usgs_sites
@@ -72,7 +84,7 @@ GRANT SELECT ON geometry_columns TO postgis_reader;
 GRANT SELECT ON geography_columns TO postgis_reader;
 GRANT SELECT ON spatial_ref_sys TO postgis_reader;
 
--- Grant Permissions to instrument_user
+-- Grant Permissions to water_user
 GRANT postgis_reader TO water_user;
 GRANT water_reader TO water_user;
 GRANT water_writer TO water_user;

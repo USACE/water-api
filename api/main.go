@@ -191,6 +191,11 @@ func main() {
 	// Watershed USGS Site Params enabled for data retrieval.  Primarily used by Airflow.
 	public.GET("/watersheds/usgs_sites", ws.ListWatershedSiteParameters)
 
+	// GET "/timeseries?provider=LRH&datasource_type=cwms-timeseries"
+	key.POST("/timeseries", cs.SyncTimeseries) // (airflow - array of objects in payload)
+	// public.POST "/:provider_slug/timeseries"
+	// "/levels/latest/config/:owner"
+
 	// Server
 	s := &http2.Server{
 		MaxConcurrentStreams: 250,     // http2 default 250
