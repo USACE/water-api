@@ -15,10 +15,10 @@ func (s Store) GetProfileChart(c echo.Context) error {
 		Inflow:  1200,
 		Outflow: 600,
 	}
-	chart, err := s.ChartServer.GetDamProfileChart(input)
+	chart, err := s.ChartServer.DamProfileChart(input)
 	if err != nil {
 		return c.String(500, err.Error())
 	}
 
-	return c.String(200, chart)
+	return c.HTML(200, chart)
 }

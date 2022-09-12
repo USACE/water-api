@@ -1,7 +1,6 @@
 package chartserver
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -23,9 +22,8 @@ func NewChartServer(cfg Config) (*ChartServer, error) {
 	return &ChartServer{URL: u}, nil
 }
 
-func (s *ChartServer) Get(u *url.URL) (string, error) {
+func (s ChartServer) Get(u *url.URL) (string, error) {
 	urlstr := u.String()
-	fmt.Println(urlstr)
 	resp, err := http.Get(urlstr)
 	if err != nil {
 		return "", err
@@ -39,5 +37,4 @@ func (s *ChartServer) Get(u *url.URL) (string, error) {
 	// Convert to string
 	b := string(body)
 	return b, nil
-
 }

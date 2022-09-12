@@ -1,8 +1,6 @@
 package chartserver
 
 import (
-	"fmt"
-
 	"github.com/USACE/water-api/api/helpers"
 )
 
@@ -13,16 +11,9 @@ type DamProfileChartInput struct {
 	Outflow float64 `querystring:"outflow"`
 }
 
-func (s *ChartServer) GetDamProfileChart(input DamProfileChartInput) (string, error) {
-
-	URL1 := *s.URL
-	pURL1 := &URL1
-	pURL1.Path = pURL1.Path + "/example-scatter"
-
-	qv := helpers.StructToQueryValues(input)
-	for v := range qv {
-		fmt.Println(v)
-	}
-
-	return s.Get(pURL1)
+func (s ChartServer) DamProfileChart(input DamProfileChartInput) (string, error) {
+	u := *s.URL
+	u.Path = u.Path + "/example-scatter"                     // Build URL Path
+	u.RawQuery = helpers.StructToQueryValues(input).Encode() // Build URL Query Params
+	return s.Get(&u)
 }
