@@ -25,6 +25,7 @@ type Config struct {
 	AWSS3ForcePathStyle   bool          `envconfig:"AWS_S3_FORCE_PATH_STYLE"`
 	AWSS3Bucket           string        `envconfig:"AWS_S3_BUCKET"`
 	PgFeatureservUrl      string        `envconfig:"PG_FEATURESERV_URL"`
+	ChartServerURL        string        `envconfig:"CHARTSERVER_URL"`
 }
 
 // GetConfig returns environment variable config
