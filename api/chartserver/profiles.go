@@ -15,5 +15,5 @@ func (s ChartServer) DamProfileChart(input DamProfileChartInput) (string, error)
 	u := *s.URL
 	u.Path = u.Path + "/example-scatter"                     // Build URL Path
 	u.RawQuery = helpers.StructToQueryValues(input).Encode() // Build URL Query Params
-	return s.Get(&u)
+	return helpers.HTTPGet(&u)
 }
