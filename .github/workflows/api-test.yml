@@ -1,0 +1,32 @@
+name: API - Build & Deploy
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*.*.*'
+  pull_request:
+    branches: ['main']
+    paths:
+      - 'api/**'
+      - 'sql/**'
+      - './Dockerfile'
+      - '.github/workflows/api-test.yml'
+      - 'test/**'
+  workflow_dispatch:
+jobs:
+  UnitTests:
+    name: unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: go tests
+        working-directory: api
+        run: go test ./...
+  FunctionalTests:
+    name: functional-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: postman tests
+        run: echo "POSTMAN TESTS NOT IMPLEMENTED"
