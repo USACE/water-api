@@ -36,4 +36,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: postman tests
-        run: docker compose -f docker-compose.yml up -d && sleep 30 && ./run_tests.sh
+        run: docker compose up --build -d && sleep 60 && ./run_tests.sh
