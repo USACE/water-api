@@ -8,6 +8,7 @@ import (
 	"golang.org/x/net/http2"
 
 	"github.com/USACE/water-api/api/app"
+	"github.com/USACE/water-api/api/chartserver"
 	"github.com/USACE/water-api/api/cwms"
 	"github.com/USACE/water-api/api/middleware"
 	"github.com/USACE/water-api/api/nws"
@@ -62,10 +63,21 @@ func main() {
 	})
 
 	/////////////////////////////////////////////////////////////////////////////
+	// CHARTSERVER INTEGRATION
+	/////////////////////////////////////////////////////////////////////////////
+	chartserver, err := chartserver.NewChartServer(chartserver.Config{URLString: config.ChartServerURL})
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
 	// CWMS
 	/////////////////////////////////////////////////////////////////////////////
 	// CWMS Store
-	cs := cwms.Store{Connection: st.Connection}
+	cs := cwms.Store{
+		Connection:  st.Connection,
+		ChartServer: chartserver,
+	}
 
 	// Search
 	public.GET("/search/locations", cs.SearchLocations)
@@ -77,6 +89,9 @@ func main() {
 	key.POST("/locations", cs.CreateLocations)
 	key.PUT("/locations/:location_id", cs.UpdateLocation)
 	key.DELETE("/locations/:location_id", cs.DeleteLocation)
+
+	// Get Location Profile Chart
+	public.GET("/locations/:location_id/profile-chart", cs.GetProfileChart)
 
 	// Locations (Office Context)
 	// public.GET("/offices/:office_symbol/locations")
