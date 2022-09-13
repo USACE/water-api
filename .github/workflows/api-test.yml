@@ -1,4 +1,4 @@
-name: API Tests
+name: API - Tests
 
 on:
   push:
@@ -35,5 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: recursive
       - name: postman tests
-        run: echo "POSTMAN TESTS NOT IMPLEMENTED"
+        run: docker compose up --build -d && sleep 60 && ./run_tests.sh
