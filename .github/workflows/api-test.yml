@@ -1,16 +1,6 @@
 name: API - Tests
 
 on:
-  push:
-    branches: [main]
-    tags:
-      - 'v*.*.*'
-    paths:
-      - 'api/**'
-      - 'sql/**'
-      - './Dockerfile'
-      - '.github/workflows/api-test.yml'
-      - 'test/**'
   pull_request:
     branches: [main]
     paths:
@@ -19,7 +9,7 @@ on:
       - './Dockerfile'
       - '.github/workflows/api-test.yml'
       - 'test/**'
-
+  workflow_call:
   workflow_dispatch:
 jobs:
   UnitTests:
