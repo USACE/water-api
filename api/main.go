@@ -131,6 +131,12 @@ func main() {
 	// States
 	public.GET("/states", cs.ListStates)
 
+	// Timeseries
+	public.GET("/timeseries", cs.ListTimeseries)
+	key.POST("/timeseries", cs.CreateOrUpdateTimeseries) // (airflow - array of objects in payload)
+	// public.POST "/:provider_slug/timeseries"
+	// "/levels/latest/config/:owner"
+
 	// Watersheds
 	public.GET("/watersheds", cs.ListWatersheds)
 	public.GET("/watersheds/:watershed_slug", cs.GetWatershed)
@@ -190,11 +196,6 @@ func main() {
 	private.DELETE("/watersheds/:watershed_slug/site/:site_number/parameter/:parameter_code", ws.DeleteWatershedSiteParameter)
 	// Watershed USGS Site Params enabled for data retrieval.  Primarily used by Airflow.
 	public.GET("/watersheds/usgs_sites", ws.ListWatershedSiteParameters)
-
-	// GET "/timeseries?provider=LRH&datasource_type=cwms-timeseries"
-	key.POST("/timeseries", cs.SyncTimeseries) // (airflow - array of objects in payload)
-	// public.POST "/:provider_slug/timeseries"
-	// "/levels/latest/config/:owner"
 
 	// Server
 	s := &http2.Server{

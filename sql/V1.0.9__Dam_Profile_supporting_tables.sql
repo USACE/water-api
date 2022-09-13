@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS datasource (
 CREATE TABLE IF NOT EXISTS timeseries (
     id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     datasource_id UUID NOT NULL REFERENCES datasource(id),
-    datasource_key VARCHAR UNIQUE NOT NULL,
+    datasource_key VARCHAR NOT NULL,
     latest_value DOUBLE PRECISION NOT NULL,
     latest_time TIMESTAMPTZ NOT NULL,
     CONSTRAINT timeseries_unique_datasource UNIQUE(datasource_id, datasource_key)
@@ -50,7 +50,8 @@ INSERT into datasource_type(id, slug, name, uri) VALUES
 
 INSERT into datasource(id, provider_id, datasource_type_id) VALUES
 ('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', '2f160ba7-fd5f-4716-8ced-4a29f75065a6', 'a138e363-30ea-4e0d-8d8f-cce03cb8e1d0'),
-('5bb6d520-5223-4b04-b348-f57268a41c03', '2f160ba7-fd5f-4716-8ced-4a29f75065a6', '97920d27-ee54-4d35-aec4-c01ec31221a2');
+('5bb6d520-5223-4b04-b348-f57268a41c03', '2f160ba7-fd5f-4716-8ced-4a29f75065a6', '97920d27-ee54-4d35-aec4-c01ec31221a2'),
+('bc8115f1-9570-4153-853b-901518549600', '552e59f7-c0cc-4689-8a4d-e791c028430a', 'a138e363-30ea-4e0d-8d8f-cce03cb8e1d0');
 
 INSERT into timeseries(id, datasource_id, datasource_key, latest_time, latest_value) VALUES
 ('4c4d08d9-356e-4a29-9867-d6c48ca1b7ff', '9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'AlumCr-Lake.Elev.Inst.15Minutes.0.OBS', '2022-09-08 20:00:00-00', 888.22),

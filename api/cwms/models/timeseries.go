@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 
+	sq "github.com/Masterminds/squirrel"
 	"github.com/USACE/water-api/api/helpers"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
@@ -13,19 +15,18 @@ import (
 )
 
 type Timeseries struct {
-	ID             *uuid.UUID `json:"id"`
-	ProviderID     *string    `json:"provider_id"`
-	DatasourceType string     `json:"datasource_type" db:"datasource_type"`
-	Key            string     `json:"key"`
-	LatestTime     time.Time  `json:"latest_time" db:"latest_time"`
-	LatestValue    float64    `json:"latest_value" db:"latest_value"`
+	ID             *uuid.UUID  `json:"id,omitempty"`
+	Provider       string      `json:"provider" db:"provider"`
+	DatasourceType string      `json:"datasource_type" db:"datasource_type"`
+	Key            string      `json:"key"`
+	Times          []time.Time `json:"times" db:"times"`
+	Values         []float64   `json:"values" db:"values"`
 }
 
 type TimeseriesFilter struct {
-	KindID         *uuid.UUID `json:"kind_id" query:"kind_id"`
-	DatasourceType string     `json:"datasource_type" query:"datasource_type"`
-	ProviderID     *uuid.UUID `json:"provider_id" query:"provider_id"`
-	Q              *string    `query:"q"`
+	DatasourceType *string `json:"datasource_type" query:"datasource_type"`
+	Provider       *string `query:"provider"`
+	Q              *string `query:"q"`
 }
 
 type TimeseriesCollection struct {
@@ -44,7 +45,59 @@ func (c *TimeseriesCollection) UnmarshalJSON(b []byte) error {
 	}
 }
 
-func SyncTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Timeseries, error) {
+func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
+
+	q := sq.Select(`dt.slug AS datasource_type,
+					p.slug AS provider,
+					t.datasource_key AS key,
+					ARRAY_AGG(t.latest_time) AS times,
+					ARRAY_AGG(t.latest_value ) AS values`,
+	).From("timeseries t")
+
+	// Base string for JOIN
+	j1 := `datasource d ON d.id = t.datasource_id 
+			JOIN datasource_type dt ON dt.id = d.datasource_type_id 
+			JOIN provider p ON p.id = d.provider_id`
+
+	q = q.Join(j1)
+
+	q = q.GroupBy("dt.slug, p.slug, t.datasource_key")
+
+	if f != nil {
+
+		// Filter by Provider
+		if f.Provider != nil {
+			q = q.Where("lower(p.slug) = lower(?)", *f.Provider)
+		}
+		// Filter by DatasourceType
+		if f.DatasourceType != nil {
+			q = q.Where("lower(dt.slug) = lower(?)", *f.DatasourceType)
+		}
+	}
+
+	fmt.Println(q.ToSql())
+
+	// Unfiltered
+	return q.PlaceholderFormat(sq.Dollar), nil
+}
+
+func ListTimeseries(db *pgxpool.Pool, f *TimeseriesFilter) ([]Timeseries, error) {
+	q, err := ListTimeseriesQuery(f)
+	if err != nil {
+		return make([]Timeseries, 0), err
+	}
+	sql, args, err := q.ToSql()
+	if err != nil {
+		return make([]Timeseries, 0), err
+	}
+	tt := make([]Timeseries, 0)
+	if err := pgxscan.Select(context.Background(), db, &tt, sql, args...); err != nil {
+		return make([]Timeseries, 0), err
+	}
+	return tt, nil
+}
+
+func CreateOrUpdateTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Timeseries, error) {
 	tx, err := db.Begin(context.Background())
 	if err != nil {
 		return make([]Timeseries, 0), err
@@ -53,21 +106,26 @@ func SyncTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Timeseries, err
 
 	newIDs := make([]uuid.UUID, 0)
 
+	queryDataSourceID := `
+		SELECT d.id FROM datasource d 
+		JOIN datasource_type dt ON dt.id = d.datasource_type_id 
+		JOIN provider p ON p.id = d.provider_id 
+		WHERE lower(p.slug) = lower($2) AND lower(dt.slug) = lower($1)
+	`
+
 	for _, t := range c.Items {
 		rows, err := tx.Query(
 			context.Background(),
 			`INSERT INTO timeseries (datasource_id, datasource_key, latest_time, latest_value)
-			VALUES((SELECT d.id FROM a2w_cwms.datasource d 
-				JOIN a2w_cwms.datasource_type dt ON dt.id = d.datasource_type_id 
-				WHERE dt.slug = $1), $2, $3, $4)
+			VALUES((`+queryDataSourceID+`), $3, $4, $5)
 			ON CONFLICT ON CONSTRAINT timeseries_unique_datasource
 			DO UPDATE SET
-			latest_time = $3,
-			latest_value = $4
-			WHERE timeseries.datasource_key = $2
-			--AND $3 >= timeseries.latest_time
+			latest_time = $4,
+			latest_value = $5
+			WHERE timeseries.datasource_key = $3
+			AND timeseries.datasource_id = (`+queryDataSourceID+`)
 			RETURNING id`,
-			t.DatasourceType, t.Key, t.LatestTime, t.LatestValue,
+			t.DatasourceType, t.Provider, t.Key, t.Times[len(t.Times)-1], t.Values[len(t.Values)-1],
 		)
 		if err != nil {
 			return make([]Timeseries, 0), err
