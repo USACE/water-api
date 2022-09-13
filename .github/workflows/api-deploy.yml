@@ -13,9 +13,12 @@ on:
       - 'test/**'
   workflow_dispatch:
 jobs:
+  Tests:
+    name: tests
+    uses: USACE/water-api/.github/workflows/api-test.yml@main
   APIDockerImage:
     name: API Image
-    needs: [unit-tests,functional-tests]
+    needs: [tests]
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     env:
