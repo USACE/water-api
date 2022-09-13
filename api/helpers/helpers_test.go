@@ -7,10 +7,10 @@ import (
 func TestStructToQueryValues(t *testing.T) {
 
 	type testStruct struct {
-		Pool    float64 `query:"pool"`
-		Tail    float64 `query:"tail"`
-		Inflow  float64 `query:"inflow"`
-		Outflow float64 `query:"outflow"`
+		Pool    float64 `querystring:"pool"`
+		Tail    float64 `querystring:"tail"`
+		Inflow  float64 `querystring:"inflow"`
+		Outflow float64 `querystring:"outflow"`
 	}
 
 	s := testStruct{
@@ -22,7 +22,6 @@ func TestStructToQueryValues(t *testing.T) {
 
 	q := StructToQueryValues(s)
 	if len(q) != 4 {
-		t.Log(q)
 		t.Errorf("length of map is %d, should be 4", len(q))
 	}
 }
