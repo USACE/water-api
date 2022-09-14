@@ -3,12 +3,6 @@ name: API - Tests
 on:
   pull_request:
     branches: [main]
-    paths:
-      - 'api/**'
-      - 'sql/**'
-      - './Dockerfile'
-      - '.github/workflows/api-test.yml'
-      - 'test/**'
   workflow_call:
   workflow_dispatch:
 jobs:
