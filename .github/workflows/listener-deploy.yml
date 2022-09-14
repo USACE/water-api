@@ -1,24 +1,29 @@
-name: Build Postgis Tiger Data Init Container
+name: Build Listener Image
 
 on:
   push:
     branches: [main]
+    tags:
+      - 'v*.*.*'
     paths:
-      - 'postgis-tiger-data-init/**'
-      - '.github/workflows/postgis-tiger-data-init.yml'
+      - 'listener/**'
+      - '.github/workflows/listener-deploy.yml'
   workflow_dispatch:
 jobs:
-
   DockerImage:
-    name: Docker Image
+    name: Listener Image
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    env:
+      # BUILD_IMAGE: Name of image to build
+      BUILD_IMAGE: water-listener:latest
+      # ECR_REPOSITORY: Name of ECR Repository for Built Images
+      ECR_REPOSITORY: water-listener
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-    
+      - uses: actions/checkout@v3
+
       - name: Configure AWS credentials
         if: ${{ always() }}
         uses: aws-actions/configure-aws-credentials@v1
@@ -31,15 +36,25 @@ jobs:
         if: ${{ success() }}
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+      
+      - name: Build Image
+        run: docker build -t $BUILD_IMAGE listener
 
-      - name: Build, tag, and push image to Amazon ECR (postgis-tiger-data-init)
-        if: ${{ success() }}
+      - name: Deploy Develop
+        if: github.ref_type == 'branch'
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: postgis-tiger-data-init
+          TAG: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:develop
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:13-3.1 postgis-tiger-data-init
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:13-3.1
+          docker tag $BUILD_IMAGE $TAG
+          docker push $TAG
+      
+      - name: Deploy Stable
+        if: github.ref_type == 'tag'
+        env:
+          TAG: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:stable
+        run: |
+          docker tag $BUILD_IMAGE $TAG
+          docker push $TAG
 
       - name: Logout of Amazon ECR
         if: ${{ always() }}
