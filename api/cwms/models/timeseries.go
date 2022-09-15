@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
@@ -23,7 +22,8 @@ type Timeseries struct {
 	Provider       string        `json:"provider" db:"provider"`
 	DatasourceType string        `json:"datasource_type" db:"datasource_type"`
 	Key            string        `json:"key"`
-	LatestTime     time.Time     `json:"latest_time"`
+	LatestTime     *time.Time    `json:"latest_time,omitempty"`
+	LatestValue    *float64      `json:"latest_value,omitempty"`
 	Measurements   *Measurements `json:"measurements,omitempty"`
 }
 
@@ -79,7 +79,7 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 		}
 	}
 
-	fmt.Println(q.ToSql())
+	// fmt.Println(q.ToSql())
 
 	// Unfiltered
 	return q.PlaceholderFormat(sq.Dollar), nil

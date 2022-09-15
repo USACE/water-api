@@ -133,7 +133,7 @@ func main() {
 
 	// Timeseries
 	public.GET("/timeseries", cs.ListTimeseries)
-	public.POST("/timeseries/measurements", cs.CreateOrUpdateTimeseriesMeasurements)
+	key.POST("/timeseries/measurements", cs.CreateOrUpdateTimeseriesMeasurements)
 	key.POST("/timeseries", cs.CreateTimeseries) // (airflow - array of objects in payload)
 	// public.POST "/:provider_slug/timeseries"
 	// "/levels/latest/config/:owner"
