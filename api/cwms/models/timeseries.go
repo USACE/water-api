@@ -14,19 +14,17 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
+// POST /timeseries
+//
+//	Creates a Timeseries may or may not have a Measurements struct.  A measurements struct has two fields. Times, Values. Each is an array with zero or more values []
+//	Creates metadata that will be associated with all related timeseries measurements
 type Timeseries struct {
-	ID             *uuid.UUID  `json:"id,omitempty"`
-	Provider       string      `json:"provider" db:"provider"`
-	DatasourceType string      `json:"datasource_type" db:"datasource_type"`
-	Key            string      `json:"key"`
-	Times          []time.Time `json:"times" db:"times"`
-	Values         []float64   `json:"values" db:"values"`
-}
-
-type TimeseriesFilter struct {
-	DatasourceType *string `json:"datasource_type" query:"datasource_type"`
-	Provider       *string `query:"provider"`
-	Q              *string `query:"q"`
+	ID             *uuid.UUID    `json:"id,omitempty"`
+	Provider       string        `json:"provider" db:"provider"`
+	DatasourceType string        `json:"datasource_type" db:"datasource_type"`
+	Key            string        `json:"key"`
+	LatestTime     time.Time     `json:"latest_time"`
+	Measurements   *Measurements `json:"measurements,omitempty"`
 }
 
 type TimeseriesCollection struct {
@@ -45,13 +43,19 @@ func (c *TimeseriesCollection) UnmarshalJSON(b []byte) error {
 	}
 }
 
+type TimeseriesFilter struct {
+	DatasourceType *string `json:"datasource_type" query:"datasource_type"`
+	Provider       *string `query:"provider"`
+	Q              *string `query:"q"`
+}
+
 func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 
 	q := sq.Select(`dt.slug AS datasource_type,
 					p.slug AS provider,
 					t.datasource_key AS key,
-					ARRAY_AGG(t.latest_time) AS times,
-					ARRAY_AGG(t.latest_value ) AS values`,
+					t.latest_time,
+					t.latest_value`,
 	).From("timeseries t")
 
 	// Base string for JOIN
@@ -61,7 +65,7 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 
 	q = q.Join(j1)
 
-	q = q.GroupBy("dt.slug, p.slug, t.datasource_key")
+	// q = q.GroupBy("dt.slug, p.slug, t.datasource_key")
 
 	if f != nil {
 
@@ -97,7 +101,10 @@ func ListTimeseries(db *pgxpool.Pool, f *TimeseriesFilter) ([]Timeseries, error)
 	return tt, nil
 }
 
-func CreateOrUpdateTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Timeseries, error) {
+// func GetTimeseries() (*Timeseries, error) {}
+
+// func CreateTimeseries() ([]Timeseries, error) {}
+func CreateTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Timeseries, error) {
 	tx, err := db.Begin(context.Background())
 	if err != nil {
 		return make([]Timeseries, 0), err
@@ -116,16 +123,10 @@ func CreateOrUpdateTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Times
 	for _, t := range c.Items {
 		rows, err := tx.Query(
 			context.Background(),
-			`INSERT INTO timeseries (datasource_id, datasource_key, latest_time, latest_value)
-			VALUES((`+queryDataSourceID+`), $3, $4, $5)
-			ON CONFLICT ON CONSTRAINT timeseries_unique_datasource
-			DO UPDATE SET
-			latest_time = $4,
-			latest_value = $5
-			WHERE timeseries.datasource_key = $3
-			AND timeseries.datasource_id = (`+queryDataSourceID+`)
+			`INSERT INTO timeseries (datasource_id, datasource_key)
+			VALUES((`+queryDataSourceID+`), $3)			
 			RETURNING id`,
-			t.DatasourceType, t.Provider, t.Key, t.Times[len(t.Times)-1], t.Values[len(t.Values)-1],
+			t.DatasourceType, t.Provider, t.Key,
 		)
 		if err != nil {
 			return make([]Timeseries, 0), err
@@ -139,5 +140,8 @@ func CreateOrUpdateTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Times
 		}
 	}
 	tx.Commit(context.Background())
+
 	return nil, nil
 }
+
+// func DeleteTimeseries() (something?) {}
