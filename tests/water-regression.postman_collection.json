@@ -1681,6 +1681,135 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Visualizations",
+			"item": [
+				{
+					"name": "Get Visualizations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/visualizations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"visualizations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Visualization (One)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"let r = JSON.parse(responseBody);",
+									"pm.environment.set(\"new_visualization_slug\", r.slug);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"location_slug\": \"lrh-test-project\",\n    \"name\": \"LRHTestProject Dam Profile Chart\",\n    \"type_id\": \"53da77d0-6550-4f02-abf8-4bcd1a596a7c\"\n}   ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/visualizations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"visualizations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Visualization Mapping (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"variable\": \"pool\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"datasource_type\": \"cwms-timeseries\"\n    },\n    {\n        \"variable\": \"outflow\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"datasource_type\": \"cwms-timeseries\"\n    }\n]   ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/visualizations/{{new_visualization_slug}}/assign",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"visualizations",
+								"{{new_visualization_slug}}",
+								"assign"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {

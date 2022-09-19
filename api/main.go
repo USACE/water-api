@@ -198,6 +198,11 @@ func main() {
 	// Watershed USGS Site Params enabled for data retrieval.  Primarily used by Airflow.
 	public.GET("/watersheds/usgs_sites", ws.ListWatershedSiteParameters)
 
+	//Visualizations
+	public.GET("/visualizations", ws.ListVisualizations)
+	public.POST("/visualizations", ws.CreateVisualization)
+	public.POST("/visualizations/:visualization_slug/assign", ws.CreateOrUpdateVisualizationMapping)
+
 	// Server
 	s := &http2.Server{
 		MaxConcurrentStreams: 250,     // http2 default 250

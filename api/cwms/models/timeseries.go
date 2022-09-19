@@ -95,7 +95,7 @@ func ListTimeseries(db *pgxpool.Pool, f *TimeseriesFilter) ([]Timeseries, error)
 		return make([]Timeseries, 0), err
 	}
 	tt := make([]Timeseries, 0)
-	if err := pgxscan.Select(context.Background(), db, &tt, sql, args...); err != nil {
+	if err := pgxscan.Select(context.Background(), db, &tt, sql+" order by p.slug, t.datasource_key", args...); err != nil {
 		return make([]Timeseries, 0), err
 	}
 	return tt, nil
