@@ -1569,7 +1569,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    }\n]",
+							"raw": "[\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1608,7 +1608,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T20:15:00-00:00\", \"2022-09-13T20:30:00-00:00\"],\n            \"values\": [124.90, 125.22]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T21:00:00-00:00\", \"2022-09-13T21:15:00-00:00\"],\n            \"values\": [459.20, 459.55]\n        }\n        \n    }\n]",
+							"raw": "[\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T20:15:00-00:00\", \"2022-09-13T20:30:00-00:00\"],\n            \"values\": [124.90, 125.22]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T21:00:00-00:00\", \"2022-09-13T21:15:00-00:00\"],\n            \"values\": [459.20, 459.55]\n        }\n        \n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1686,7 +1686,7 @@
 			"name": "Visualizations",
 			"item": [
 				{
-					"name": "Get Visualizations",
+					"name": "List Visualizations",
 					"event": [
 						{
 							"listen": "test",
@@ -1769,6 +1769,49 @@
 					"response": []
 				},
 				{
+					"name": "Get Visualization (One)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/visualizations/{{new_visualization_slug}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"visualizations",
+								"{{new_visualization_slug}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Visualization Mapping (Many)",
 					"event": [
 						{
@@ -1788,7 +1831,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"variable\": \"pool\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"datasource_type\": \"cwms-timeseries\"\n    },\n    {\n        \"variable\": \"outflow\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"datasource_type\": \"cwms-timeseries\"\n    }\n]   ",
+							"raw": "[\n    {\n        \"variable\": \"pool\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"datasource_type\": \"cwms-timeseries\"\n    },\n    {\n        \"variable\": \"outflow\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"datasource_type\": \"cwms-timeseries\"\n    }\n]   ",
 							"options": {
 								"raw": {
 									"language": "json"

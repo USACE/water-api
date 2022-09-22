@@ -91,7 +91,7 @@ func main() {
 	key.DELETE("/locations/:location_id", cs.DeleteLocation)
 
 	// Get Location Profile Chart
-	public.GET("/locations/:location_id/profile-chart", cs.GetProfileChart)
+	public.GET("/locations/:location_slug/profile-chart", cs.GetProfileChart)
 
 	// Locations (Office Context)
 	// public.GET("/offices/:office_symbol/locations")
@@ -202,6 +202,7 @@ func main() {
 	public.GET("/visualizations", ws.ListVisualizations)
 	public.POST("/visualizations", ws.CreateVisualization)
 	public.POST("/visualizations/:visualization_slug/assign", ws.CreateOrUpdateVisualizationMapping)
+	public.GET("/visualizations/:visualization_slug", ws.GetVisualization)
 
 	// Server
 	s := &http2.Server{

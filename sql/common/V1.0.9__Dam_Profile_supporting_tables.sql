@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS visualization (
     location_id UUID NOT NULL REFERENCES location(id),
     slug VARCHAR UNIQUE NOT NULL,
     name VARCHAR NOT NULL,
-    type_id UUID NOT NULL,
-    CONSTRAINT visualization_location_unique_slug UNIQUE(location_id, slug)
+    type_id UUID NOT NULL
+    --CONSTRAINT visualization_location_unique_slug UNIQUE(location_id, slug)
 );
 
 -- visualization_variable_mapping
