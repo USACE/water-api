@@ -1,7 +1,6 @@
 package cwms
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/USACE/water-api/api/chartserver"
@@ -55,22 +54,37 @@ func (s Store) GetProfileChart(c echo.Context) error {
 
 	}
 
-	for v, x := range m {
-		fmt.Println(v, " -> ", x)
+	// for v, x := range m {
+	// 	fmt.Println(v, " -> ", x)
+	// }
+
+	pool_val := m["pool"]["latest_value"]
+	if pool_val == nil {
+		pool_val = float64(0)
 	}
 
-	fmt.Println(m["pool"]["latest_value"])
+	inflow_val := m["inflow"]["latest_value"]
+	if inflow_val == nil {
+		inflow_val = float64(0)
+	}
 
-	// fmt.Println(m["pool"]["key"])
-	// fmt.Println(m["pool"]["latest_value"])
-	// fmt.Println("---")
-	// fmt.Println(m["outflow"])
+	outflow_val := m["outflow"]["latest_value"]
+	if outflow_val == nil {
+		outflow_val = float64(0)
+	}
+
+	damTop_val := m["top-of-dam"]["latest_value"]
+	if damTop_val == nil {
+		damTop_val = float64(0)
+	}
 
 	input := chartserver.DamProfileChartInput{
-		Pool:    15.0,
-		Tail:    12.0,
-		Inflow:  1200,
-		Outflow: 600,
+		Pool:      pool_val.(float64),
+		Tail:      12.0,
+		Inflow:    inflow_val.(float64),
+		Outflow:   outflow_val.(float64),
+		DamTop:    damTop_val.(float64),
+		DamBottom: 300,
 	}
 	chart, err := s.ChartServer.DamProfileChart(input)
 	if err != nil {
