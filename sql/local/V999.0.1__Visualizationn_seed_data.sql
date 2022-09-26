@@ -45,6 +45,7 @@ INSERT INTO visualization(id, location_id, slug, name, type_id) VALUES
 
 INSERT INTO visualization_variable_mapping(visualization_id, variable, timeseries_id) VALUES
 ('ff03ac20-439c-4504-8c33-8819db2acb23', 'pool', (SELECT id from timeseries where datasource_key = 'AlumCr-Lake.Elev.Inst.15Minutes.0.OBS')),
+('ff03ac20-439c-4504-8c33-8819db2acb23', 'tail', (SELECT id from timeseries where datasource_key = 'AlumCr-Outflow.Stage.Inst.15Minutes.0.OBS')),
 ('ff03ac20-439c-4504-8c33-8819db2acb23', 'inflow', (SELECT id from timeseries where datasource_key = 'AlumCr-Lake.Flow.Inst.15Minutes.0.OBS')),
 ('ff03ac20-439c-4504-8c33-8819db2acb23', 'outflow', (SELECT id from timeseries where datasource_key = 'AlumCr-Outflow.Flow.Inst.15Minutes.0.OBS')),
 ('ff03ac20-439c-4504-8c33-8819db2acb23', 'streambed', (SELECT id from timeseries where datasource_key = 'AlumCr.Elev.Inst.0.Streambed')),
