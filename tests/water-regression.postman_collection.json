@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "f5f87e48-968c-4fa0-9b8d-755a152b0d13",
+		"_postman_id": "6e135645-7491-454d-80fb-417007ab615f",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20040250"
 	},
 	"item": [
 		{
@@ -1538,6 +1539,460 @@
 								"nws",
 								"stages",
 								"rgtst"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Timeseries",
+			"item": [
+				{
+					"name": "Create Timeseries (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Dam\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Streambed\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Flood\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Bottom of Flood\",\n        \"provider\": \"LRH\"\n        \n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/timeseries",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"timeseries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create/Update Timeseries Measurements (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 or 202\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T20:15:00-00:00\", \"2022-09-13T20:30:00-00:00\"],\n            \"values\": [755.90, 756.22]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T20:15:00-00:00\", \"2022-09-13T20:30:00-00:00\"],\n            \"values\": [305, 307]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T21:00:00-00:00\", \"2022-09-13T21:15:00-00:00\"],\n            \"values\": [459.20, 459.55]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T21:00:00-00:00\", \"2022-09-13T21:15:00-00:00\"],\n            \"values\": [15.20, 16.55]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Streambed\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [700.55]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Dam\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [800.55]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Flood\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [780.55]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Bottom of Flood\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [750.0]\n        }\n        \n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/timeseries/measurements",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"timeseries",
+								"measurements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Timeseries (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/timeseries?provider=lrh&datasource_type=cwms-timeseries",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"timeseries"
+							],
+							"query": [
+								{
+									"key": "provider",
+									"value": "lrh"
+								},
+								{
+									"key": "datasource_type",
+									"value": "cwms-timeseries"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Timeseries Levels (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/timeseries?provider=lrh&datasource_type=cwms-levels",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"timeseries"
+							],
+							"query": [
+								{
+									"key": "provider",
+									"value": "lrh"
+								},
+								{
+									"key": "datasource_type",
+									"value": "cwms-levels"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Visualizations",
+			"item": [
+				{
+					"name": "List Visualizations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/visualizations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"visualizations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Visualization (One)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"let r = JSON.parse(responseBody);",
+									"pm.environment.set(\"new_visualization_slug\", r.slug);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"location_slug\": \"lrh-test-project\",\n    \"name\": \"LRHTestProject Dam Profile Chart\",\n    \"type_id\": \"53da77d0-6550-4f02-abf8-4bcd1a596a7c\"\n}   ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/visualizations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"visualizations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Visualization (One)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/visualizations/{{new_visualization_slug}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"visualizations",
+								"{{new_visualization_slug}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Visualization Mapping (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 or 202\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"variable\": \"pool\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"datasource_type\": \"cwms-timeseries\"\n    },\n    {\n        \"variable\": \"tail\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"datasource_type\": \"cwms-timeseries\"\n    },\n    {\n        \"variable\": \"inflow\",\n        \"key\": \"TestLocation-Lake.Flow.Inst.15Minutes.0.OBS\",\n        \"datasource_type\": \"cwms-timeseries\"\n    },\n    {\n        \"variable\": \"outflow\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"datasource_type\": \"cwms-timeseries\"\n    },\n    {\n        \"variable\": \"streambed\",\n        \"key\": \"TestLocation.Elev.Inst.0.Streambed\",\n        \"datasource_type\": \"cwms-levels\"\n    },\n    {\n        \"variable\": \"top-of-dam\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Dam\",\n        \"datasource_type\": \"cwms-levels\"\n    },\n    {\n        \"variable\": \"top-of-flood\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Flood\",\n        \"datasource_type\": \"cwms-levels\"\n    },\n    {\n        \"variable\": \"bottom-of-flood\",\n        \"key\": \"TestLocation.Elev.Inst.0.Bottom of Flood\",\n        \"datasource_type\": \"cwms-levels\"\n    }\n]   ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/visualizations/{{new_visualization_slug}}/assign",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"visualizations",
+								"{{new_visualization_slug}}",
+								"assign"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dam Profile Chart By Location Slug",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/locations/lrh-test-project/profile-chart",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"locations",
+								"lrh-test-project",
+								"profile-chart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dam Profile Chart By Location Slug (json)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/locations/lrh-test-project/profile-chart?format=json",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"locations",
+								"lrh-test-project",
+								"profile-chart"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "json"
+								}
 							]
 						}
 					},

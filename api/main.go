@@ -91,7 +91,7 @@ func main() {
 	key.DELETE("/locations/:location_id", cs.DeleteLocation)
 
 	// Get Location Profile Chart
-	public.GET("/locations/:location_id/profile-chart", cs.GetProfileChart)
+	public.GET("/locations/:location_slug/profile-chart", cs.GetProfileChart)
 
 	// Locations (Office Context)
 	// public.GET("/offices/:office_symbol/locations")
@@ -130,6 +130,13 @@ func main() {
 
 	// States
 	public.GET("/states", cs.ListStates)
+
+	// Timeseries
+	public.GET("/timeseries", cs.ListTimeseries)
+	key.POST("/timeseries/measurements", cs.CreateOrUpdateTimeseriesMeasurements)
+	key.POST("/timeseries", cs.CreateTimeseries) // (airflow - array of objects in payload)
+	// public.POST "/:provider_slug/timeseries"
+	// "/levels/latest/config/:owner"
 
 	// Watersheds
 	public.GET("/watersheds", cs.ListWatersheds)
@@ -190,6 +197,12 @@ func main() {
 	private.DELETE("/watersheds/:watershed_slug/site/:site_number/parameter/:parameter_code", ws.DeleteWatershedSiteParameter)
 	// Watershed USGS Site Params enabled for data retrieval.  Primarily used by Airflow.
 	public.GET("/watersheds/usgs_sites", ws.ListWatershedSiteParameters)
+
+	//Visualizations
+	public.GET("/visualizations", ws.ListVisualizations)
+	public.POST("/visualizations", ws.CreateVisualization)
+	public.POST("/visualizations/:visualization_slug/assign", ws.CreateOrUpdateVisualizationMapping)
+	public.GET("/visualizations/:visualization_slug", ws.GetVisualization)
 
 	// Server
 	s := &http2.Server{
