@@ -2,7 +2,6 @@ package chartserver
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/USACE/water-api/api/helpers"
 	"github.com/georgysavva/scany/pgxscan"
@@ -29,8 +28,6 @@ func (s ChartServer) DamProfileChart(input DamProfileChartInput) (string, error)
 	u := *s.URL
 	u.Path = u.Path + "/dam-profile-chart"                   // Build URL Path
 	u.RawQuery = helpers.StructToQueryValues(input).Encode() // Build URL Query Params
-	fmt.Println("******")
-	fmt.Println(u)
 	return helpers.HTTPGet(&u)
 }
 

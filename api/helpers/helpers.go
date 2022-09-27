@@ -14,18 +14,28 @@ func StructToQueryValues(data interface{}) url.Values {
 		if tagval, ok := typ.Field(i).Tag.Lookup("querystring"); ok {
 			if tagval != "" {
 
-				if typ.Field(i).Type.Kind() == reflect.Slice {
+				// handle levels which are stored in an array of structs
+				if typ.Field(i).Type.Kind() == reflect.Slice && tagval == "level" {
 
-					field := reflect.ValueOf(val.Field(i).Interface())
+					recordSlice := reflect.ValueOf(val.Field(i).Interface())
 
 					var level string
 
-					for x := 1; x < field.Len(); x++ {
-						level = ""
-						level += field.Index(x - 1).Field(x - 1).String()
-						level += ","
-						level += fmt.Sprintf("%.2f", field.Index(x-1).Field(x).Float())
-						//fmt.Println("level", level)
+					for x := 0; x < recordSlice.Len(); x++ {
+
+						entry := recordSlice.Index(x)
+						// fmt.Println("Field entries: ", recordSlice.Len())
+						// fmt.Println(entry.Field(0).String())
+
+						fieldKey := entry.Field(0).String()
+						fieldVal := entry.Field(1).Interface()
+
+						// fmt.Println(fieldKey, " -> ", fieldVal)
+						// fmt.Println(reflect.TypeOf(fieldVal))
+
+						level = fieldKey + "," + fmt.Sprintf("%.2f", fieldVal)
+
+						// fmt.Println("level", level)
 						vv.Add(tagval, level)
 					}
 
