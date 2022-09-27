@@ -23,11 +23,14 @@ type VisualizationMapping struct {
 }
 
 type Visualization struct {
-	LocationSlug string                  `json:"location_slug" db:"location_slug"`
-	Name         string                  `json:"name" db:"name"`
-	Slug         string                  `json:"slug" db:"slug"`
-	TypeID       uuid.UUID               `json:"type_id" db:"type_id"`
-	Mapping      *[]VisualizationMapping `json:"mapping,omitempty"`
+	LocationSlug string    `json:"location_slug" db:"location_slug"`
+	Name         string    `json:"name" db:"name"`
+	Slug         string    `json:"slug" db:"slug"`
+	TypeID       uuid.UUID `json:"type_id" db:"type_id"`
+	ProviderName string    `json:"provider_name" db:"provider_name"`
+	ProviderSlug string    `json:"provider_slug" db:"provider_slug"`
+
+	Mapping *[]VisualizationMapping `json:"mapping,omitempty"`
 }
 
 type VisualizationMappingCollection struct {
@@ -46,14 +49,19 @@ func (c *VisualizationMappingCollection) UnmarshalJSON(b []byte) error {
 	}
 }
 
-var listVisualizationsSQL = `SELECT l.slug AS location_slug, v.name, v.slug, v.type_id
-						FROM a2w_cwms.visualization v 
-						JOIN a2w_cwms."location" l ON l.id = v.location_id`
+var listVisualizationsSQL = `SELECT 
+							l.slug AS location_slug, 
+							v.name, v.slug, v.type_id, 
+							p."name" AS provider_name, 
+							p.slug AS provider_slug
+							FROM a2w_cwms.visualization v 
+							JOIN a2w_cwms."location" l ON l.id = v.location_id
+							JOIN a2w_cwms.provider p ON p.id = l.office_id`
 
 func ListVisualizations(db *pgxpool.Pool) ([]Visualization, error) {
 	vv := make([]Visualization, 0)
 	if err := pgxscan.Select(
-		context.Background(), db, &vv, listVisualizationsSQL+" ORDER BY v.slug",
+		context.Background(), db, &vv, listVisualizationsSQL+" ORDER BY p.slug, v.slug",
 	); err != nil {
 		return make([]Visualization, 0), err
 	}
@@ -68,6 +76,8 @@ func GetVisualization(db *pgxpool.Pool, visualizationSlug *string) (*Visualizati
 							v.name AS name,
 							v.slug AS slug,
 							v.type_id,
+							p."name" AS provider_name, 
+							p.slug AS provider_slug,
 							COALESCE(json_agg(json_build_object(
 								'variable', vvm.variable,
 								'key', t.datasource_key,
@@ -76,10 +86,11 @@ func GetVisualization(db *pgxpool.Pool, visualizationSlug *string) (*Visualizati
 							)), '[]') AS mapping
 							FROM a2w_cwms.visualization v
 							JOIN a2w_cwms."location" l ON l.id = v.location_id
+							JOIN provider p ON p.id = l.office_id 
 							LEFT JOIN a2w_cwms.visualization_variable_mapping vvm ON vvm.visualization_id = v.id
 							LEFT JOIN a2w_cwms.timeseries t ON t.id = vvm.timeseries_id
 							WHERE lower(v.slug) = lower($1)
-							GROUP BY l.slug, v.slug, v.name, v.type_id
+							GROUP BY l.slug, v.slug, v.name, v.type_id, p.name, p.slug
 							LIMIT 1`
 
 	var v Visualization
@@ -97,6 +108,8 @@ func GetVisualizationByLocation(db *pgxpool.Pool, locationSlug *string, visualiz
 							v.name AS name,
 							v.slug AS slug,
 							v.type_id,
+							p."name" AS provider_name, 
+							p.slug AS provider_slug,
 							COALESCE(json_agg(json_build_object(
 								'variable', vvm.variable,
 								'key', t.datasource_key,
@@ -105,11 +118,12 @@ func GetVisualizationByLocation(db *pgxpool.Pool, locationSlug *string, visualiz
 							)), '[]') AS mapping
 							FROM a2w_cwms.visualization v
 							JOIN a2w_cwms."location" l ON l.id = v.location_id
+							JOIN provider p ON p.id = l.office_id 
 							LEFT JOIN a2w_cwms.visualization_variable_mapping vvm ON vvm.visualization_id = v.id
 							LEFT JOIN a2w_cwms.timeseries t ON t.id = vvm.timeseries_id
 							WHERE lower(l.slug) = lower($1)
 							AND type_id = $2
-							GROUP BY l.slug, v.slug, v.name, v.type_id
+							GROUP BY l.slug, v.slug, v.name, v.type_id, p.name, p.slug
 							LIMIT 1`
 
 	var v Visualization
