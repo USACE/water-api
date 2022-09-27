@@ -1,9 +1,9 @@
 
 INSERT into timeseries(datasource_id, datasource_key, latest_time, latest_value) VALUES
-('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'AlumCr-Lake.Elev.Inst.15Minutes.0.OBS', '2022-09-27T02:15:00Z', 927.47),
-('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'AlumCr-Lake.Flow.Inst.15Minutes.0.OBS', '2022-09-27T02:15:00Z', 0),
-('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'AlumCr-Outflow.Flow.Inst.15Minutes.0.OBS', '2022-09-27T02:15:00Z', 11.34672),
-('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'AlumCr-Outflow.Stage.Inst.15Minutes.0.OBS', '2022-09-27T01:45:00Z', 5.9),
+('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'AlumCr-Lake.Elev.Inst.15Minutes.0.OBS', '2022-09-27T17:00:00Z', 888.14),
+('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'AlumCr-Lake.Flow.Inst.15Minutes.0.OBS', '2022-09-27T16:00:00Z', 23.56),
+('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'AlumCr-Outflow.Flow.Inst.15Minutes.0.OBS', '2022-09-27T16:00:00Z', 16.56),
+('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'AlumCr-Outflow.Stage.Inst.15Minutes.0.OBS', '2022-09-27T16:00:00Z', 1.38),
 ('5bb6d520-5223-4b04-b348-f57268a41c03', 'AlumCr.Elev.Inst.0.Streambed', '2022-09-09T18:35:00Z', 820),
 ('5bb6d520-5223-4b04-b348-f57268a41c03', 'AlumCr.Elev.Inst.0.Top of Dam', '2022-09-09T18:35:00Z', 913),
 ('5bb6d520-5223-4b04-b348-f57268a41c03', 'AlumCr.Elev.Inst.0.Top of Flood', '2022-09-09T18:35:00Z', 901),
