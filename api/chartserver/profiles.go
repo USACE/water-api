@@ -11,24 +11,25 @@ import (
 )
 
 type DamProfileChartInput struct {
-	Pool      float64  `querystring:"pool" json:"pool"`
-	Tail      float64  `querystring:"tail"`
-	Inflow    float64  `querystring:"inflow" json:"inflow"`
-	Outflow   float64  `querystring:"outflow" json:"outflow"`
-	DamTop    float64  `querystring:"damTop" json:"damtottom" db:"damtop"`
-	DamBottom float64  `querystring:"damBottom" json:"dambottom" db:"dambottom"`
-	Levels    *[]Level `json:"levels" db:"levels"`
+	Pool      float64 `querystring:"pool" json:"pool"`
+	Tail      float64 `querystring:"tail"`
+	Inflow    float64 `querystring:"inflow" json:"inflow"`
+	Outflow   float64 `querystring:"outflow" json:"outflow"`
+	DamTop    float64 `querystring:"damTop" json:"damtottom" db:"damtop"`
+	DamBottom float64 `querystring:"damBottom" json:"dambottom" db:"dambottom"`
+	Levels    []Level `querystring:"level" json:"levels" db:"levels"`
 }
 
 type Level struct {
-	Name  string
-	Value float64
+	Name  string  `json:"name"`
+	Value float64 `json:"value"`
 }
 
 func (s ChartServer) DamProfileChart(input DamProfileChartInput) (string, error) {
 	u := *s.URL
 	u.Path = u.Path + "/dam-profile-chart"                   // Build URL Path
 	u.RawQuery = helpers.StructToQueryValues(input).Encode() // Build URL Query Params
+	fmt.Println("******")
 	fmt.Println(u)
 	return helpers.HTTPGet(&u)
 }
@@ -37,7 +38,7 @@ func GetDamProfileByLocation(db *pgxpool.Pool, locationSlug *string) (*DamProfil
 	visualizationTypeId, _ := uuid.Parse("53da77d0-6550-4f02-abf8-4bcd1a596a7c")
 
 	var damProfileSQL = `
-		WITH levels AS (
+		WITH lvl_ts AS (
 			SELECT 
 				vvm.visualization_id,
 				vvm.variable AS variable,
@@ -69,33 +70,27 @@ func GetDamProfileByLocation(db *pgxpool.Pool, locationSlug *string) (*DamProfil
 		)		
 		
 		SELECT
-		--v.slug,
-		(SELECT latest_value FROM viz_ts WHERE variable = 'pool' AND visualization_id = v.id) AS pool,
-		(SELECT latest_value FROM viz_ts WHERE variable = 'inflow' AND visualization_id = v.id) AS inflow,
-		(SELECT latest_value FROM viz_ts WHERE variable = 'outflow' AND visualization_id = v.id) AS outflow,
-		(SELECT latest_value FROM viz_ts WHERE variable = 'tail' AND visualization_id = v.id) AS tail,
-		(SELECT latest_value FROM levels WHERE variable = 'streambed' AND visualization_id = v.id) AS dambottom,
-		(SELECT latest_value FROM levels WHERE variable = 'top-of-dam' AND visualization_id = v.id) AS damtop,
-		COALESCE(json_agg(json_build_object(
-										'name', levels.variable,
-										'key', levels.key,
-										'latest_time', levels.latest_time,
-										'latest_value', levels.latest_value
-									)), '[]') AS levels
+			(SELECT latest_value FROM viz_ts WHERE variable = 'pool' AND visualization_id = v.id) AS pool,
+			(SELECT latest_value FROM viz_ts WHERE variable = 'inflow' AND visualization_id = v.id) AS inflow,
+			(SELECT latest_value FROM viz_ts WHERE variable = 'outflow' AND visualization_id = v.id) AS outflow,
+			(SELECT latest_value FROM viz_ts WHERE variable = 'tail' AND visualization_id = v.id) AS tail,
+			(SELECT latest_value FROM lvl_ts WHERE variable = 'streambed' AND visualization_id = v.id) AS dambottom,
+			(SELECT latest_value FROM lvl_ts WHERE variable = 'top-of-dam' AND visualization_id = v.id) AS damtop,
+			COALESCE(json_agg(json_build_object(
+											'name', lvl_ts.variable,									
+											'value', lvl_ts.latest_value
+										)), '[]') AS levels
 		FROM a2w_cwms.visualization v
 		JOIN visualization_variable_mapping vvm ON vvm.visualization_id = v.id 
 		JOIN timeseries t ON t.id = vvm.timeseries_id 
 		JOIN datasource d ON d.id = t.datasource_id 
 		JOIN datasource_type dt ON dt.id = d.datasource_type_id 
 		JOIN "location" l ON l.id = v.location_id 
-		JOIN viz_ts ON viz_ts.visualization_id = vvm.visualization_id AND viz_ts.variable = vvm.variable AND viz_ts.key = t.datasource_key
-		JOIN levels ON levels.visualization_id = vvm.visualization_id
+		LEFT JOIN viz_ts ON viz_ts.visualization_id = vvm.visualization_id AND viz_ts.variable = vvm.variable
+		JOIN lvl_ts ON lvl_ts.visualization_id = v.id AND lvl_ts.key = t.datasource_key
 		WHERE v.type_id = $2
 		AND lower(l.slug) = lower($1)
-		--AND dt.slug = 'cwms-timeseries'
-		AND vvm.variable IS NOT NULL 
 		GROUP BY 
-		v.slug,
 		v.id
 		LIMIT 1`
 
