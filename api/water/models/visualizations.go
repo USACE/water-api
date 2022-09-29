@@ -23,7 +23,7 @@ type VisualizationMapping struct {
 }
 
 type Visualization struct {
-	LocationSlug string    `json:"location_slug" db:"location_slug"`
+	LocationSlug *string   `json:"location_slug" db:"location_slug"`
 	Name         string    `json:"name" db:"name"`
 	Slug         string    `json:"slug" db:"slug"`
 	TypeID       uuid.UUID `json:"type_id" db:"type_id"`
@@ -143,13 +143,24 @@ func CreateVisualization(db *pgxpool.Pool, v *Visualization) (*Visualization, er
 	}
 
 	var vSlug string
-	if err := pgxscan.Get(
-		context.Background(), db, &vSlug,
-		`INSERT INTO visualization (location_id, slug, name, type_id)
-		VALUES((SELECT l.id FROM location l WHERE lower(l.slug) = lower($1)), $2, $3, $4)
-		RETURNING slug`, v.LocationSlug, slug, v.Name, v.TypeID,
-	); err != nil {
-		return nil, err
+	if v.LocationSlug == nil {
+		if err := pgxscan.Get(
+			context.Background(), db, &vSlug,
+			`INSERT INTO visualization (slug, name, type_id)
+			VALUES($1, $2, $3)
+			RETURNING slug`, slug, v.Name, v.TypeID,
+		); err != nil {
+			return nil, err
+		}
+	} else {
+		if err := pgxscan.Get(
+			context.Background(), db, &vSlug,
+			`INSERT INTO visualization (location_id, slug, name, type_id)
+			VALUES((SELECT l.id FROM location l WHERE lower(l.slug) = lower($1)), $2, $3, $4)
+			RETURNING slug`, v.LocationSlug, slug, v.Name, v.TypeID,
+		); err != nil {
+			return nil, err
+		}
 	}
 
 	return GetVisualization(db, &vSlug)
