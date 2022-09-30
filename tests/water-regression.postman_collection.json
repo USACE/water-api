@@ -1801,7 +1801,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"location_slug\": \"lrh-test-project\",\n    \"name\": \"LRHTestProject Dam Profile Chart\",\n    \"type_id\": \"53da77d0-6550-4f02-abf8-4bcd1a596a7c\"\n}   ",
+							"raw": "{\n    \"provider_slug\": \"lrh\",\n    \"location_slug\": \"lrh-test-project\",\n    \"name\": \"LRHTestProject Dam Profile Chart\",\n    \"type_id\": \"53da77d0-6550-4f02-abf8-4bcd1a596a7c\"\n}   ",
 							"options": {
 								"raw": {
 									"language": "json"
