@@ -1,12 +1,6 @@
 
 INSERT into timeseries(datasource_id, datasource_key, latest_time, latest_value) VALUES
-('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'AlumCr-Lake.Elev.Inst.15Minutes.0.OBS', '2022-09-27T17:00:00Z', 888.14),
-('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'AlumCr-Lake.Flow.Inst.15Minutes.0.OBS', '2022-09-27T16:00:00Z', 23.56),
-('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'AlumCr-Outflow.Flow.Inst.15Minutes.0.OBS', '2022-09-27T16:00:00Z', 16.56),
-('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'AlumCr-Outflow.Stage.Inst.15Minutes.0.OBS', '2022-09-27T16:00:00Z', 1.38),
-('5bb6d520-5223-4b04-b348-f57268a41c03', 'AlumCr.Elev.Inst.0.Streambed', '2022-09-09T18:35:00Z', 820),
-('5bb6d520-5223-4b04-b348-f57268a41c03', 'AlumCr.Elev.Inst.0.Top of Dam', '2022-09-09T18:35:00Z', 913),
-('5bb6d520-5223-4b04-b348-f57268a41c03', 'AlumCr.Elev.Inst.0.Top of Flood', '2022-09-09T18:35:00Z', 901),
+-- alum creek already in seed data
 ('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'Atwood-Lake.Elev.Inst.15Minutes.0.OBS', null, null),
 ('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'Atwood-Lake.Flow.Inst.15Minutes.0.OBS', null, null),
 ('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', 'Atwood-Outflow.Flow.Inst.15Minutes.0.OBS', null, null),
@@ -36,7 +30,7 @@ INSERT into timeseries(datasource_id, datasource_key, latest_time, latest_value)
 ('5bb6d520-5223-4b04-b348-f57268a41c03', 'Bluestone.Elev.Inst.0.Top of Flood', '2022-09-18T18:35:00Z', 1520);
 
 INSERT INTO visualization(id, location_id, slug, name, type_id) VALUES
-('ff03ac20-439c-4504-8c33-8819db2acb23', (SELECT id from location where slug = 'alumcr'), 'lrh-alum-creek-dam-profile', 'Alum Creek Dam Profile Chart', '53da77d0-6550-4f02-abf8-4bcd1a596a7c'),
+-- alum-creek-dam-profile already in seed data
 ('1c89c8f2-b7ef-4cc6-a877-ac6c21d48e87', (SELECT id from location where slug = 'alumcr'), 'lrh-alum-creek-example-scatter', 'Alum Creek Dam Scatter Chart', '61910b8c-4dfb-4343-affb-d478b6bf915f'),
 ('41f2f75e-9472-4339-bac6-be898e809aee', (SELECT id from location where slug = 'atwood-1'), 'lrh-atwood-dam-profile', 'Atwood Dam Profile Chart', '53da77d0-6550-4f02-abf8-4bcd1a596a7c'),
 ('ec15892b-bfde-421f-adfa-9f7c0f906ec2', (SELECT id from location where slug = 'beachcity'), 'lrh-beachcity-dam-profile', 'Beach City Dam Profile Chart', '53da77d0-6550-4f02-abf8-4bcd1a596a7c'),
@@ -44,13 +38,7 @@ INSERT INTO visualization(id, location_id, slug, name, type_id) VALUES
 ('945cd8de-39ec-4a75-836d-f14c0f609571', (SELECT id from location where slug = 'bluestone'), 'lrh-bluestone-dam-profile', 'Bluestone Dam Profile Chart', '53da77d0-6550-4f02-abf8-4bcd1a596a7c');
 
 INSERT INTO visualization_variable_mapping(visualization_id, variable, timeseries_id) VALUES
-('ff03ac20-439c-4504-8c33-8819db2acb23', 'pool', (SELECT id from timeseries where datasource_key = 'AlumCr-Lake.Elev.Inst.15Minutes.0.OBS')),
-('ff03ac20-439c-4504-8c33-8819db2acb23', 'tail', (SELECT id from timeseries where datasource_key = 'AlumCr-Outflow.Stage.Inst.15Minutes.0.OBS')),
-('ff03ac20-439c-4504-8c33-8819db2acb23', 'inflow', (SELECT id from timeseries where datasource_key = 'AlumCr-Lake.Flow.Inst.15Minutes.0.OBS')),
-('ff03ac20-439c-4504-8c33-8819db2acb23', 'outflow', (SELECT id from timeseries where datasource_key = 'AlumCr-Outflow.Flow.Inst.15Minutes.0.OBS')),
-('ff03ac20-439c-4504-8c33-8819db2acb23', 'streambed', (SELECT id from timeseries where datasource_key = 'AlumCr.Elev.Inst.0.Streambed')),
-('ff03ac20-439c-4504-8c33-8819db2acb23', 'top-of-dam', (SELECT id from timeseries where datasource_key = 'AlumCr.Elev.Inst.0.Top of Dam')),
-('ff03ac20-439c-4504-8c33-8819db2acb23', 'top-of-flood', (SELECT id from timeseries where datasource_key = 'AlumCr.Elev.Inst.0.Top of Flood')),
+-- alumcr dam profile mapping already in seed data
 ('41f2f75e-9472-4339-bac6-be898e809aee', 'pool', (SELECT id from timeseries where datasource_key = 'Atwood-Lake.Elev.Inst.15Minutes.0.OBS')),
 ('41f2f75e-9472-4339-bac6-be898e809aee', 'inflow', (SELECT id from timeseries where datasource_key = 'Atwood-Lake.Flow.Inst.15Minutes.0.OBS')),
 ('41f2f75e-9472-4339-bac6-be898e809aee', 'outflow', (SELECT id from timeseries where datasource_key = 'Atwood-Outflow.Flow.Inst.15Minutes.0.OBS')),
