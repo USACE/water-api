@@ -21,7 +21,7 @@ func NextUniqueSlug(db *pgxpool.Pool, table, field, inString, contextField, cont
 	sql := func() string {
 		// Find inString or any variants suffixed by xxx-1, xxx-2, etc.
 		q := fmt.Sprintf(
-			`SELECT %s FROM %s WHERE %s ~ ($1||'(?:-[0-9]+)?$')`,
+			`SELECT %s FROM %s WHERE %s ~ ('^'||$1||'(?:-[0-9]+)?$')`,
 			field, table, field,
 		)
 		if contextField != "" && contextValue != "" {
