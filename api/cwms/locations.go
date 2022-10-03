@@ -200,42 +200,40 @@ func (s Store) UpdateLocationByOffice(c echo.Context) error {
 }
 
 func (s Store) SyncLocations(c echo.Context) error {
+
 	var lc models.LocationCollection
 	if err := c.Bind(&lc); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
+	// Get all location slugs; convert to map for fast indexing
+	// Map used to assign and ensure table-unique slug for each location
+	ss, err := models.ListLocationSlugs(s.Connection)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	slugMap := make(map[string]bool, len(ss))
+	for _, s := range ss {
+		slugMap[s] = true
+	}
+
 	// Assign Unique Slugs
 	for idx := range lc.Items {
-		_s, err := helpers.NextUniqueSlug(s.Connection, "location", "slug", lc.Items[idx].Name, "", "")
+
+		slug, err := helpers.GetUniqueSlug(lc.Items[idx].Name, slugMap)
 		if err != nil {
 			return c.String(http.StatusInternalServerError, err.Error())
 		}
-		lc.Items[idx].Slug = _s
+
+		// Assign the slug; Add newly-taken slug to the map of taken slugs
+		lc.Items[idx].Slug = slug
+		slugMap[slug] = true
 	}
+
 	sl, err := models.SyncLocations(s.Connection, lc)
 	if err != nil {
-		// The server error results from UPDATE; try to create
-		// Assign Unique Slugs
-		for idx := range lc.Items {
-			_s, err := helpers.NextUniqueSlug(s.Connection, "location", "slug", lc.Items[idx].Name, "", "")
-			if err != nil {
-				return c.String(http.StatusInternalServerError, err.Error())
-			}
-			lc.Items[idx].Slug = _s
-		}
-		cl, err := models.CreateLocations(s.Connection, lc)
-		// If Error was postgres error, return error message based on error code
-		var pgErr *pgconn.PgError
-		if errors.As(err, &pgErr) {
-			switch pgErr.Code {
-			case pgerrcode.UniqueViolation:
-				return c.JSON(
-					http.StatusBadRequest,
-					messages.NewMessage(pgErr.Error()))
-			}
-		}
-		return c.JSON(http.StatusCreated, cl)
+		return c.String(http.StatusInternalServerError, err.Error())
 	}
+
 	return c.JSON(http.StatusAccepted, sl)
 }
 
