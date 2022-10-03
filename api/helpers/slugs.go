@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -10,6 +11,44 @@ import (
 	"github.com/gosimple/slug"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
+
+func Slugify(inString string) string {
+
+	// Slugify string
+	return slug.Make(inString)
+
+}
+
+func GetUniqueSlug(name string, slugMap map[string]bool) (string, error) {
+
+	slugIsTaken := func(str string) bool {
+		if _, ok := slugMap[str]; ok {
+			return true
+		}
+		return false
+	}
+
+	// slugify the input name
+	slug := Slugify(name)
+
+	// if slug is unique without appending an integer, return it
+	if !(slugIsTaken(slug)) {
+		return slug, nil
+	}
+
+	// max 1000 iterations trying to get unique slug
+	// if we reach the end of 1000 iterations, it means there are more than 1000 things with the same
+	// name in the database table.
+	i := 1
+	for i < 1000 {
+		slug := fmt.Sprintf("%s-%d", slug, i)
+		if !(slugIsTaken(slug)) {
+			return slug, nil
+		}
+		i++
+	}
+	return "", errors.New("reached max iteration %i without finding a unique slug")
+}
 
 // NextUniqueSlug returns the next available slug given a table
 // contextField is a column name in table; contextString is a value in contextField;
@@ -32,7 +71,7 @@ func NextUniqueSlug(db *pgxpool.Pool, table, field, inString, contextField, cont
 	}
 
 	// Slugify string; this is the first choice for a slug if it's not already taken
-	slugTry := slug.Make(inString)
+	slugTry := Slugify(inString)
 
 	ss := make([]string, 0)
 	if err := pgxscan.Select(context.Background(), db, &ss, sql(), slugTry); err != nil {

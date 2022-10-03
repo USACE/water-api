@@ -125,6 +125,20 @@ func ListLocations(db *pgxpool.Pool, f *LocationFilter) ([]Location, error) {
 	return ll, nil
 }
 
+func ListLocationSlugs(db *pgxpool.Pool) ([]string, error) {
+
+	ss := make([]string, 0)
+
+	if err := pgxscan.Select(
+		context.Background(), db, &ss,
+		`SELECT slug from location`,
+	); err != nil {
+		return make([]string, 0), err
+	}
+	return ss, nil
+
+}
+
 func ListLocationsForIDs(db *pgxpool.Pool, IDs []uuid.UUID) ([]Location, error) {
 	// Base Locations Query
 	q, err := ListLocationsQuery(nil)
