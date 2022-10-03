@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	"github.com/USACE/water-api/api/chartserver"
+	"github.com/USACE/water-api/api/messages"
+	"github.com/georgysavva/scany/pgxscan"
 	"github.com/labstack/echo/v4"
 )
 
@@ -21,7 +23,10 @@ func (s Store) GetProfileChart(c echo.Context) error {
 	v, err := chartserver.GetDamProfileByLocation(s.Connection, &locationSlug)
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		if pgxscan.NotFound(err) {
+			return c.JSON(http.StatusNotFound, messages.DefaultMessageNotFound)
+		}
+		return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
 	}
 
 	input := chartserver.DamProfileChartInput{

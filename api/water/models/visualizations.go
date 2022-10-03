@@ -23,7 +23,7 @@ type VisualizationMapping struct {
 }
 
 type Visualization struct {
-	LocationSlug string    `json:"location_slug" db:"location_slug"`
+	LocationSlug *string   `json:"location_slug" db:"location_slug"`
 	Name         string    `json:"name" db:"name"`
 	Slug         string    `json:"slug" db:"slug"`
 	TypeID       uuid.UUID `json:"type_id" db:"type_id"`
@@ -54,9 +54,9 @@ var listVisualizationsSQL = `SELECT
 							v.name, v.slug, v.type_id, 
 							p."name" AS provider_name, 
 							p.slug AS provider_slug
-							FROM a2w_cwms.visualization v 
-							JOIN a2w_cwms."location" l ON l.id = v.location_id
-							JOIN a2w_cwms.provider p ON p.id = l.office_id`
+							FROM a2w_cwms.visualization v
+							LEFT JOIN a2w_cwms."location" l ON l.id = v.location_id
+							JOIN a2w_cwms.provider p ON p.id = v.provider_id`
 
 func ListVisualizations(db *pgxpool.Pool) ([]Visualization, error) {
 	vv := make([]Visualization, 0)
@@ -85,8 +85,8 @@ func GetVisualization(db *pgxpool.Pool, visualizationSlug *string) (*Visualizati
 								'latest_value', t.latest_value
 							)), '[]') AS mapping
 							FROM a2w_cwms.visualization v
-							JOIN a2w_cwms."location" l ON l.id = v.location_id
-							JOIN provider p ON p.id = l.office_id 
+							LEFT JOIN a2w_cwms."location" l ON l.id = v.location_id
+							JOIN provider p ON p.id = v.provider_id
 							LEFT JOIN a2w_cwms.visualization_variable_mapping vvm ON vvm.visualization_id = v.id
 							LEFT JOIN a2w_cwms.timeseries t ON t.id = vvm.timeseries_id
 							WHERE lower(v.slug) = lower($1)
@@ -143,13 +143,24 @@ func CreateVisualization(db *pgxpool.Pool, v *Visualization) (*Visualization, er
 	}
 
 	var vSlug string
-	if err := pgxscan.Get(
-		context.Background(), db, &vSlug,
-		`INSERT INTO visualization (location_id, slug, name, type_id)
-		VALUES((SELECT l.id FROM location l WHERE lower(l.slug) = lower($1)), $2, $3, $4)
-		RETURNING slug`, v.LocationSlug, slug, v.Name, v.TypeID,
-	); err != nil {
-		return nil, err
+	if v.LocationSlug == nil {
+		if err := pgxscan.Get(
+			context.Background(), db, &vSlug,
+			`INSERT INTO visualization (slug, name, type_id, (SELECT id from provider where lower(slug) = lower($5)))
+			VALUES($1, $2, $3)
+			RETURNING slug`, slug, v.Name, v.TypeID, v.ProviderSlug,
+		); err != nil {
+			return nil, err
+		}
+	} else {
+		if err := pgxscan.Get(
+			context.Background(), db, &vSlug,
+			`INSERT INTO visualization (location_id, slug, name, type_id, provider_id)
+			VALUES((SELECT l.id FROM location l WHERE lower(l.slug) = lower($1)), $2, $3, $4, (SELECT id from provider where lower(slug) = lower($5)))
+			RETURNING slug`, v.LocationSlug, slug, v.Name, v.TypeID, v.ProviderSlug,
+		); err != nil {
+			return nil, err
+		}
 	}
 
 	return GetVisualization(db, &vSlug)
