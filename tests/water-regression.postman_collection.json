@@ -1801,7 +1801,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/timeseries?provider=lrh&datasource_type=cwms-timeseries&mapped=1",
+							"raw": "{{base_url}}/timeseries?provider=lrh&datasource_type=cwms-timeseries&only_mapped=1",
 							"host": [
 								"{{base_url}}"
 							],
@@ -1818,7 +1818,7 @@
 									"value": "cwms-timeseries"
 								},
 								{
-									"key": "mapped",
+									"key": "only_mapped",
 									"value": "1"
 								}
 							]
