@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
@@ -87,7 +86,6 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 		// Filter by search string
 
 		if f.Q != nil {
-			fmt.Println(f.Q)
 			if len(*f.Q) > 2 {
 				q = q.Where("lower(t.datasource_key) ILIKE '%' || lower(?) || '%' ", f.Q)
 			}
