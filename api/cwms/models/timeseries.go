@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
@@ -46,6 +47,7 @@ func (c *TimeseriesCollection) UnmarshalJSON(b []byte) error {
 type TimeseriesFilter struct {
 	DatasourceType *string `json:"datasource_type" query:"datasource_type"`
 	Provider       *string `query:"provider"`
+	IsMapped       bool    `query:"mapped"`
 	Q              *string `query:"q"`
 }
 
@@ -77,6 +79,20 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 		if f.DatasourceType != nil {
 			q = q.Where("lower(dt.slug) = lower(?)", *f.DatasourceType)
 		}
+		// Filter by IsMapped
+		if f.IsMapped {
+			q = q.LeftJoin("visualization_variable_mapping vvm ON vvm.timeseries_id = t.id")
+			q = q.Where("vvm.visualization_id IS NOT null")
+		}
+		// Filter by search string
+
+		if f.Q != nil {
+			fmt.Println(f.Q)
+			if len(*f.Q) > 2 {
+				q = q.Where("lower(t.datasource_key) ILIKE '%' || lower(?) || '%' ", f.Q)
+			}
+		}
+
 	}
 
 	// fmt.Println(q.ToSql())
@@ -111,7 +127,7 @@ func CreateTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Timeseries, e
 	}
 	defer tx.Rollback(context.Background())
 
-	newIDs := make([]uuid.UUID, 0)
+	//newIDs := make([]uuid.UUID, 0)
 
 	queryDataSourceID := `
 		SELECT d.id FROM datasource d 
@@ -124,7 +140,8 @@ func CreateTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Timeseries, e
 		rows, err := tx.Query(
 			context.Background(),
 			`INSERT INTO timeseries (datasource_id, datasource_key)
-			VALUES((`+queryDataSourceID+`), $3)			
+			VALUES((`+queryDataSourceID+`), $3)	
+			ON CONFLICT DO NOTHING		
 			RETURNING id`,
 			t.DatasourceType, t.Provider, t.Key,
 		)
@@ -133,15 +150,17 @@ func CreateTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Timeseries, e
 		}
 		var id uuid.UUID
 		if err := pgxscan.ScanOne(&id, rows); err != nil {
-			tx.Rollback(context.Background())
-			return c.Items, err
-		} else {
-			newIDs = append(newIDs, id)
+			// tx.Rollback(context.Background())
+			// return c.Items, err
+			continue
 		}
+		// } else {
+		// 	newIDs = append(newIDs, id)
+		// }
 	}
 	tx.Commit(context.Background())
 
-	return nil, nil
+	return make([]Timeseries, 0), err
 }
 
 // func DeleteTimeseries() (something?) {}

@@ -28,7 +28,7 @@ func (s Store) CreateTimeseries(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	s_tsc, err := models.CreateTimeseries(s.Connection, tsc)
+	_, err := models.CreateTimeseries(s.Connection, tsc)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate") {
@@ -41,7 +41,7 @@ func (s Store) CreateTimeseries(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
 	}
 
-	return c.JSON(http.StatusCreated, s_tsc)
+	return c.NoContent(http.StatusAccepted)
 }
 
 func (s Store) CreateOrUpdateTimeseriesMeasurements(c echo.Context) error {
