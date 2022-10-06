@@ -46,27 +46,27 @@ func (c *TimeseriesCollection) UnmarshalJSON(b []byte) error {
 type TimeseriesFilter struct {
 	DatasourceType *string `json:"datasource_type" query:"datasource_type"`
 	Provider       *string `query:"provider"`
-	IsMapped       bool    `query:"mapped"`
+	OnlyMapped     bool    `query:"only_mapped"`
 	Q              *string `query:"q"`
 }
 
 func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 
-	q := sq.Select(`dt.slug AS datasource_type,
-					p.slug AS provider,
-					t.datasource_key AS key,
-					t.latest_time,
-					t.latest_value`,
-	).From("timeseries t")
-
-	// Base string for JOIN
-	j1 := `datasource d ON d.id = t.datasource_id 
-			JOIN datasource_type dt ON dt.id = d.datasource_type_id 
-			JOIN provider p ON p.id = d.provider_id`
-
-	q = q.Join(j1)
-
-	// q = q.GroupBy("dt.slug, p.slug, t.datasource_key")
+	q := sq.Select(
+		`dt.slug 			AS datasource_type,
+		 p.slug  			AS provider,
+		 t.datasource_key 	AS key,
+		 t.latest_time,
+		 t.latest_value`,
+	).From(
+		"timeseries t",
+	).Join(
+		"datasource d ON d.id = t.datasource_id",
+	).Join(
+		"datasource_type dt ON dt.id = d.datasource_type_id",
+	).Join(
+		"provider p ON p.id = d.provider_id",
+	)
 
 	if f != nil {
 
@@ -79,9 +79,8 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 			q = q.Where("lower(dt.slug) = lower(?)", *f.DatasourceType)
 		}
 		// Filter by IsMapped
-		if f.IsMapped {
-			q = q.LeftJoin("visualization_variable_mapping vvm ON vvm.timeseries_id = t.id")
-			q = q.Where("vvm.visualization_id IS NOT null")
+		if f.OnlyMapped {
+			q = q.Join("visualization_variable_mapping vvm ON vvm.timeseries_id = t.id")
 		}
 		// Filter by search string
 
