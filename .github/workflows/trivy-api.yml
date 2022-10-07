@@ -1,0 +1,43 @@
+name: Trivy Scan API Develop
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+        - 'api/**'
+        - '.github/workflows/trivy-api.yml'
+  schedule:
+    - cron: '0 12 * * 2'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    permissions:
+      contents: read # for actions/checkout to fetch code
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+    name: Build
+    runs-on: "ubuntu-22.04"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build an image from Dockerfile
+        run: |
+          docker build -t api:${{ github.sha }} api
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'api:${{ github.sha }}'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH,MEDIUM'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
