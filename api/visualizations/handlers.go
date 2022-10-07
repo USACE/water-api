@@ -1,11 +1,11 @@
-package water
+package visualizations
 
 import (
 	"net/http"
 	"strings"
 
 	"github.com/USACE/water-api/api/messages"
-	"github.com/USACE/water-api/api/water/models"
+	"github.com/USACE/water-api/api/visualizations/models"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/labstack/echo/v4"
 )

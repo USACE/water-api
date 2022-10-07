@@ -13,6 +13,7 @@ import (
 	"github.com/USACE/water-api/api/middleware"
 	"github.com/USACE/water-api/api/nws"
 	"github.com/USACE/water-api/api/usgs"
+	"github.com/USACE/water-api/api/visualizations"
 	"github.com/USACE/water-api/api/water"
 
 	_ "github.com/jackc/pgx/v4"
@@ -201,11 +202,8 @@ func main() {
 	// Tenants (
 	public.GET("/providers", ws.ListProviders)
 
-	// Visualizations
-	public.GET("/visualizations", ws.ListVisualizations)
-	public.POST("/visualizations", ws.CreateVisualization)
-	public.POST("/visualizations/:visualization_slug/assign", ws.CreateOrUpdateVisualizationMapping)
-	public.GET("/visualizations/:visualization_slug", ws.GetVisualization)
+	// Visualizations (Charts)
+	visualizations.Mount(st.Connection, e)
 
 	// Server
 	s := &http2.Server{
