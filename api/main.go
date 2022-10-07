@@ -156,26 +156,8 @@ func main() {
 	// Maintenance/Automation
 	key.POST("/automation/assign_states_to_locations", cs.AssignStatesToLocations)
 
-	/////////////////////////////////////////////////////////////////////////////
 	// USGS
-	/////////////////////////////////////////////////////////////////////////////
-	// USGS Store
-	gs := usgs.Store{Connection: st.Connection}
-
-	// Search
-	public.GET("/search/usgs_sites", gs.SearchSites)
-
-	// USGS Sites
-	public.GET("/usgs/sites", gs.ListSites) // Will accept ?state=xx
-	public.GET("/usgs/sites/:site_number", gs.GetSite)
-	public.GET("/usgs/parameters", gs.ListParameters)
-	//public.GET("/usgs_sites/enabled_parameters", cs.ListParametersEnabled)
-	key.POST("/usgs/sync/sites", gs.SyncSites)
-	key.POST("/usgs/site_parameters", gs.CreateSiteParameters)
-
-	// USGS Time Series
-	key.POST("/usgs/sites/:site_number/measurements", gs.CreateOrUpdateUSGSMeasurements)
-	public.GET("/usgs/sites/:site_number/measurements", gs.ListUSGSMeasurements)
+	usgs.Mount(st.Connection, e, &config)
 
 	/////////////////////////////////////////////////////////////////////////////
 	// NWS
@@ -203,7 +185,7 @@ func main() {
 	public.GET("/providers", ws.ListProviders)
 
 	// Visualizations (Charts)
-	visualizations.Mount(st.Connection, e)
+	visualizations.Mount(st.Connection, e, &config)
 
 	// Server
 	s := &http2.Server{
