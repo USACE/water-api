@@ -1,9 +1,9 @@
-package water
+package providers
 
 import (
 	"net/http"
 
-	"github.com/USACE/water-api/api/water/models"
+	"github.com/USACE/water-api/api/providers/models"
 	"github.com/labstack/echo/v4"
 )
 
