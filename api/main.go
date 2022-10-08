@@ -15,6 +15,7 @@ import (
 	"github.com/USACE/water-api/api/usgs"
 	"github.com/USACE/water-api/api/visualizations"
 	"github.com/USACE/water-api/api/water"
+	"github.com/USACE/water-api/api/watersheds"
 
 	_ "github.com/jackc/pgx/v4"
 	"github.com/kelseyhightower/envconfig"
@@ -112,8 +113,6 @@ func main() {
 	// Statistics
 	public.GET("/stats/states", cs.ListStatsStates)
 	public.GET("/stats/states/:state_id", cs.GetStatsState)
-	// public.GET("/stats/watersheds", cs.ListStatsWatersheds)
-	// public.GET("/stats/watersheds/:watershed_id", cs.GetStatsWatershed)
 	public.GET("/stats/offices", cs.ListStatsOffices)
 	public.GET("/stats/offices/:office_id", cs.GetStatsOffice)
 
@@ -139,20 +138,6 @@ func main() {
 	// public.POST "/:provider_slug/timeseries"
 	// "/levels/latest/config/:owner"
 
-	// Watersheds
-	public.GET("/watersheds", cs.ListWatersheds)
-	public.GET("/watersheds/:watershed_slug", cs.GetWatershed)
-	private.POST("/watersheds", cs.CreateWatershed)
-	private.PUT("/watersheds/:watershed_slug", cs.UpdateWatershed)
-	public.GET("/watersheds/:watershed_slug/geometry", cs.GetWatershedGeometry)
-	key.PUT("/watersheds/:watershed_id/update_geometry", cs.UpdateWatershedGeometry)
-	private.DELETE("/watersheds/:watershed_slug", cs.DeleteWatershed)
-	private.POST("/watersheds/:watershed_slug/undelete", cs.UndeleteWatershed)
-	private.POST("/watersheds/:watershed_id/shapefile_uploads", cs.UploadWatersheds, middleware.IsAdmin)
-
-	// Extract timeseries values using locations grouped with a watershed defined by its slug
-	public.GET("watersheds/:watershed_slug/extract", cs.WatershedExtract)
-
 	// Maintenance/Automation
 	key.POST("/automation/assign_states_to_locations", cs.AssignStatesToLocations)
 
@@ -175,11 +160,8 @@ func main() {
 	// WATER Store
 	ws := water.Store{Connection: st.Connection}
 
-	// Associate USGS sites/parameters with Watershed
-	private.POST("/watersheds/:watershed_slug/site/:site_number/parameter/:parameter_code", ws.CreateWatershedSiteParameter)
-	private.DELETE("/watersheds/:watershed_slug/site/:site_number/parameter/:parameter_code", ws.DeleteWatershedSiteParameter)
-	// Watershed USGS Site Params enabled for data retrieval.  Primarily used by Airflow.
-	public.GET("/watersheds/usgs_sites", ws.ListWatershedSiteParameters)
+	// Watersheds
+	watersheds.Mount(st.Connection, e, &config)
 
 	// Tenants (
 	public.GET("/providers", ws.ListProviders)

@@ -1,10 +1,10 @@
-package water
+package watersheds
 
 import (
 	"net/http"
 	"strings"
 
-	"github.com/USACE/water-api/api/water/models"
+	"github.com/USACE/water-api/api/watersheds/models"
 
 	"github.com/labstack/echo/v4"
 )
