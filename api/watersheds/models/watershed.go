@@ -6,11 +6,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"mime/multipart"
-	"time"
 
 	"github.com/USACE/water-api/api/app"
 	"github.com/USACE/water-api/api/helpers"
-	"github.com/USACE/water-api/api/timeseries"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -29,17 +27,6 @@ type Watershed struct {
 	Slug         string    `json:"slug"`
 	Name         string    `json:"name"`
 	Bbox         []float64 `json:"bbox" db:"bbox"`
-}
-
-// Extract struct for the return of measurements for a watershed
-type Extract struct {
-	SiteNumber  string      `json:"site_number"`
-	Code        string      `json:"code"`
-	SiteID      uuid.UUID   `json:"site_id"`
-	Name        string      `json:"name"`
-	ParameterID uuid.UUID   `json:"paramter_id"`
-	Times       []time.Time `json:"times"`
-	Values      []float64   `json:"values"`
 }
 
 // WatershedSQL includes common fields selected to build a watershed
@@ -273,42 +260,4 @@ func UploadWatersheds(db *pgxpool.Pool, wid uuid.UUID, file *multipart.FileHeade
 	result["Bucket"] = *bucket
 
 	return result, nil
-}
-
-// WatershedExtract
-func WatershedExtract(db *pgxpool.Pool, slug string, tw *timeseries.TimeWindow) ([]Extract, error) {
-	ext := make([]Extract, 0)
-	rows, err := db.Query(context.Background(),
-		`SELECT r1.site_number, r1."name", r1.code, r1.site_id, r1.parameter_id, array_agg(r1."time") AS times, array_agg(r1.value) AS values
-        FROM
-        (
-            SELECT us.site_number, us."name", up.code, usp.site_id, usp.parameter_id, um."time", um.value 
-            FROM watershed_usgs_sites wus
-            JOIN
-            (
-            SELECT "time", value, usgs_site_parameters_id from usgs_measurements
-            WHERE "time" >= $2::timestamptz AND "time" <= $3::timestamptz
-            ORDER BY usgs_site_parameters_id, "time" desc
-            ) AS um on um.usgs_site_parameters_id = wus.usgs_site_parameter_id
-        JOIN
-        usgs_site_parameters usp 
-        ON usgs_site_parameters_id = usp.id
-        JOIN usgs_site us 
-        ON us.id = usp.site_id
-        JOIN usgs_parameter up
-        ON up.id = usp.parameter_id
-        WHERE wus.watershed_id = (SELECT id FROM watershed w WHERE slug = $1)
-        ORDER BY us.site_number, up.code, um."time"
-        ) r1
-        GROUP BY r1.site_number, r1."name", r1.code, r1.site_id, r1.parameter_id`,
-		slug, tw.After, tw.Before,
-	)
-	if err != nil {
-		return nil, err
-	}
-	if err = pgxscan.ScanAll(&ext, rows); err != nil {
-		return nil, err
-	}
-
-	return ext, nil
 }
