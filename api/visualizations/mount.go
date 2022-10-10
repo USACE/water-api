@@ -20,4 +20,5 @@ func Mount(conn *pgxpool.Pool, e *echo.Echo, config *app.Config) {
 	public.GET("/visualizations/:visualization_slug", s.GetVisualization)
 	public.POST("/visualizations", s.CreateVisualization)
 	public.POST("/visualizations/:visualization_slug/assign", s.CreateOrUpdateVisualizationMapping)
+	public.DELETE("/visualizations/:visualization_slug", s.DeleteVisualization)
 }
