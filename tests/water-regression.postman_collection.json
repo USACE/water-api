@@ -2010,46 +2010,6 @@
 					"response": []
 				},
 				{
-					"name": "Delete Visualization",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/visualizations/{{new_visualization_slug}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"visualizations",
-								"{{new_visualization_slug}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Create Visualization Mapping (Many)",
 					"event": [
 						{
@@ -2179,6 +2139,46 @@
 									"key": "format",
 									"value": "json"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Visualization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/visualizations/{{new_visualization_slug}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"visualizations",
+								"{{new_visualization_slug}}"
 							]
 						}
 					},
