@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "24e8ff6b-09ce-4380-9b8e-0902cd0d9fc6",
+		"_postman_id": "6e135645-7491-454d-80fb-417007ab615f",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20040250"
 	},
 	"item": [
 		{
@@ -2142,14 +2143,9 @@
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "Providers",
-			"item": [
+				},
 				{
-					"name": "List Providers",
+					"name": "Delete Visualization",
 					"event": [
 						{
 							"listen": "test",
@@ -2163,11 +2159,8 @@
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -2179,12 +2172,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/providers",
+							"raw": "{{base_url}}/visualizations/{{new_visualization_slug}}",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"providers"
+								"visualizations",
+								"{{new_visualization_slug}}"
 							]
 						}
 					},

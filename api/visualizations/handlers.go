@@ -65,3 +65,13 @@ func (s Store) CreateOrUpdateVisualizationMapping(c echo.Context) error {
 	}
 	return c.NoContent(http.StatusAccepted)
 }
+
+func (s Store) DeleteVisualization(c echo.Context) error {
+	vSlug := c.Param("visualization_slug")
+
+	err := models.DeleteVisualization(s.Connection, &vSlug)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, make(map[string]interface{}))
+}

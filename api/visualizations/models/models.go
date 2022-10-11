@@ -146,8 +146,8 @@ func CreateVisualization(db *pgxpool.Pool, v *Visualization) (*Visualization, er
 	if v.LocationSlug == nil {
 		if err := pgxscan.Get(
 			context.Background(), db, &vSlug,
-			`INSERT INTO visualization (slug, name, type_id, (SELECT id from provider where lower(slug) = lower($5)))
-			VALUES($1, $2, $3)
+			`INSERT INTO visualization (slug, name, type_id, provider_id)
+			VALUES($1, $2, $3, (SELECT id from provider where lower(slug) = lower($4)))
 			RETURNING slug`, slug, v.Name, v.TypeID, v.ProviderSlug,
 		); err != nil {
 			return nil, err
@@ -219,4 +219,11 @@ func CreateOrUpdateVisualizationMapping(db *pgxpool.Pool, c VisualizationMapping
 
 	return nil, nil
 
+}
+
+func DeleteVisualization(db *pgxpool.Pool, vizualizationSlug *string) error {
+	if _, err := db.Exec(context.Background(), `DELETE FROM visualization WHERE slug=$1`, vizualizationSlug); err != nil {
+		return err
+	}
+	return nil
 }
