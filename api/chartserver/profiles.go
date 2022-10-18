@@ -77,7 +77,7 @@ func GetDamProfileByLocation(db *pgxpool.Pool, locationSlug *string) (*DamProfil
 											'name', lvl_ts.variable,									
 											'value', lvl_ts.latest_value
 										)), '[]') AS levels
-		FROM a2w_cwms.visualization v
+		FROM visualization v
 		JOIN visualization_variable_mapping vvm ON vvm.visualization_id = v.id 
 		JOIN timeseries t ON t.id = vvm.timeseries_id 
 		JOIN datasource d ON d.id = t.datasource_id 
