@@ -71,7 +71,7 @@ func GetWatershedGeometry(db *pgxpool.Pool, watershedSlug *string) ([]byte, erro
 			SELECT slug,
 				   name,
 				   ST_ForcePolygonCCW(ST_Transform(w.geometry,4326))::geometry as geom
-			FROM a2w_cwms.watershed w
+			FROM watershed w
 			WHERE slug = $1
 		)
 		SELECT jsonb_build_object(

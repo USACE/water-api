@@ -54,9 +54,9 @@ var listVisualizationsSQL = `SELECT
 							v.name, v.slug, v.type_id, 
 							p."name" AS provider_name, 
 							p.slug AS provider_slug
-							FROM a2w_cwms.visualization v
-							LEFT JOIN a2w_cwms."location" l ON l.id = v.location_id
-							JOIN a2w_cwms.provider p ON p.id = v.provider_id`
+							FROM visualization v
+							LEFT JOIN "location" l ON l.id = v.location_id
+							JOIN provider p ON p.id = v.provider_id`
 
 func ListVisualizations(db *pgxpool.Pool) ([]Visualization, error) {
 	vv := make([]Visualization, 0)
@@ -84,11 +84,11 @@ func GetVisualization(db *pgxpool.Pool, visualizationSlug *string) (*Visualizati
 								'latest_time', t.latest_time,
 								'latest_value', t.latest_value
 							)), '[]') AS mapping
-							FROM a2w_cwms.visualization v
-							LEFT JOIN a2w_cwms."location" l ON l.id = v.location_id
+							FROM visualization v
+							LEFT JOIN "location" l ON l.id = v.location_id
 							JOIN provider p ON p.id = v.provider_id
-							LEFT JOIN a2w_cwms.visualization_variable_mapping vvm ON vvm.visualization_id = v.id
-							LEFT JOIN a2w_cwms.timeseries t ON t.id = vvm.timeseries_id
+							LEFT JOIN visualization_variable_mapping vvm ON vvm.visualization_id = v.id
+							LEFT JOIN timeseries t ON t.id = vvm.timeseries_id
 							WHERE lower(v.slug) = lower($1)
 							GROUP BY l.slug, v.slug, v.name, v.type_id, p.name, p.slug
 							LIMIT 1`
@@ -116,11 +116,11 @@ func GetVisualizationByLocation(db *pgxpool.Pool, locationSlug *string, visualiz
 								'latest_time', t.latest_time,
 								'latest_value', t.latest_value
 							)), '[]') AS mapping
-							FROM a2w_cwms.visualization v
-							JOIN a2w_cwms."location" l ON l.id = v.location_id
+							FROM visualization v
+							JOIN "location" l ON l.id = v.location_id
 							JOIN provider p ON p.id = l.office_id 
-							LEFT JOIN a2w_cwms.visualization_variable_mapping vvm ON vvm.visualization_id = v.id
-							LEFT JOIN a2w_cwms.timeseries t ON t.id = vvm.timeseries_id
+							LEFT JOIN visualization_variable_mapping vvm ON vvm.visualization_id = v.id
+							LEFT JOIN timeseries t ON t.id = vvm.timeseries_id
 							WHERE lower(l.slug) = lower($1)
 							AND type_id = $2
 							GROUP BY l.slug, v.slug, v.name, v.type_id, p.name, p.slug
@@ -187,8 +187,8 @@ func CreateOrUpdateVisualizationMapping(db *pgxpool.Pool, c VisualizationMapping
 				(SELECT id from visualization WHERE lower(slug) = lower($1)), 
 				$2,
 				(SELECT t.id from timeseries t
-					JOIN a2w_cwms.datasource d ON d.id = t.datasource_id 
-					JOIN a2w_cwms.datasource_type dt ON dt.id = d.datasource_type_id 
+					JOIN datasource d ON d.id = t.datasource_id 
+					JOIN datasource_type dt ON dt.id = d.datasource_type_id 
 					WHERE lower(datasource_key) = lower($3)
 					AND lower(dt.slug) = lower($4))
 			)
