@@ -73,9 +73,9 @@ func CreateWatershedSiteParameter(db *pgxpool.Pool, w *WatershedSiteParameter) e
 		`INSERT INTO watershed_usgs_sites (watershed_id, usgs_site_parameter_id) VALUES
 		((select id from watershed where slug = $1), 
 		(
-			SELECT usp.id FROM a2w_cwms.usgs_site_parameters usp
-			JOIN a2w_cwms.usgs_site us ON us.id = usp.site_id 
-			JOIN a2w_cwms.usgs_parameter up ON up.id = usp.parameter_id 
+			SELECT usp.id FROM usgs_site_parameters usp
+			JOIN usgs_site us ON us.id = usp.site_id 
+			JOIN usgs_parameter up ON up.id = usp.parameter_id 
 			WHERE us.site_number = $2
 			AND up.code = $3)
 		)
@@ -94,9 +94,9 @@ func DeleteWatershedSiteParameter(db *pgxpool.Pool, w *WatershedSiteParameter) e
 		`DELETE FROM watershed_usgs_sites
 		WHERE watershed_id = (select id from watershed where slug = $1)
 		AND usgs_site_parameter_id = (
-			SELECT usp.id FROM a2w_cwms.usgs_site_parameters usp
-			JOIN a2w_cwms.usgs_site us ON us.id = usp.site_id 
-			JOIN a2w_cwms.usgs_parameter up ON up.id = usp.parameter_id 
+			SELECT usp.id FROM usgs_site_parameters usp
+			JOIN usgs_site us ON us.id = usp.site_id 
+			JOIN usgs_parameter up ON up.id = usp.parameter_id 
 			WHERE us.site_number = $2
 			AND up.code = $3)
 		`, w.WatershedSlug, w.SiteNumber, w.ParameterCode,

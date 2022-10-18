@@ -338,7 +338,7 @@ func DeleteLocationByOffice(db *pgxpool.Pool, location_slug string, office_symbo
 	if _, err := db.Exec(
 		context.Background(),
 		`DELETE FROM location
-		WHERE id = (SELECT l.id FROM a2w_cwms.location AS l, a2w_cwms.office AS o
+		WHERE id = (SELECT l.id FROM location AS l, office AS o
 		WHERE o.symbol = $1 and l.slug = $2)`, strings.ToUpper(office_symbol), location_slug,
 	); err != nil {
 		return err

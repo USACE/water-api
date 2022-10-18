@@ -46,14 +46,14 @@ func CreateOrUpdateUSGSMeasurements(db *pgxpool.Pool, c ParameterMeasurementColl
 			rows, err := tx.Query(
 				context.Background(),
 				`WITH s_id AS (
-					SELECT id FROM a2w_cwms.usgs_site s WHERE s.site_number = $1
+					SELECT id FROM usgs_site s WHERE s.site_number = $1
 				), p_id AS (
-					SELECT id FROM a2w_cwms.usgs_parameter p WHERE p.code = $2
+					SELECT id FROM usgs_parameter p WHERE p.code = $2
 				), site_parameter_id AS (
-					SELECT id FROM a2w_cwms.usgs_site_parameters sp
+					SELECT id FROM usgs_site_parameters sp
 					WHERE parameter_id = (SELECT * FROM p_id) AND site_id = (SELECT * FROM s_id)
 				)
-				INSERT INTO a2w_cwms.usgs_measurements (time, value, usgs_site_parameters_id) VALUES
+				INSERT INTO usgs_measurements (time, value, usgs_site_parameters_id) VALUES
 				($3, $4, (SELECT * FROM site_parameter_id))
 				ON CONFLICT ON CONSTRAINT site_parameters_unique_time
 				DO UPDATE SET value = EXCLUDED.value
@@ -96,12 +96,12 @@ func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []st
 		rows, _ := tx.Query(
 			context.Background(),
 			`WITH s_id AS (
-				SELECT s.* FROM a2w_cwms.usgs_site AS s WHERE s.site_number = $1
+				SELECT s.* FROM usgs_site AS s WHERE s.site_number = $1
 			), s_parameters AS (
-				SELECT sp.* FROM a2w_cwms.usgs_site_parameters AS sp
+				SELECT sp.* FROM usgs_site_parameters AS sp
 				WHERE sp.site_id = (SELECT id FROM s_id)
 			)
-			SELECT p.code FROM a2w_cwms.usgs_parameter p, s_parameters s
+			SELECT p.code FROM usgs_parameter p, s_parameters s
 			WHERE p.id = s.parameter_id`,
 			site_number,
 		)
