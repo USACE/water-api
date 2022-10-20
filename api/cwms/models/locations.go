@@ -15,15 +15,17 @@ import (
 )
 
 type Location struct {
-	ID         uuid.UUID        `json:"id"`
-	OfficeID   uuid.UUID        `json:"office_id"`
-	StateID    *int             `json:"state_id"`
-	Name       string           `json:"name"`
-	PublicName *string          `json:"public_name"`
-	Slug       string           `json:"slug"`
-	KindID     uuid.UUID        `json:"kind_id"`
-	Kind       string           `json:"kind"`
-	Geometry   helpers.Geometry `json:"geometry"`
+	ID           uuid.UUID        `json:"id"`
+	OfficeID     uuid.UUID        `json:"office_id"`
+	StateID      *int             `json:"state_id"`
+	Name         string           `json:"name"`
+	PublicName   *string          `json:"public_name"`
+	Slug         string           `json:"slug"`
+	KindID       uuid.UUID        `json:"kind_id"`
+	Kind         string           `json:"kind"`
+	Geometry     helpers.Geometry `json:"geometry"`
+	ProviderName string           `json:"provider_name"`
+	ProviderSlug string           `json:"provider_slug"`
 }
 
 type LocationFilter struct {
@@ -59,8 +61,14 @@ func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 		            a.slug,
 		            ST_AsGeoJSON(a.geometry)::json AS geometry,
 		            k.id                           AS kind_id,
-		            k.name                         AS kind`,
-	).From("location a")
+		            k.name                         AS kind,
+					p.name						   AS provider_name,
+					p.slug						   AS provider_slug`,
+	).From(
+		"location a",
+	).Join(
+		"provider p on p.id = a.office_id",
+	)
 
 	// Base string for JOIN of location_kind table
 	j1 := "location_kind k ON k.id = a.kind_id"
