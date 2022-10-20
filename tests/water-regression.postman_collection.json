@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6e135645-7491-454d-80fb-417007ab615f",
+		"_postman_id": "8a7e5a96-76b2-400e-a32e-e56fe0b63d38",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -56,7 +56,12 @@
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
-									""
+									"pm.test(\"Response time is less than 3 sec\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -87,7 +92,12 @@
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
-									""
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -124,7 +134,12 @@
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
-									""
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -161,7 +176,12 @@
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
-									""
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -171,7 +191,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/locations?office_id=91cf44dc-6384-4622-bd9f-0f36e4343413&kind_id=460ea73b-c65e-4fc8-907a-6e6fd2907a99",
+							"raw": "{{base_url}}/locations?office_id=2f160ba7-fd5f-4716-8ced-4a29f75065a6&kind_id=460ea73b-c65e-4fc8-907a-6e6fd2907a99",
 							"host": [
 								"{{base_url}}"
 							],
@@ -181,7 +201,7 @@
 							"query": [
 								{
 									"key": "office_id",
-									"value": "91cf44dc-6384-4622-bd9f-0f36e4343413"
+									"value": "2f160ba7-fd5f-4716-8ced-4a29f75065a6"
 								},
 								{
 									"key": "kind_id",
@@ -202,7 +222,12 @@
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
-									""
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -234,7 +259,12 @@
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
-									""
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -283,7 +313,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Regression Test Create One Location\",\n    \"public_name\": \"Regression Test Create One Location UPDATED\",\n    \"slug\": \"regression-test-create-one-location\",\n    \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n    \"kind\": \"PROJECT\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -82.2,\n            38.9\n        ]\n    }\n}",
+							"raw": "{\n    \"name\": \"Regression Test Create One Location\",\n    \"public_name\": \"Regression Test Create One Location UPDATED\",\n    \"slug\": \"regression-test-location-01\",\n    \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n    \"kind\": \"PROJECT\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -82.2,\n            38.9\n        ]\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -291,7 +321,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/offices/lrd/locations/regression-test-create-one-location",
+							"raw": "{{base_url}}/offices/lrd/locations/regression-test-location-01",
 							"host": [
 								"{{base_url}}"
 							],
@@ -299,7 +329,7 @@
 								"offices",
 								"lrd",
 								"locations",
-								"regression-test-create-one-location"
+								"regression-test-location-01"
 							]
 						}
 					},
@@ -307,12 +337,32 @@
 				},
 				{
 					"name": "Create Location (One)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});",
+									"let r = JSON.parse(responseBody);",
+									"pm.environment.set(\"regression_location_01_id\", r[0].id);",
+									"pm.environment.set(\"regression_location_01_slug\", r[0].slug);",
+									"pm.environment.set(\"regression_location_01_name\", r[0].name);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"office_id\": \"91cf44dc-6384-4622-bd9f-0f36e4343413\",\n    \"name\": \"Regression Test Create One Location\",\n    \"public_name\": \"Regression Test Create One Location\",\n    \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    }\n}\n",
+							"raw": "{\n    \"office_id\": \"91cf44dc-6384-4622-bd9f-0f36e4343413\",\n    \"name\": \"Postman Regression Test First Location\",\n    \"public_name\": \"Postman Regression Test First Location\",\n    \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    }\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -333,12 +383,33 @@
 				},
 				{
 					"name": "Create Location by Office (One)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});",
+									"let r = JSON.parse(responseBody);",
+									"pm.environment.set(\"regression_location_02_id\", r[0].id);",
+									"pm.environment.set(\"regression_location_02_slug\", r[0].slug);",
+									"pm.environment.set(\"regression_location_02_name\", r[0].name);",
+									"pm.environment.set(\"regression_location_02_provider_slug\", r[0].provider_slug);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Regression Test Create One Location\",\n    \"public_name\": \"Regression Test Create One Location\",\n    \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    }\n}\n",
+							"raw": "{\n    \"name\": \"Postman Regression Test Second Location\",\n    \"public_name\": \"Postman Regression Test Second Location\",\n    \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    }\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -361,12 +432,31 @@
 				},
 				{
 					"name": "Sync Location (One)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 202\", function () {",
+									"    pm.response.to.have.status(202);",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"office_id\": \"91cf44dc-6384-4622-bd9f-0f36e4343413\",\n    \"name\": \"Regression Test Create One Location\",\n    \"public_name\": \"Regression Test Create One Location\",\n    \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    }\n}\n",
+							"raw": "{\n    \"office_id\": \"91cf44dc-6384-4622-bd9f-0f36e4343413\",\n    \"name\": \"{{regression_location_01_name}}\",\n    \"public_name\": \"Postman Regression Test First Location UPDATED\",\n    \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    }\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -374,11 +464,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/locations",
+							"raw": "{{base_url}}/sync/locations",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
+								"sync",
 								"locations"
 							]
 						}
@@ -387,12 +478,31 @@
 				},
 				{
 					"name": "Create Location (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"office_id\": \"91cf44dc-6384-4622-bd9f-0f36e4343413\",\n        \"name\": \"Regression Test Create Many Locations A\",\n        \"public_name\": \"Regression Test Create Many Locations A\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    },\n    {\n        \"office_id\": \"91cf44dc-6384-4622-bd9f-0f36e4343413\",\n        \"name\": \"Regression Test Create Many Locations B\",\n        \"public_name\": \"Regression Test Create Many Locations B\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    },\n    {\n        \"office_id\": \"91cf44dc-6384-4622-bd9f-0f36e4343413\",\n        \"name\": \"Regression Test Create Many Locations C\",\n        \"public_name\": \"Regression Test Create Many Locations C\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    }\n]",
+							"raw": "[\n    {\n        \"office_id\": \"91cf44dc-6384-4622-bd9f-0f36e4343413\",\n        \"name\": \"Postman Regression Test Create Many Locations A\",\n        \"public_name\": \"Regression Test Create Many Locations A\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    },\n    {\n        \"office_id\": \"91cf44dc-6384-4622-bd9f-0f36e4343413\",\n        \"name\": \"Postman Regression Test Create Many Locations B\",\n        \"public_name\": \"Regression Test Create Many Locations B\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    },\n    {\n        \"office_id\": \"91cf44dc-6384-4622-bd9f-0f36e4343413\",\n        \"name\": \"Postman Regression Test Create Many Locations C\",\n        \"public_name\": \"Regression Test Create Many Locations C\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -413,12 +523,31 @@
 				},
 				{
 					"name": "Create Location by Office (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"name\": \"Regression Test Create Many Locations A\",\n        \"public_name\": \"Regression Test Create Many Locations A\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    },\n    {\n        \"name\": \"Regression Test Create Many Locations B\",\n        \"public_name\": \"Regression Test Create Many Locations B\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    },\n    {\n        \"name\": \"Regression Test Create Many Locations C\",\n        \"public_name\": \"Regression Test Create Many Locations C\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    }\n]",
+							"raw": "[\n    {\n        \"name\": \"Postman Regression Test Create Many Locations A - LRD\",\n        \"public_name\": \"Regression Test Create Many Locations A - LRD\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    },\n    {\n        \"name\": \"Postman Regression Test Create Many Locations B - LRD\",\n        \"public_name\": \"Regression Test Create Many Locations B - LRD\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    },\n    {\n        \"name\": \"Postman Regression Test Create Many Locations C - LRD\",\n        \"public_name\": \"Regression Test Create Many Locations C - LRD\",\n        \"kind_id\": \"460ea73b-c65e-4fc8-907a-6e6fd2907a99\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        }\n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -441,6 +570,25 @@
 				},
 				{
 					"name": "Sync Location (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 202\", function () {",
+									"    pm.response.to.have.status(202);",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -454,11 +602,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/locations",
+							"raw": "{{base_url}}/sync/locations",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
+								"sync",
 								"locations"
 							]
 						}
@@ -467,37 +616,75 @@
 				},
 				{
 					"name": "Delete Location (Regression Test Location 01)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/locations/45cd0d9f-6751-434f-afe4-9da0690793be",
+							"raw": "{{base_url}}/locations/{{regression_location_01_id}}",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"locations",
-								"45cd0d9f-6751-434f-afe4-9da0690793be"
+								"{{regression_location_01_id}}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete Location by Office (Regression Test Location 01)",
+					"name": "Delete Location by Office (Regression Test Location 02)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/offices/LRD/locations/regression-test-create-one-location",
+							"raw": "{{base_url}}/offices/{{regression_location_02_provider_slug}}/locations/{{regression_location_02_slug}}",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"offices",
-								"LRD",
+								"{{regression_location_02_provider_slug}}",
 								"locations",
-								"regression-test-create-one-location"
+								"{{regression_location_02_slug}}"
 							]
 						}
 					},
@@ -1547,6 +1734,47 @@
 			]
 		},
 		{
+			"name": "Providers",
+			"item": [
+				{
+					"name": "List Providers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/providers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Timeseries",
 			"item": [
 				{
@@ -1637,6 +1865,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1679,6 +1913,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1727,6 +1967,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1779,6 +2025,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1835,6 +2087,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1892,6 +2150,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1975,6 +2239,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
