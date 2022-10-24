@@ -10,6 +10,7 @@ import (
 	"github.com/USACE/water-api/api/app"
 	"github.com/USACE/water-api/api/chartserver"
 	"github.com/USACE/water-api/api/cwms"
+	"github.com/USACE/water-api/api/locations"
 	"github.com/USACE/water-api/api/middleware"
 	"github.com/USACE/water-api/api/nws"
 	"github.com/USACE/water-api/api/providers"
@@ -59,12 +60,13 @@ func main() {
 	features.Use(middleware.PgFeatureservProxy(config.PgFeatureservUrl))
 
 	// Mount Routes
-	cwms.Mount(st.Connection, e, &config, chartserver) // CWMS
-	nws.Mount(st.Connection, e, &config)               // National Weather Service
-	providers.Mount(st.Connection, e, &config)         // Providers
-	usgs.Mount(st.Connection, e, &config)              // USGS
-	visualizations.Mount(st.Connection, e, &config)    // Visualizations
-	watersheds.Mount(st.Connection, e, &config)        // Watersheds
+	cwms.Mount(st.Connection, e, &config, chartserver)      // CWMS
+	locations.Mount(st.Connection, e, &config, chartserver) // Locations
+	nws.Mount(st.Connection, e, &config)                    // National Weather Service
+	providers.Mount(st.Connection, e, &config)              // Providers
+	usgs.Mount(st.Connection, e, &config)                   // USGS
+	visualizations.Mount(st.Connection, e, &config)         // Visualizations
+	watersheds.Mount(st.Connection, e, &config)             // Watersheds
 
 	// Start Server
 	s := &http2.Server{
