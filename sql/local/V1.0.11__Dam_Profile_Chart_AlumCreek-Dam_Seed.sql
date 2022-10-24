@@ -10,10 +10,10 @@ INSERT into timeseries(datasource_id, datasource_key, latest_time, latest_value)
 ('5bb6d520-5223-4b04-b348-f57268a41c03', 'AlumCr.Elev.Inst.0.Top of Flood', '2022-09-09T18:35:00Z', 901);
 
 -- Alum Creek Locations already in seed data and should be in develop/stable
-INSERT INTO visualization(id, location_id, slug, name, type_id) VALUES
+INSERT INTO chart(id, location_id, slug, name, type_id) VALUES
 ('ff03ac20-439c-4504-8c33-8819db2acb23', (SELECT id from location where slug = 'alumcr'), 'alum-creek-dam-profile', 'Alum Creek Dam Profile Chart', '53da77d0-6550-4f02-abf8-4bcd1a596a7c');
 
-INSERT INTO visualization_variable_mapping(visualization_id, variable, timeseries_id) VALUES
+INSERT INTO chart_variable_mapping(chart_id, variable, timeseries_id) VALUES
 ('ff03ac20-439c-4504-8c33-8819db2acb23', 'pool', (SELECT id from timeseries where datasource_key = 'AlumCr-Lake.Elev.Inst.15Minutes.0.OBS')),
 ('ff03ac20-439c-4504-8c33-8819db2acb23', 'tail', (SELECT id from timeseries where datasource_key = 'AlumCr-Outflow.Stage.Inst.15Minutes.0.OBS')),
 ('ff03ac20-439c-4504-8c33-8819db2acb23', 'inflow', (SELECT id from timeseries where datasource_key = 'AlumCr-Lake.Flow.Inst.15Minutes.0.OBS')),

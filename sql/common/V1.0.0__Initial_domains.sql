@@ -179,8 +179,8 @@ CREATE TABLE IF NOT EXISTS timeseries (
 -- CHART
 --------------
 
--- charts table
-CREATE TABLE IF NOT EXISTS charts (
+-- chart table
+CREATE TABLE IF NOT EXISTS chart (
     id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     location_id UUID REFERENCES location(id),
     slug VARCHAR UNIQUE NOT NULL,

@@ -29,7 +29,7 @@ INSERT into timeseries(datasource_id, datasource_key, latest_time, latest_value)
 ('5bb6d520-5223-4b04-b348-f57268a41c03', 'Bluestone.Elev.Inst.0.Top of Dam', '2022-09-18T18:35:00Z', 1535),
 ('5bb6d520-5223-4b04-b348-f57268a41c03', 'Bluestone.Elev.Inst.0.Top of Flood', '2022-09-18T18:35:00Z', 1520);
 
-INSERT INTO visualization(id, location_id, slug, name, type_id, provider_id) VALUES
+INSERT INTO chart(id, location_id, slug, name, type_id, provider_id) VALUES
 -- alum-creek-dam-profile already in seed data
 ('1c89c8f2-b7ef-4cc6-a877-ac6c21d48e87', (SELECT id from location where slug = 'alumcr'), 'lrh-alum-creek-example-scatter', 'Alum Creek Dam Scatter Chart', '61910b8c-4dfb-4343-affb-d478b6bf915f', '2f160ba7-fd5f-4716-8ced-4a29f75065a6'),
 ('41f2f75e-9472-4339-bac6-be898e809aee', (SELECT id from location where slug = 'atwood-1'), 'lrh-atwood-dam-profile', 'Atwood Dam Profile Chart', '53da77d0-6550-4f02-abf8-4bcd1a596a7c', '2f160ba7-fd5f-4716-8ced-4a29f75065a6'),
@@ -37,7 +37,7 @@ INSERT INTO visualization(id, location_id, slug, name, type_id, provider_id) VAL
 ('8cc22bfd-678c-48ad-a35a-ff427c481cc6', (SELECT id from location where slug = 'bolivar'), 'lrh-bolivar-dam-profile', 'Bolivar Dam Profile Chart', '53da77d0-6550-4f02-abf8-4bcd1a596a7c', '2f160ba7-fd5f-4716-8ced-4a29f75065a6'),
 ('945cd8de-39ec-4a75-836d-f14c0f609571', (SELECT id from location where slug = 'bluestone'), 'lrh-bluestone-dam-profile', 'Bluestone Dam Profile Chart', '53da77d0-6550-4f02-abf8-4bcd1a596a7c', '2f160ba7-fd5f-4716-8ced-4a29f75065a6');
 
-INSERT INTO visualization_variable_mapping(visualization_id, variable, timeseries_id) VALUES
+INSERT INTO chart_variable_mapping(chart_id, variable, timeseries_id) VALUES
 -- alumcr dam profile mapping already in seed data
 ('41f2f75e-9472-4339-bac6-be898e809aee', 'pool', (SELECT id from timeseries where datasource_key = 'Atwood-Lake.Elev.Inst.15Minutes.0.OBS')),
 ('41f2f75e-9472-4339-bac6-be898e809aee', 'inflow', (SELECT id from timeseries where datasource_key = 'Atwood-Lake.Flow.Inst.15Minutes.0.OBS')),
