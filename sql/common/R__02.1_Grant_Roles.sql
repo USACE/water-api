@@ -2,7 +2,7 @@
 -- ${flyway:timestamp}
 
 -- Grant Schema Usage to water_user
-GRANT USAGE ON SCHEMA a2w_cwms TO water_user;
+GRANT USAGE ON SCHEMA water TO water_user;
 
 -- Grant 'tiger' Schema Usage to water_user
 GRANT USAGE ON SCHEMA tiger TO water_user;
@@ -18,15 +18,11 @@ GRANT SELECT ON tiger_data.state_all TO water_user;
 
 GRANT SELECT ON
     config,
+    cwms_location,
     datasource,
     datasource_type,
     location,
-    location_kind,
-    level,
-    level_kind,
-    level_value,
-    nws_stages,
-    office,
+    cwms_location_kind,
     provider,
     timeseries,
     upload_status,  
@@ -41,8 +37,8 @@ GRANT SELECT ON
     usgs_huc8_simple,
     usgs_measurements,
     usgs_site_parameters,
+    usgs_site_type,
     usgs_parameter,
-    vertical_datum,
     visualization,
     visualization_variable_mapping,
     watershed,
@@ -56,17 +52,13 @@ TO water_reader;
 -- Tables specific to water app
 GRANT INSERT,UPDATE,DELETE ON
     config,
+    cwms_location,
     datasource,
     datasource_type,
     location,
-    location_kind,
-    level,
-    level_kind,
-    level_value,
+    cwms_location_kind,
     provider,
     timeseries,
-    vertical_datum,
-    nws_stages,
     upload_status,
     usgs_site,
     usgs_measurements,

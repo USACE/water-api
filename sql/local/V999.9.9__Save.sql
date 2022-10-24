@@ -1,0 +1,11 @@
+-- -- Create vertical_datum table
+-- CREATE TABLE IF NOT EXISTS vertical_datum (
+--     id SERIAL PRIMARY KEY NOT NULL,
+--     name VARCHAR UNIQUE NOT NULL
+-- );
+
+-- INSERT into vertical_datum (id, name) VALUES
+--     (0, 'UNKNOWN'),
+--     (1, 'COE1912'),
+--     (2, 'NGVD29'),
+--     (3, 'NAVD88');
