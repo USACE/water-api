@@ -8,6 +8,14 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
+type LocationFilter struct {
+	Slugs    *[]string // not supported as query param at this time
+	Slug     *string   `query:"location" param:"location"` // binds to either /locations/:slug or /locations?slug=
+	State    *string   `query:"state"`
+	Provider *string   `query:"provider"`
+	Q        *string   `query:"q"`
+}
+
 func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 
 	q := sq.Select(
