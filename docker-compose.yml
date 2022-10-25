@@ -43,7 +43,7 @@ services:
     image: flyway/flyway
     container_name: water-flyway
     restart: on-failure
-    command: -url=jdbc:postgresql://water-db:5432/postgres -schemas=a2w_cwms -user=postgres -password=postgres -connectRetries=60 migrate
+    command: -url=jdbc:postgresql://water-db:5432/postgres -schemas=water -user=postgres -password=postgres -connectRetries=60 migrate
     environment:
       - FLYWAY_EDITION=community
       - FLYWAY_LOCATIONS=filesystem:/flyway/sql/common,filesystem:/flyway/sql/local,filesystem:/flyway/sql/develop

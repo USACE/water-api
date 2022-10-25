@@ -41,9 +41,9 @@ CREATE OR REPLACE VIEW v_watershed AS (
            w.slug,
            w.name,
            w.geometry AS geometry,
-           w.office_id,
-           f.symbol AS office_symbol
+           w.provider_id,
+           p.slug AS provider_slug
 	FROM   watershed w
-    LEFT JOIN office f ON w.office_id = f.id
+    LEFT JOIN provider p ON w.provider_id = p.id
 	WHERE NOT w.deleted
 );

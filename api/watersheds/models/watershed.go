@@ -22,8 +22,8 @@ import (
 // Watershed is a watershed struct
 type Watershed struct {
 	ID           uuid.UUID `json:"id" db:"id"`
-	OfficeSymbol *string   `json:"office_symbol" db:"office_symbol"`
-	OfficeID     uuid.UUID `json:"office_id" db:"office_id"`
+	ProviderSlug *string   `json:"provider_slug" db:"provider_slug"`
+	ProviderID   uuid.UUID `json:"provider_id" db:"provider_id"`
 	Slug         string    `json:"slug"`
 	Name         string    `json:"name"`
 	Bbox         []float64 `json:"bbox" db:"bbox"`
@@ -31,8 +31,8 @@ type Watershed struct {
 
 // WatershedSQL includes common fields selected to build a watershed
 const WatershedSQL = `SELECT w.id,
-                             w.office_symbol,
-							 w.office_id,
+                             w.provider_slug,
+							 w.provider_id,
                              w.slug,
                              w.name,
 	                         ARRAY[
@@ -45,7 +45,7 @@ const WatershedSQL = `SELECT w.id,
 // ListWatersheds returns an array of watersheds
 func ListWatersheds(db *pgxpool.Pool) ([]Watershed, error) {
 	ww := make([]Watershed, 0)
-	if err := pgxscan.Select(context.Background(), db, &ww, WatershedSQL+" FROM v_watershed w order by w.office_symbol, w.name"); err != nil {
+	if err := pgxscan.Select(context.Background(), db, &ww, WatershedSQL+" FROM v_watershed w order by w.provider_slug, w.name"); err != nil {
 		return make([]Watershed, 0), nil
 	}
 	return ww, nil
@@ -105,7 +105,7 @@ func CreateWatershed(db *pgxpool.Pool, w *Watershed) (*Watershed, error) {
 	var wNew Watershed
 	if err := pgxscan.Get(
 		context.Background(), db, &wNew,
-		`INSERT INTO watershed (name, slug, office_id) VALUES ($1,$2, $3) RETURNING id, name, slug, office_id`, &w.Name, slug, &w.OfficeID,
+		`INSERT INTO watershed (name, slug, provider_id) VALUES ($1,$2, (SELECT id from provider where lower(slug) = lower($3))) RETURNING slug`, &w.Name, slug, &w.ProviderSlug,
 	); err != nil {
 		return nil, err
 	}
@@ -173,7 +173,9 @@ func UpdateWatershedGeometry(db *pgxpool.Pool, id *uuid.UUID, wf *geojson.Featur
 // UpdateWatershed updates a watershed
 func UpdateWatershed(db *pgxpool.Pool, w *Watershed) (*Watershed, error) {
 	var wSlug string
-	if err := pgxscan.Get(context.Background(), db, &wSlug, `UPDATE watershed SET name=$1, office_id=$3 WHERE slug=$2 RETURNING slug`, &w.Name, &w.Slug, &w.OfficeID); err != nil {
+	if err := pgxscan.Get(context.Background(), db, &wSlug,
+		`UPDATE watershed SET name=$1, provider_id=(SELECT id from provider where lower(slug) = lower($3)) WHERE slug=$2 RETURNING slug`,
+		&w.Name, &w.Slug, &w.ProviderSlug); err != nil {
 		return nil, err
 	}
 	fmt.Println(wSlug)

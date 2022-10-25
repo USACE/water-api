@@ -39,9 +39,3 @@ $$;
 
 -- Set Search Path
 ALTER ROLE water_user SET search_path TO water,topology,tiger,tiger_data,public;
-
--- Add State Column to Location
-/*
-This should be moved if/when we restructure the migrations
-*/
-ALTER TABLE water.location ADD COLUMN IF NOT EXISTS state_id integer REFERENCES tiger_data.state_all(gid);

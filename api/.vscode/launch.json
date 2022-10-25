@@ -12,6 +12,7 @@
       "program": "${workspaceFolder}/main.go",
       "env": {
         "APPLICATION_KEY": "appkey",
+        "AUTH_MOCKED": "true",
         "WATER_DB_USER": "water_user",
         "WATER_DB_PASS": "water_pass",
         "WATER_DB_NAME": "postgres",
@@ -28,7 +29,7 @@
         "DB_POOL_MAX_CONNS": "10",
         "DB_POOL_MAX_CONN_IDLE_TIME": "30m",
         "DB_POOL_MIN_CONNS": "5",
-        "CHARTSERVER_URL":"http://localhost:3000"
+        "CHARTSERVER_URL": "http://localhost:3000"
       },
       "args": []
     }

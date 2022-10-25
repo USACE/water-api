@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS config (
 ------------------------
 
 CREATE TABLE IF NOT EXISTS cwms_location_kind (
-    id UUID NOT NULL,
+    id UUID PRIMARY KEY NOT NULL,
     name VARCHAR UNIQUE NOT NULL
 );
 
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS cwms_location_kind (
 -------------------
 
 CREATE TABLE IF NOT EXISTS usgs_site_type (
-    id UUID NOT NULL,
+    id UUID PRIMARY KEY NOT NULL,
     abbreviation VARCHAR UNIQUE NOT NULL,
     name VARCHAR UNIQUE NOT NULL
 );
@@ -65,10 +65,10 @@ CREATE TABLE IF NOT EXISTS location (
     id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     datasource_id UUID REFERENCES datasource(id),
     slug VARCHAR UNIQUE NOT NULL,
-    geometry geometry NOT NULL,   
+    geometry geometry NOT NULL, 
+    state_id INTEGER REFERENCES tiger_data.state_all(gid),
     create_date TIMESTAMPTZ NOT NULL DEFAULT now(),
-    update_date TIMESTAMPTZ,
-    ON DELETE CASCADE;
+    update_date TIMESTAMPTZ
 );
 
 ----------------
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS location (
 ----------------
 
 CREATE TABLE IF NOT EXISTS cwms_location (
-    location_id UUID REFERENCES location(id),
+    location_id UUID REFERENCES location(id) ON DELETE CASCADE,
     name VARCHAR,
     public_name VARCHAR,
     kind_id UUID NOT NULL REFERENCES cwms_location_kind(id)
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS cwms_location (
 ----------------
 
 CREATE TABLE IF NOT EXISTS usgs_site (
-    location_id UUID REFERENCES location(id),
+    location_id UUID REFERENCES location(id) ON DELETE CASCADE,
     site_number VARCHAR UNIQUE NOT NULL,
     station_name VARCHAR NOT NULL,
     site_type_id UUID NOT NULL REFERENCES usgs_site_type(id)
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS watershed (
     slug VARCHAR UNIQUE NOT NULL,
     name VARCHAR NOT NULL,
     geometry geometry NOT NULL DEFAULT ST_GeomFromText('POLYGON ((0 0, 0 0, 0 0, 0 0, 0 0))',4326),
-    office_id UUID NOT NULL REFERENCES office(id),
+    provider_id UUID NOT NULL REFERENCES provider(id),
 	deleted boolean NOT NULL DEFAULT false
 );
 
@@ -186,14 +186,13 @@ CREATE TABLE IF NOT EXISTS chart (
     slug VARCHAR UNIQUE NOT NULL,
     name VARCHAR NOT NULL,
     type_id UUID NOT NULL,
-    provider_id NOT NULL REFERENCES provider(id);
+    provider_id UUID NOT NULL REFERENCES provider(id)
 );
 
 -- chart_variable_mapping
 CREATE TABLE IF NOT EXISTS chart_variable_mapping (
     chart_id UUID NOT NULL REFERENCES chart(id),
     variable VARCHAR NOT NULL,
-    timeseries_id UUID NOT NULL REFERENCES timeseries(id),
-    CONSTRAINT chart_id_unique_variable UNIQUE(chart_id, variable),
-    ON DELETE CASCADE;
+    timeseries_id UUID NOT NULL REFERENCES timeseries(id) ON DELETE CASCADE,
+    CONSTRAINT chart_id_unique_variable UNIQUE(chart_id, variable)
 );

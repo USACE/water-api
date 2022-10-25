@@ -15,7 +15,8 @@ INSERT INTO cwms_location_kind (id, name) VALUES
 
 INSERT INTO usgs_site_type (id, abbreviation, name) VALUES
 	('896c45b0-e458-4621-840d-512f962427cb','LK', 'Lake, Reservoir, Impoundment'),
-    ('c34cb071-9163-4240-83fc-e0e691f61523','ST', 'Stream');
+    ('c34cb071-9163-4240-83fc-e0e691f61523','ST', 'Stream'),
+    ('de46a4ab-b9ae-49d0-bac0-04fa07debc3d','ST-TS', 'Tidal Stream');
 
 INSERT INTO provider (id, name, slug, parent_id) VALUES
     ('91cf44dc-6384-4622-bd9f-0f36e4343413','Great Lakes and Ohio River Division','lrd',Null),
@@ -66,19 +67,19 @@ INSERT INTO provider (id, name, slug, parent_id) VALUES
     ('f3f0d7ff-19b6-4167-a3f1-5c04f5a0fe4d','Fort Worth District','swf','2176fa5b-7d6f-4f73-8dc3-18e2323aefbb'),
     ('72ee5695-cdaa-4182-b0c1-4d27f1a3f570','Galveston District','swg','2176fa5b-7d6f-4f73-8dc3-18e2323aefbb'),
     ('131daa5c-49c2-4488-be6b-bd638a83a03f','Little Rock District','swl','2176fa5b-7d6f-4f73-8dc3-18e2323aefbb'),
-    ('fe29f6e2-e200-44a4-9545-a4680ab9366e','Tulsa District','swt','2176fa5b-7d6f-4f73-8dc3-18e2323aefbb');
+    ('fe29f6e2-e200-44a4-9545-a4680ab9366e','Tulsa District','swt','2176fa5b-7d6f-4f73-8dc3-18e2323aefbb'),
+    -- USGS
+    ('154791a9-1be9-4b11-a964-3bbd1e08fa89','U.S. Geological Survey','usgs', NULL);
 
 
 INSERT into datasource_type(id, slug, name, uri) VALUES
-    ('a138e363-30ea-4e0d-8d8f-cce03cb8e1d0', 'cwms-timeseries', 'CWMS RADAR Timeseries', 'https://cwms-data.usace.army.mil/cwms-data/timeseries'),
-    ('97920d27-ee54-4d35-aec4-c01ec31221a2', 'cwms-levels', 'CWMS RADAR Levels', 'https://cwms-data.usace.army.mil/cwms-data/levels'),
-    ('36dc9f8c-b18b-433c-b919-9c067739b6aa', 'usgs-timeseres', 'USGS Timeseries', 'https//waterservices.usgs.gov/nwis/iv/'),
-    ('f5854c47-7cc3-4bcb-9d13-83ed5ca31905', 'nws-levels', 'NWS Levels', 'https://water.weather.gov');
-
-INSERT into datasource(id, provider_id, datasource_type_id) VALUES
-    ('9680cd77-f2fd-47d1-ac29-d71ec4310ea7', '2f160ba7-fd5f-4716-8ced-4a29f75065a6', 'a138e363-30ea-4e0d-8d8f-cce03cb8e1d0'),
-    ('5bb6d520-5223-4b04-b348-f57268a41c03', '2f160ba7-fd5f-4716-8ced-4a29f75065a6', '97920d27-ee54-4d35-aec4-c01ec31221a2'),
-    ('bc8115f1-9570-4153-853b-901518549600', '552e59f7-c0cc-4689-8a4d-e791c028430a', 'a138e363-30ea-4e0d-8d8f-cce03cb8e1d0');
+    ('a138e363-30ea-4e0d-8d8f-cce03cb8e1d0', 'cwms-timeseries', 'CWMS Timeseries', 'https://cwms-data.usace.army.mil/cwms-data/timeseries'),
+    ('97920d27-ee54-4d35-aec4-c01ec31221a2', 'cwms-level', 'CWMS Level', 'https://cwms-data.usace.army.mil/cwms-data/levels'),
+    ('a2d0956a-251c-4994-b8a8-3a240227ca4e', 'cwms-location', 'CWMS Location', 'https://cwms-data.usace.army.mil/cwms-data/location'),
+    ('5d4a5d99-79e1-49b9-82aa-6f72708925e7', 'usgs-site', 'USGS Site', 'https//waterservices.usgs.gov/nwis/iv/'),
+    ('36dc9f8c-b18b-433c-b919-9c067739b6aa', 'usgs-timeseries', 'USGS Timeseries', 'https//waterservices.usgs.gov/nwis/iv/'),
+    ('42d3f5cb-8c5e-4857-a80d-202c0b86ed6c', 'nws-timeseries', 'NWS Timeseries', 'https://water.weather.gov'),
+    ('f5854c47-7cc3-4bcb-9d13-83ed5ca31905', 'nws-level', 'NWS Level', 'https://water.weather.gov');
 
 -- usgs_parameter seed data
 INSERT INTO usgs_parameter (id, code, description) VALUES 
@@ -94,27 +95,27 @@ INSERT INTO usgs_parameter (id, code, description) VALUES
 
 -- extent to polygon reference order - simple 4 point extents
 -- xmin,ymax (top left), xmax ymax (top right), xmax ymin (bottom right), xmin ymin (bottom left), xmin ymax (top left again)
-INSERT INTO watershed (id,slug,"name",geometry,office_id) VALUES	 
-    ('0f065e6a-3380-4ac3-b576-89fae7774b9f','little-sandy-river','Little Sandy River',ST_GeomFromText('POLYGON ((1096000 1812000, 1158000 1812000, 1158000 1732000, 1096000 1732000, 1096000 1812000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),    
-    ('1a629fac-82c9-4b3e-b7fc-6a891d944140','ohio-river','Ohio River',ST_GeomFromText('POLYGON ((1006000 1914000, 1206000 1914000, 1206000 1754000, 1006000 1754000, 1006000 1914000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),	
-    ('3e322a11-b76b-4710-8f9a-b7884cd8ae77','big-sandy-river','Big Sandy River',ST_GeomFromText('POLYGON ((1114000 1796000, 1288000 1796000, 1288000 1624000, 1114000 1624000, 1114000 1796000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),	 
-    ('4d3083d1-101c-4b76-9311-1154917ffbf1','twelvepole-river','Twelvepole River',ST_GeomFromText('POLYGON ((1152000 1796000, 1212000 1796000, 1212000 1728000, 1152000 1728000, 1152000 1796000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),	 
+INSERT INTO watershed (id,slug,"name",geometry,provider_id) VALUES	 
+    ('0f065e6a-3380-4ac3-b576-89fae7774b9f','little-sandy-river','Little Sandy River',ST_GeomFromText('POLYGON ((1096000 1812000, 1158000 1812000, 1158000 1732000, 1096000 1732000, 1096000 1812000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),
+    ('1a629fac-82c9-4b3e-b7fc-6a891d944140','ohio-river','Ohio River',ST_GeomFromText('POLYGON ((1006000 1914000, 1206000 1914000, 1206000 1754000, 1006000 1754000, 1006000 1914000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),
+    ('3e322a11-b76b-4710-8f9a-b7884cd8ae77','big-sandy-river','Big Sandy River',ST_GeomFromText('POLYGON ((1114000 1796000, 1288000 1796000, 1288000 1624000, 1114000 1624000, 1114000 1796000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'), 
+    ('4d3083d1-101c-4b76-9311-1154917ffbf1','twelvepole-river','Twelvepole River',ST_GeomFromText('POLYGON ((1152000 1796000, 1212000 1796000, 1212000 1728000, 1152000 1728000, 1152000 1796000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),
     ('5024720e-02f6-4577-a09c-ff1ff5a28223','hocking-river','Hocking River',ST_GeomFromText('POLYGON ((1112000 1960000, 1220000 1960000, 1220000 1878000, 1112000 1878000, 1112000 1960000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),
-    ('50372dbc-f254-4584-8345-1c3613d2a102','guyandotte-river','Guyandotte River',ST_GeomFromText('POLYGON ((1166000 1814000, 1298000 1814000, 1298000 1692000, 1166000 1692000, 1166000 1814000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),	 
+    ('50372dbc-f254-4584-8345-1c3613d2a102','guyandotte-river','Guyandotte River',ST_GeomFromText('POLYGON ((1166000 1814000, 1298000 1814000, 1298000 1692000, 1166000 1692000, 1166000 1814000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),
     ('5758d0dc-c8bf-4e37-a5e7-44ff3f4b8677','scioto-river','Scioto River',ST_GeomFromText('POLYGON ((1004000 2056000, 1154000 2056000, 1154000 1810000, 1004000 1810000, 1004000 2056000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),
-    ('65a93467-c9b4-4166-acb6-58e8ec06ed3b','kanawha-river','Kanawha River',ST_GeomFromText('POLYGON ((1182000 1870000, 1410000 1870000, 1410000 1544000, 1182000 1544000, 1182000 1870000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),	 
+    ('65a93467-c9b4-4166-acb6-58e8ec06ed3b','kanawha-river','Kanawha River',ST_GeomFromText('POLYGON ((1182000 1870000, 1410000 1870000, 1410000 1544000, 1182000 1544000, 1182000 1870000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),
     ('7c6dd902-fbc5-43e4-9bbf-351963f5723d','muskingum-river','Muskingum River',ST_GeomFromText('POLYGON ((1098000 2110000, 1268000 2110000, 1268000 1904000, 1098000 1904000, 1098000 2110000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),
     ('cf193b4e-61c3-4e4d-9503-2935a82aed96','little-kanawha-river','Little Kanawha River',ST_GeomFromText('POLYGON ((1164000 1970000, 1354000 1970000, 1354000 1824000, 1164000 1824000, 1164000 1970000))',5070),'2f160ba7-fd5f-4716-8ced-4a29f75065a6'),
-	('c54eab5b-1020-476b-a5f8-56d77802d9bf','tennessee-river','Tennessee River',ST_GeomFromText('POLYGON ((640000 1678000, 1300000 1678000, 1300000 1268000, 640000 1268000, 640000 1678000))',5070),'552e59f7-c0cc-4689-8a4d-e791c028430a'),	 
-    ('c785f4de-ab17-444b-b6e6-6f1ad16676e8','cumberland-basin-river','Cumberland Basin River',ST_GeomFromText('POLYGON ((662000 1678000, 1172000 1678000, 1172000 1408000, 662000 1408000, 662000 1678000))',5070),'552e59f7-c0cc-4689-8a4d-e791c028430a'),	 																																	
-	('feda585b-1ba0-4b19-92ed-7195154b8052','tennessee-cumberland-river', 'Tennessee & Cumberland River', ST_GeomFromText('POLYGON ((642000 1682000, 1300000 1682000, 1300000 1258000, 642000 1258000, 642000 1682000))',5070), '552e59f7-c0cc-4689-8a4d-e791c028430a'),
+    ('c54eab5b-1020-476b-a5f8-56d77802d9bf','tennessee-river','Tennessee River',ST_GeomFromText('POLYGON ((640000 1678000, 1300000 1678000, 1300000 1268000, 640000 1268000, 640000 1678000))',5070),'552e59f7-c0cc-4689-8a4d-e791c028430a'),
+    ('c785f4de-ab17-444b-b6e6-6f1ad16676e8','cumberland-basin-river','Cumberland Basin River',ST_GeomFromText('POLYGON ((662000 1678000, 1172000 1678000, 1172000 1408000, 662000 1408000, 662000 1678000))',5070),'552e59f7-c0cc-4689-8a4d-e791c028430a'),																												
+    ('feda585b-1ba0-4b19-92ed-7195154b8052','tennessee-cumberland-river', 'Tennessee & Cumberland River', ST_GeomFromText('POLYGON ((642000 1682000, 1300000 1682000, 1300000 1258000, 642000 1258000, 642000 1682000))',5070), '552e59f7-c0cc-4689-8a4d-e791c028430a'),
     ('03206ff6-fe91-426c-a5e9-4c651b06f9c6','eau-galla-river','Eau Galla River',ST_GeomFromText('POLYGON ((284000 2460000, 326000 2460000, 326000 2404000, 284000 2404000, 284000 2460000))',5070),'2cf60156-f22a-418a-bc9f-a28960ad0321'),
     ('048ce853-6642-4ac4-9fb2-81c01f67a85b','mississippi-river-headwaters','Mississippi River Headwaters',ST_GeomFromText('POLYGON ((24000 2760000, 254000 2760000, 254000 2402000, 24000 2402000, 24000 2760000))',5070),'2cf60156-f22a-418a-bc9f-a28960ad0321'),
     ('ad30f178-afc3-43b9-ba92-7bd139581217','red-river-north','Red River North',ST_GeomFromText('POLYGON ((-356000 2950000, 150000 2950000, 150000 2494000, -356000 2494000, -356000 2950000))',5070),'2cf60156-f22a-418a-bc9f-a28960ad0321'),
     ('c8bf6c6d-7f19-406a-a438-f2f876ce4815','souris-river','Souris River',ST_GeomFromText('POLYGON ((-708000 3100000, -178000 3100000, -178000 2736000, -708000 2736000, -708000 3100000))',5070),'2cf60156-f22a-418a-bc9f-a28960ad0321'),
     ('ced6ec9e-43b5-496e-a2b7-894af92c9b63','mississippi-river-navigation','Mississippi River Navigation',ST_GeomFromText('POLYGON ((48000 2646000, 564000 2646000, 564000 2204000, 48000 2204000, 48000 2646000))',5070),'2cf60156-f22a-418a-bc9f-a28960ad0321'),
     ('f4219691-e498-46a3-ab0f-f2957bd09a10','minnesota-river','Minnesota River',ST_GeomFromText('POLYGON ((-112000 2602000, 234000 2602000, 234000 2244000, -112000 2244000, -112000 2602000))',5070),'2cf60156-f22a-418a-bc9f-a28960ad0321'),
-    ('c572ed70-d401-4a97-aea6-cb3fe2b77e41','savannah-river-basin','Savannah River Basin',ST_GeomFromText('POLYGON ((1110000 1432000, 1432000 1432000, 1432000 1094000, 1110000 1094000, 1110000 1432000))',5070),'0154184e-2509-4485-b449-8eff4ab52eef')
+    ('c572ed70-d401-4a97-aea6-cb3fe2b77e41','savannah-river-basin','Savannah River Basin',ST_GeomFromText('POLYGON ((1110000 1432000, 1432000 1432000, 1432000 1094000, 1110000 1094000, 1110000 1432000))',5070),'0154184e-2509-4485-b449-8eff4ab52eef'),
     ('3413594d-8f1b-4d41-b48a-33447771a44d','middle-wabash-river','Middle Wabash River',ST_GeomFromText('POLYGON ((708000 1982000, 942000 1982000, 942000 1714000, 708000 1714000, 708000 1982000))',5070),'433a554d-7b27-4046-89eb-906788eb4046'),
     ('43f38b7d-0d25-4d6e-a333-aa0d5408c4a1','little-miami-river','Little Miami River',ST_GeomFromText('POLYGON ((980000 1952000, 1058000 1952000, 1058000 1824000, 980000 1824000, 980000 1952000))',5070),'433a554d-7b27-4046-89eb-906788eb4046'),
     ('4c43255a-3af2-4cb0-94f8-4d2b82b31055','licking-river','Licking River',ST_GeomFromText('POLYGON ((968000 1850000, 1150000 1850000, 1150000 1678000, 968000 1678000, 968000 1850000))',5070),'433a554d-7b27-4046-89eb-906788eb4046'),
