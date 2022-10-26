@@ -12,6 +12,13 @@ BEGIN
     JOIN provider p ON p.id = d.provider_id 
     WHERE dt.slug = 'usgs-site' AND p.slug = 'usgs';
 
+    -- -- Regression test
+    -- INSERT INTO location (id, datasource_id, slug, geometry, state_id) VALUES
+    -- ('79a9caf9-355d-44a5-ab33-5ed07d031fd7', usgs_site_ds_id, '99999999', ST_GeomFromText('POINT(-80.8861976 37.64067498)',4326), 1);
+
+    -- INSERT INTO usgs_site (location_id, site_number, station_name, site_type_id) VALUES
+    -- ('79a9caf9-355d-44a5-ab33-5ed07d031fd7', '99999999', 'REGRESSION TEST, WV', 'c34cb071-9163-4240-83fc-e0e691f61523');
+
 
     -- TN sites
     INSERT INTO location (id, datasource_id, slug, geometry, state_id) VALUES

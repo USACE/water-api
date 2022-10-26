@@ -69,7 +69,10 @@ INSERT INTO provider (id, name, slug, parent_id) VALUES
     ('131daa5c-49c2-4488-be6b-bd638a83a03f','Little Rock District','swl','2176fa5b-7d6f-4f73-8dc3-18e2323aefbb'),
     ('fe29f6e2-e200-44a4-9545-a4680ab9366e','Tulsa District','swt','2176fa5b-7d6f-4f73-8dc3-18e2323aefbb'),
     -- USGS
-    ('154791a9-1be9-4b11-a964-3bbd1e08fa89','U.S. Geological Survey','usgs', NULL);
+    ('154791a9-1be9-4b11-a964-3bbd1e08fa89','U.S. Geological Survey','usgs', NULL),
+    -- NWS
+    ('c3164251-a68a-459f-b0ca-2cdbe982db5a','National Weather Service','noaa-nws', NULL);
+
 
 
 INSERT into datasource_type(id, slug, name, uri) VALUES
@@ -79,7 +82,8 @@ INSERT into datasource_type(id, slug, name, uri) VALUES
     ('5d4a5d99-79e1-49b9-82aa-6f72708925e7', 'usgs-site', 'USGS Site', 'https//waterservices.usgs.gov/nwis/iv/'),
     ('36dc9f8c-b18b-433c-b919-9c067739b6aa', 'usgs-timeseries', 'USGS Timeseries', 'https//waterservices.usgs.gov/nwis/iv/'),
     ('42d3f5cb-8c5e-4857-a80d-202c0b86ed6c', 'nws-timeseries', 'NWS Timeseries', 'https://water.weather.gov'),
-    ('f5854c47-7cc3-4bcb-9d13-83ed5ca31905', 'nws-level', 'NWS Level', 'https://water.weather.gov');
+    ('f5854c47-7cc3-4bcb-9d13-83ed5ca31905', 'nws-level', 'NWS Level', 'https://water.weather.gov'),
+    ('52f34db5-4129-41a3-812e-df63e7f9e715', 'nws-site', 'NWS Site', 'https://water.weather.gov');
 
 -- usgs_parameter seed data
 INSERT INTO usgs_parameter (id, code, description) VALUES 

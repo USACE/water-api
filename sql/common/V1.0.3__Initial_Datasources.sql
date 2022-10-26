@@ -35,5 +35,6 @@ INSERT into datasource(id, provider_id, datasource_type_id) VALUES
 -- USGS
 ('77dc8cf9-5804-434a-a53f-8b65c0358a6b', (SELECT id from provider where slug = 'usgs'), (SELECT id from datasource_type where slug = 'usgs-timeseries')),
 -- NWS
-('a59ffe5f-6614-4679-a387-204013aa8de3', (SELECT id from provider where slug = 'nws'), (SELECT id from datasource_type where slug = 'nws-timeseries')),
-('9aafe174-dc17-44c8-813e-714474b44e04', (SELECT id from provider where slug = 'nws'), (SELECT id from datasource_type where slug = 'nws-level'));
+('a59ffe5f-6614-4679-a387-204013aa8de3', (SELECT id from provider where slug = 'noaa-nws'), (SELECT id from datasource_type where slug = 'nws-timeseries')),
+('9aafe174-dc17-44c8-813e-714474b44e04', (SELECT id from provider where slug = 'noaa-nws'), (SELECT id from datasource_type where slug = 'nws-level')),
+('65195574-602c-4540-8ba2-60198ca8e17e', (SELECT id from provider where slug = 'noaa-nws'), (SELECT id from datasource_type where slug = 'nws-site'));

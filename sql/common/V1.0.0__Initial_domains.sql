@@ -119,6 +119,15 @@ CREATE TABLE IF NOT EXISTS usgs_measurements (
     PRIMARY KEY (usgs_site_parameters_id, time)
 );
 
+----------------
+-- NWS SITE
+----------------
+
+CREATE TABLE IF NOT EXISTS nws_site (
+    location_id UUID REFERENCES location(id) ON DELETE CASCADE,
+    name VARCHAR
+);
+
 -- watershed
 CREATE TABLE IF NOT EXISTS watershed (
     id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
