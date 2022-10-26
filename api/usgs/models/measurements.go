@@ -46,12 +46,12 @@ func CreateOrUpdateUSGSMeasurements(db *pgxpool.Pool, c ParameterMeasurementColl
 			rows, err := tx.Query(
 				context.Background(),
 				`WITH s_id AS (
-					SELECT id FROM usgs_site s WHERE s.site_number = $1
+					SELECT location_id FROM usgs_site s WHERE s.site_number = $1
 				), p_id AS (
 					SELECT id FROM usgs_parameter p WHERE p.code = $2
 				), site_parameter_id AS (
 					SELECT id FROM usgs_site_parameters sp
-					WHERE parameter_id = (SELECT * FROM p_id) AND site_id = (SELECT * FROM s_id)
+					WHERE parameter_id = (SELECT * FROM p_id) AND location_id = (SELECT * FROM s_id)
 				)
 				INSERT INTO usgs_measurements (time, value, usgs_site_parameters_id) VALUES
 				($3, $4, (SELECT * FROM site_parameter_id))
@@ -96,10 +96,10 @@ func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []st
 		rows, _ := tx.Query(
 			context.Background(),
 			`WITH s_id AS (
-				SELECT s.* FROM usgs_site AS s WHERE s.site_number = $1
+				SELECT location_id, site_number, station_name, site_type_id FROM usgs_site WHERE site_number = $1
 			), s_parameters AS (
-				SELECT sp.* FROM usgs_site_parameters AS sp
-				WHERE sp.site_id = (SELECT id FROM s_id)
+				SELECT id, location_id, parameter_id FROM usgs_site_parameters AS sp
+				WHERE sp.location_id = (SELECT id FROM s_id)
 			)
 			SELECT p.code FROM usgs_parameter p, s_parameters s
 			WHERE p.id = s.parameter_id`,
@@ -112,12 +112,12 @@ func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []st
 		rows, err := tx.Query(
 			context.Background(),
 			`WITH s_id AS (
-			SELECT id FROM usgs_site s WHERE s.site_number = $1
+			SELECT location_id FROM usgs_site s WHERE s.site_number = $1
 			), p_id AS (
 				SELECT id FROM usgs_parameter p WHERE p.code = $2
 			), site_parameter_id AS (
 				SELECT id FROM usgs_site_parameters sp
-				WHERE parameter_id = (SELECT * FROM p_id) AND site_id = (SELECT * FROM s_id)
+				WHERE parameter_id = (SELECT * FROM p_id) AND location_id = (SELECT * FROM s_id)
 			)
 			SELECT m.time, m.value
 			FROM usgs_measurements m

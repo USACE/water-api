@@ -29,7 +29,7 @@ func ListWatershedSiteParameters(db *pgxpool.Pool) ([]byte, error) {
 			SELECT
 				DISTINCT
 				s.site_number AS site_number,
-				s.state_abbrev AS state_abbrev,
+				sa.stusps AS state_abbrev,
 				COALESCE(code_agg.parameter_codes, '{}') AS parameter_codes
 			FROM
 				watershed_usgs_sites w				
@@ -38,11 +38,15 @@ func ListWatershedSiteParameters(db *pgxpool.Pool) ([]byte, error) {
 			JOIN usgs_parameter p ON
 				p.id = usp.parameter_id
 			JOIN usgs_site s ON
-				s.id = usp.site_id
+				s.location_id = usp.location_id
+			JOIN "location" l ON 
+				l.id = s.location_id 
+			JOIN tiger_data.state_all sa ON
+				sa.gid = l.state_id 
 			LEFT JOIN (			
 				SELECT
 					array_agg(DISTINCT code) AS parameter_codes,
-					usp.site_id
+					usp.location_id
 				FROM
 					usgs_parameter a
 				JOIN usgs_site_parameters usp ON
@@ -50,9 +54,9 @@ func ListWatershedSiteParameters(db *pgxpool.Pool) ([]byte, error) {
 				JOIN watershed_usgs_sites b ON
 					b.usgs_site_parameter_id = usp.id
 				GROUP BY
-					usp.site_id					
+					usp.location_id					
 					) code_agg ON
-				code_agg.site_id = usp.site_id
+				code_agg.location_id = usp.location_id
 		) AS t
 		GROUP BY
 			t.state_abbrev
@@ -74,7 +78,7 @@ func CreateWatershedSiteParameter(db *pgxpool.Pool, w *WatershedSiteParameter) e
 		((select id from watershed where slug = $1), 
 		(
 			SELECT usp.id FROM usgs_site_parameters usp
-			JOIN usgs_site us ON us.id = usp.site_id 
+			JOIN usgs_site us ON us.location_id = usp.location_id 
 			JOIN usgs_parameter up ON up.id = usp.parameter_id 
 			WHERE us.site_number = $2
 			AND up.code = $3)
@@ -95,7 +99,7 @@ func DeleteWatershedSiteParameter(db *pgxpool.Pool, w *WatershedSiteParameter) e
 		WHERE watershed_id = (select id from watershed where slug = $1)
 		AND usgs_site_parameter_id = (
 			SELECT usp.id FROM usgs_site_parameters usp
-			JOIN usgs_site us ON us.id = usp.site_id 
+			JOIN usgs_site us ON us.location_id = usp.location_id 
 			JOIN usgs_parameter up ON up.id = usp.parameter_id 
 			WHERE us.site_number = $2
 			AND up.code = $3)

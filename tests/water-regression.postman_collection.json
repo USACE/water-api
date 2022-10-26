@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6e135645-7491-454d-80fb-417007ab615f",
+		"_postman_id": "d2f481c3-387a-45bf-8120-73cd8a45c8c7",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -917,7 +917,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Regression Test 1 - LRH Watershed\",\n    \"office_id\": \"2f160ba7-fd5f-4716-8ced-4a29f75065a6\"\n}",
+							"raw": "{\n    \"name\": \"Regression Test 1 - LRH Watershed\",\n    \"provider_slug\": \"lrh\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -960,7 +960,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Regression Test 2 - LRH Watershed\",\n    \"office_id\": \"2f160ba7-fd5f-4716-8ced-4a29f75065a6\"\n}",
+							"raw": "{\n    \"name\": \"Regression Test 2 - LRH Watershed\",\n    \"provider_slug\": \"lrh\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1000,7 +1000,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"slug\": \"{{new_create_watershed1_slug}}\",\n    \"name\": \"Regression Test 1 - Changed to LRN\",\n    \"office_id\": \"552e59f7-c0cc-4689-8a4d-e791c028430a\"\n}",
+							"raw": "{\n    \"slug\": \"{{new_create_watershed1_slug}}\",\n    \"name\": \"Regression Test 1 - Changed to LRN\",\n    \"provider_slug\": \"lrn\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1238,28 +1238,6 @@
 					"response": []
 				},
 				{
-					"name": "DeleteWatershedSiteParameter",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/watersheds/{{new_create_watershed2_slug}}/site/99999999/parameter/00065",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"watersheds",
-								"{{new_create_watershed2_slug}}",
-								"site",
-								"99999999",
-								"parameter",
-								"00065"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "ListWatershedSiteParameters",
 					"event": [
 						{
@@ -1286,6 +1264,28 @@
 							"path": [
 								"watersheds",
 								"usgs_sites"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteWatershedSiteParameter",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/watersheds/{{new_create_watershed2_slug}}/site/99999999/parameter/00065",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"watersheds",
+								"{{new_create_watershed2_slug}}",
+								"site",
+								"99999999",
+								"parameter",
+								"00065"
 							]
 						}
 					},

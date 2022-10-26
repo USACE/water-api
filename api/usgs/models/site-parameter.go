@@ -24,8 +24,8 @@ func CreateSiteParameters(db *pgxpool.Pool, ss []SiteParameter) ([]SiteParameter
 	for _, m := range ss {
 		rows, err := tx.Query(
 			context.Background(),
-			`INSERT INTO usgs_site_parameters (site_id, parameter_id) VALUES
-			((select id from usgs_site where site_number = $1), (select id from usgs_parameter where code = $2))
+			`INSERT INTO usgs_site_parameters (location_id, parameter_id) VALUES
+			((select location_id from usgs_site where site_number = $1), (select id from usgs_parameter where code = $2))
 			RETURNING id`, m.SiteNumber, m.ParameterCodes[0],
 		)
 		if err != nil {
