@@ -13,7 +13,7 @@ import (
 )
 
 type VisualizationMapping struct {
-	VisualizationID *uuid.UUID `json:"visualization_id,omitempty" db:"visualization_id"`
+	VisualizationID *uuid.UUID `json:"visualization_id,omitempty" db:"chart_id"`
 	Slug            string     `json:"slug,omitempty" db:"slug"`
 	Variable        string     `json:"variable,omitempty" db:"variable"`
 	Key             string     `json:"key,omitempty"`
@@ -82,29 +82,29 @@ func GetVisualization(db *pgxpool.Pool, visualizationSlug *string) (*Visualizati
 								)
 								SELECT
 								l.slug AS location_slug,
-								v.name AS name,
-								v.slug AS slug,
-								v.type_id,
+								c.name AS name,
+								c.slug AS slug,
+								c.type_id,
 								p."name" AS provider_name, 
 								p.slug AS provider_slug,
 								COALESCE(json_agg(json_build_object(
-									'variable', vvm.variable,
+									'variable', cvm.variable,
 									'datasource_type', dt.slug,
 									'provider', tp.slug,
 									'key', t.datasource_key,
 									'latest_time', t.latest_time,
 									'latest_value', t.latest_value
 								)), '[]') AS mapping
-								FROM visualization v
-								LEFT JOIN "location" l ON l.id = v.location_id
+								FROM chart c
+								LEFT JOIN "location" l ON l.id = c.location_id
 								JOIN provider p ON p.id = v.provider_id
-								LEFT JOIN visualization_variable_mapping vvm ON vvm.visualization_id = v.id
-								LEFT JOIN timeseries t ON t.id = vvm.timeseries_id
+								LEFT JOIN chart_variable_mapping cvm ON cvm.chart_id = c.id
+								LEFT JOIN timeseries t ON t.id = cvm.timeseries_id
 								LEFT JOIN datasource d ON d.id = t.datasource_id 
 								LEFT JOIN datasource_type dt ON dt.id = d.datasource_type_id
 								LEFT JOIN timeseries_providers tp ON tp.id = t.id
-								WHERE lower(v.slug) = lower($1)
-								GROUP BY l.slug, v.slug, v.name, v.type_id, p.name, p.slug
+								WHERE lower(c.slug) = lower($1)
+								GROUP BY l.slug, c.slug, c.name, c.type_id, p.name, p.slug
 								LIMIT 1`
 
 	var v Visualization
@@ -119,25 +119,25 @@ func GetVisualizationByLocation(db *pgxpool.Pool, locationSlug *string, visualiz
 
 	var getVisualizationSQL = `SELECT
 							l.slug AS location_slug,
-							v.name AS name,
-							v.slug AS slug,
-							v.type_id,
+							c.name AS name,
+							c.slug AS slug,
+							c.type_id,
 							p."name" AS provider_name, 
 							p.slug AS provider_slug,
 							COALESCE(json_agg(json_build_object(
-								'variable', vvm.variable,
+								'variable', cvm.variable,
 								'key', t.datasource_key,
 								'latest_time', t.latest_time,
 								'latest_value', t.latest_value
 							)), '[]') AS mapping
-							FROM visualization v
-							JOIN "location" l ON l.id = v.location_id
+							FROM chart c
+							JOIN "location" l ON l.id = c.location_id
 							JOIN provider p ON p.id = l.office_id 
-							LEFT JOIN visualization_variable_mapping vvm ON vvm.visualization_id = v.id
-							LEFT JOIN timeseries t ON t.id = vvm.timeseries_id
+							LEFT JOIN chart_variable_mapping cvm ON cvm.chart_id = c.id
+							LEFT JOIN timeseries t ON t.id = cvm.timeseries_id
 							WHERE lower(l.slug) = lower($1)
 							AND type_id = $2
-							GROUP BY l.slug, v.slug, v.name, v.type_id, p.name, p.slug
+							GROUP BY l.slug, c.slug, c.name, c.type_id, p.name, p.slug
 							LIMIT 1`
 
 	var v Visualization
@@ -160,7 +160,7 @@ func CreateVisualization(db *pgxpool.Pool, v *Visualization) (*Visualization, er
 	if v.LocationSlug == nil {
 		if err := pgxscan.Get(
 			context.Background(), db, &vSlug,
-			`INSERT INTO visualization (slug, name, type_id, provider_id)
+			`INSERT INTO chart (slug, name, type_id, provider_id)
 			VALUES($1, $2, $3, (SELECT id from provider where lower(slug) = lower($4)))
 			RETURNING slug`, slug, v.Name, v.TypeID, v.ProviderSlug,
 		); err != nil {
@@ -169,7 +169,7 @@ func CreateVisualization(db *pgxpool.Pool, v *Visualization) (*Visualization, er
 	} else {
 		if err := pgxscan.Get(
 			context.Background(), db, &vSlug,
-			`INSERT INTO visualization (location_id, slug, name, type_id, provider_id)
+			`INSERT INTO chart (location_id, slug, name, type_id, provider_id)
 			VALUES((SELECT l.id FROM location l WHERE lower(l.slug) = lower($1)), $2, $3, $4, (SELECT id from provider where lower(slug) = lower($5)))
 			RETURNING slug`, v.LocationSlug, slug, v.Name, v.TypeID, v.ProviderSlug,
 		); err != nil {
@@ -195,10 +195,10 @@ func CreateOrUpdateVisualizationMapping(db *pgxpool.Pool, c VisualizationMapping
 
 		rows, err := tx.Query(
 			context.Background(),
-			`INSERT into visualization_variable_mapping(visualization_id, variable, timeseries_id) 
+			`INSERT into chart_variable_mapping(chart_id, variable, timeseries_id) 
 			VALUES
 			(
-				(SELECT id from visualization WHERE lower(slug) = lower($1)), 
+				(SELECT id from chart WHERE lower(slug) = lower($1)), 
 				$2,
 				(SELECT t.id from timeseries t
 					JOIN datasource d ON d.id = t.datasource_id 
@@ -209,11 +209,11 @@ func CreateOrUpdateVisualizationMapping(db *pgxpool.Pool, c VisualizationMapping
 					AND lower(p.slug) = lower($5)
 				)
 			)
-			ON CONFLICT ON CONSTRAINT visualization_id_unique_variable
+			ON CONFLICT ON CONSTRAINT chart_id_unique_variable
 			DO UPDATE SET
 			variable = $2
-			WHERE visualization_variable_mapping.visualization_id = (SELECT id from visualization WHERE lower(slug) = lower($1))
-			RETURNING visualization_id`,
+			WHERE chart_variable_mapping.chart_id = (SELECT id from chart WHERE lower(slug) = lower($1))
+			RETURNING chart_id`,
 			*visualizationSlug, v.Variable, v.Key, v.DatasourceType, v.Provider,
 		)
 		if err != nil {
@@ -238,8 +238,8 @@ func CreateOrUpdateVisualizationMapping(db *pgxpool.Pool, c VisualizationMapping
 
 }
 
-func DeleteVisualization(db *pgxpool.Pool, vizualizationSlug *string) error {
-	if _, err := db.Exec(context.Background(), `DELETE FROM visualization WHERE slug=$1`, vizualizationSlug); err != nil {
+func DeleteVisualization(db *pgxpool.Pool, visualizationSlug *string) error {
+	if _, err := db.Exec(context.Background(), `DELETE FROM chart WHERE slug=$1`, visualizationSlug); err != nil {
 		return err
 	}
 	return nil

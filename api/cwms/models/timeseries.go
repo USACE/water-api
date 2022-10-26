@@ -80,7 +80,7 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 		}
 		// Filter by IsMapped
 		if f.OnlyMapped {
-			q = q.Join("visualization_variable_mapping vvm ON vvm.timeseries_id = t.id")
+			q = q.Join("chart_variable_mapping cvm ON cvm.timeseries_id = t.id")
 		}
 		// Filter by search string
 
