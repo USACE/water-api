@@ -16,10 +16,10 @@ import (
 )
 
 type Site struct {
-	UID            uuid.UUID  `json:"-" db:"id"`
+	LocationID     uuid.UUID  `json:"-" db:"location_id"`
 	ParameterCodes []string   `json:"parameter_codes" db:"parameter_codes"`
 	State          string     `json:"state"`
-	VerticalDatum  string     `json:"vertical_datum" db:"vertical_datum"`
+	VerticalDatum  string     `json:"vertical_datum,omitempty" db:"vertical_datum"`
 	CreateDate     time.Time  `json:"create_date" db:"create_date"`
 	UpdateDate     *time.Time `json:"update_date" db:"update_date"`
 	SiteInfo
@@ -35,10 +35,10 @@ type SiteInfo struct {
 	SiteNumber        string           `json:"site_number" db:"site_number"`
 	Name              string           `json:"name"`
 	Geometry          helpers.Geometry `json:"geometry"`
-	Elevation         *float32         `json:"elevation"`
-	HorizontalDatumId int              `json:"horizontal_datum_id" db:"horizontal_datum_id"`
-	VerticallDatumId  int              `json:"vertical_datum_id" db:"vertical_datum_id"`
-	Huc               *string          `json:"huc"`
+	Elevation         *float32         `json:"elevation,omitempty"`
+	HorizontalDatumId int              `json:"horizontal_datum_id,omitempty" db:"horizontal_datum_id"`
+	VerticallDatumId  int              `json:"vertical_datum_id,omitempty" db:"vertical_datum_id"`
+	Huc               *string          `json:"huc,omitempty"`
 	StateAbbrev       *string          `json:"state_abbrev" db:"state_abbrev"`
 }
 
@@ -49,18 +49,18 @@ type SiteFilter struct {
 
 func ListSitesQuery(sf *SiteFilter) (sq.SelectBuilder, error) {
 
-	q := sq.Select(`id,
+	q := sq.Select(`location_id,
 					site_number,   
 					name,		            
 		            geometry,
-		            elevation,
-					horizontal_datum_id,
-					vertical_datum_id,
-					vertical_datum,
-					huc,
+		            --elevation,
+					--horizontal_datum_id,
+					--vertical_datum_id,
+					--vertical_datum,
+					--huc,
 					state_abbrev,
 					parameter_codes,
-					nws_stages,
+					--nws_stages,
 					state,
 					create_date,
 					update_date`).From("v_usgs_site")
