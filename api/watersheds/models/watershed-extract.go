@@ -14,7 +14,7 @@ import (
 type Extract struct {
 	SiteNumber  string      `json:"site_number"`
 	Code        string      `json:"code"`
-	SiteID      uuid.UUID   `json:"site_id"`
+	LocationID  uuid.UUID   `json:"location_id"`
 	Name        string      `json:"name"`
 	ParameterID uuid.UUID   `json:"paramter_id"`
 	Times       []time.Time `json:"times"`

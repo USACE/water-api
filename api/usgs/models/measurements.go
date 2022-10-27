@@ -99,7 +99,7 @@ func ListUSGSMeasurements(db *pgxpool.Pool, site_number *string, parameters []st
 				SELECT location_id, site_number, station_name, site_type_id FROM usgs_site WHERE site_number = $1
 			), s_parameters AS (
 				SELECT id, location_id, parameter_id FROM usgs_site_parameters AS sp
-				WHERE sp.location_id = (SELECT id FROM s_id)
+				WHERE sp.location_id = (SELECT location_id FROM s_id)
 			)
 			SELECT p.code FROM usgs_parameter p, s_parameters s
 			WHERE p.id = s.parameter_id`,
