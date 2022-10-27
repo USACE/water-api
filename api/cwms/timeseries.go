@@ -3,9 +3,11 @@ package cwms
 import (
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/USACE/water-api/api/cwms/models"
 	"github.com/USACE/water-api/api/messages"
+	"github.com/USACE/water-api/api/timeseries"
 	"github.com/labstack/echo/v4"
 )
 
@@ -67,4 +69,26 @@ func (s Store) CreateOrUpdateTimeseriesMeasurements(c echo.Context) error {
 
 	return c.NoContent(http.StatusAccepted)
 
+}
+
+// ListTimeseriesMeasurements
+func (s Store) GetTimeseriesMeasurements(c echo.Context) error {
+	tsid := c.Param("tsid")
+	k := "water/measurements/" + tsid + "/data.csv.gz"
+	after := c.QueryParam("after")
+	before := c.QueryParam("before")
+	tw, err := timeseries.CreateTimeWindow(after, before)
+	if err != nil {
+		return c.JSON(http.StatusNotAcceptable, err.Error())
+	}
+	sm, err := models.GetTimeseriesMeasurements(
+		s.Connection,
+		k,
+		tw.After.Format(time.RFC3339),
+		tw.Before.Format(time.RFC3339),
+	)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, sm)
 }

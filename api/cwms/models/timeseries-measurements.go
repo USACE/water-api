@@ -2,9 +2,17 @@ package models
 
 import (
 	"context"
+	"encoding/csv"
 	"errors"
+	"fmt"
+	"io"
+	"strconv"
 	"time"
 
+	"github.com/USACE/water-api/api/app"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -80,4 +88,76 @@ func CreateOrUpdateTimeseriesMeasurements(db *pgxpool.Pool, c TimeseriesCollecti
 	}
 
 	return nil, nil
+}
+
+// GetTimeseriesMeasurements
+func GetTimeseriesMeasurements(db *pgxpool.Pool, k string, a string, b string) (Measurements, error) {
+	ms := Measurements{}
+	fmt.Printf("%s\n%s\n%s", k, a, b)
+	cfg, err := app.GetConfig()
+	if err != nil {
+		return ms, err
+	}
+	s3Config := app.AWSConfig(*cfg)
+
+	sess, err := session.NewSession(&s3Config)
+	if err != nil {
+		return ms, err
+	}
+	svc := s3.New(sess)
+
+	params := &s3.SelectObjectContentInput{
+		Bucket:         aws.String(cfg.AWSS3Bucket),
+		Key:            aws.String(k),
+		ExpressionType: aws.String(s3.ExpressionTypeSql),
+		Expression:     aws.String(fmt.Sprintf("SELECT * FROM S3Object s WHERE s.Date >= '%s' AND s.Date <='%s'", a, b)),
+		InputSerialization: &s3.InputSerialization{
+			CSV: &s3.CSVInput{
+				FileHeaderInfo: aws.String(s3.FileHeaderInfoUse),
+			},
+			CompressionType: aws.String(s3.CompressionTypeGzip),
+		},
+		OutputSerialization: &s3.OutputSerialization{
+			CSV: &s3.CSVOutput{},
+		},
+	}
+	resp, err := svc.SelectObjectContent(params)
+	if err != nil {
+		return ms, err
+	}
+	defer resp.EventStream.Close()
+
+	results, resultWriter := io.Pipe()
+	go func() {
+		defer resultWriter.Close()
+		for event := range resp.EventStream.Events() {
+			switch e := event.(type) {
+			case *s3.RecordsEvent:
+				resultWriter.Write(e.Payload)
+				// fmt.Printf("Payload: %v\n", string(e.Payload))
+			case *s3.StatsEvent:
+				fmt.Printf("Processed %d bytes\n", *e.Details.BytesProcessed)
+			}
+		}
+	}()
+
+	if err := resp.EventStream.Err(); err != nil {
+		return ms, fmt.Errorf("failed to read from SelectObjectContent EventStream, %v", err)
+	}
+
+	resReader := csv.NewReader(results)
+
+	for {
+		r, err := resReader.Read()
+		if len(r) > 0 {
+			t, _ := time.Parse(time.RFC3339, r[0])
+			v, _ := strconv.ParseFloat(r[1], 32)
+			ms.Times = append(ms.Times, t)
+			ms.Values = append(ms.Values, v)
+		}
+		if err == io.EOF {
+			break
+		}
+	}
+	return ms, nil
 }
