@@ -79,8 +79,8 @@ INSERT into datasource_type(id, slug, name, uri) VALUES
     ('a138e363-30ea-4e0d-8d8f-cce03cb8e1d0', 'cwms-timeseries', 'CWMS Timeseries', 'https://cwms-data.usace.army.mil/cwms-data/timeseries'),
     ('97920d27-ee54-4d35-aec4-c01ec31221a2', 'cwms-level', 'CWMS Level', 'https://cwms-data.usace.army.mil/cwms-data/levels'),
     ('a2d0956a-251c-4994-b8a8-3a240227ca4e', 'cwms-location', 'CWMS Location', 'https://cwms-data.usace.army.mil/cwms-data/location'),
-    ('5d4a5d99-79e1-49b9-82aa-6f72708925e7', 'usgs-site', 'USGS Site', 'https//waterservices.usgs.gov/nwis/iv/'),
-    ('36dc9f8c-b18b-433c-b919-9c067739b6aa', 'usgs-timeseries', 'USGS Timeseries', 'https//waterservices.usgs.gov/nwis/iv/'),
+    ('5d4a5d99-79e1-49b9-82aa-6f72708925e7', 'usgs-site', 'USGS Site', 'https://waterservices.usgs.gov/nwis/iv'),
+    ('36dc9f8c-b18b-433c-b919-9c067739b6aa', 'usgs-timeseries', 'USGS Timeseries', 'https://waterservices.usgs.gov/nwis/iv'),
     ('42d3f5cb-8c5e-4857-a80d-202c0b86ed6c', 'nws-timeseries', 'NWS Timeseries', 'https://water.weather.gov'),
     ('f5854c47-7cc3-4bcb-9d13-83ed5ca31905', 'nws-level', 'NWS Level', 'https://water.weather.gov'),
     ('52f34db5-4129-41a3-812e-df63e7f9e715', 'nws-site', 'NWS Site', 'https://water.weather.gov');

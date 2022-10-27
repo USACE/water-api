@@ -33,6 +33,7 @@ END$$;
 
 INSERT into datasource(id, provider_id, datasource_type_id) VALUES
 -- USGS
+('2988a8d9-19a2-4c54-8594-f546a32fe43c', (SELECT id from provider where slug = 'usgs'), (SELECT id from datasource_type where slug = 'usgs-site')),
 ('77dc8cf9-5804-434a-a53f-8b65c0358a6b', (SELECT id from provider where slug = 'usgs'), (SELECT id from datasource_type where slug = 'usgs-timeseries')),
 -- NWS
 ('a59ffe5f-6614-4679-a387-204013aa8de3', (SELECT id from provider where slug = 'noaa-nws'), (SELECT id from datasource_type where slug = 'nws-timeseries')),

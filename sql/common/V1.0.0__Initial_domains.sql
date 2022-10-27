@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS datasource (
 
 CREATE TABLE IF NOT EXISTS location (
     id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-    datasource_id UUID REFERENCES datasource(id),
+    datasource_id UUID NOT NULL REFERENCES datasource(id),
     slug VARCHAR UNIQUE NOT NULL,
     geometry geometry NOT NULL, 
     state_id INTEGER REFERENCES tiger_data.state_all(gid),
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS location (
 ----------------
 
 CREATE TABLE IF NOT EXISTS cwms_location (
-    location_id UUID REFERENCES location(id) ON DELETE CASCADE,
+    location_id UUID NOT NULL REFERENCES location(id) ON DELETE CASCADE,
     name VARCHAR,
     public_name VARCHAR,
     kind_id UUID NOT NULL REFERENCES cwms_location_kind(id)
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS cwms_location (
 ----------------
 
 CREATE TABLE IF NOT EXISTS usgs_site (
-    location_id UUID REFERENCES location(id) ON DELETE CASCADE,
+    location_id UUID NOT NULL REFERENCES location(id) ON DELETE CASCADE,
     site_number VARCHAR UNIQUE NOT NULL,
     station_name VARCHAR NOT NULL,
     site_type_id UUID NOT NULL REFERENCES usgs_site_type(id)
@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS usgs_measurements (
 ----------------
 
 CREATE TABLE IF NOT EXISTS nws_site (
-    location_id UUID REFERENCES location(id) ON DELETE CASCADE,
+    location_id UUID NOT NULL REFERENCES location(id) ON DELETE CASCADE,
     name VARCHAR NOT NULL,
     nws_li VARCHAR UNIQUE NOT NULL
 );
