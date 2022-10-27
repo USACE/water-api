@@ -125,7 +125,8 @@ CREATE TABLE IF NOT EXISTS usgs_measurements (
 
 CREATE TABLE IF NOT EXISTS nws_site (
     location_id UUID REFERENCES location(id) ON DELETE CASCADE,
-    name VARCHAR
+    name VARCHAR NOT NULL,
+    nws_li VARCHAR UNIQUE NOT NULL
 );
 
 -- watershed
