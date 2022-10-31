@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/USACE/water-api/api/helpers"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4"
 )
@@ -29,6 +30,8 @@ func NewNwsSite(l Location) (NwsSite, error) {
 	if err != nil {
 		return NwsSite{}, fmt.Errorf("[%v]: error creating NwsSiteAttributes from provided information; %s", l, err.Error())
 	}
+
+	l.Slug = helpers.Slugify(a.NwsLI) // enforce nws_li used in slug creation
 
 	return NwsSite{Location: l, NwsSiteAttributes: a}, nil
 }

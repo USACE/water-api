@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/USACE/water-api/api/helpers"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4"
 )
@@ -31,6 +32,8 @@ func NewUsgsSite(l Location) (UsgsSite, error) {
 	if err != nil {
 		return UsgsSite{}, fmt.Errorf("[%v]: error creating UsgsSiteAttributes from provided information; %s", l, err.Error())
 	}
+
+	l.Slug = helpers.Slugify(a.SiteNumber) // enforce nws_li attribute used in slug creation
 
 	return UsgsSite{Location: l, UsgsSiteAttributes: a}, nil
 }

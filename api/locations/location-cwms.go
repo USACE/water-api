@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/USACE/water-api/api/helpers"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4"
 )
@@ -31,6 +32,8 @@ func NewCwmsLocation(l Location) (CwmsLocation, error) {
 	if err != nil {
 		return CwmsLocation{}, fmt.Errorf("[%v]: error creating CwmsLocationAttributes from provided information; %s", l, err.Error())
 	}
+
+	l.Slug = helpers.Slugify(cla.Name) // enforce name attribute used in slug creation
 
 	return CwmsLocation{Location: l, CwmsLocationAttributes: cla}, nil
 }
