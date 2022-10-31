@@ -13,7 +13,7 @@ type (
 	// CwmsLocation holds CwmsLocation-specific attributes and a pointer to the underlying Location
 	// It allows for specific implementation of CRUD Interfaces
 	CwmsLocation struct {
-		Location               *Location
+		Location               Location
 		CwmsLocationAttributes CwmsLocationAttributes
 	}
 
@@ -25,11 +25,11 @@ type (
 	}
 )
 
-func NewCwmsLocation(l *Location) (CwmsLocation, error) {
+func NewCwmsLocation(l Location) (CwmsLocation, error) {
 
 	cla, err := NewCwmsLocationAttributes(l.Attributes)
 	if err != nil {
-		return CwmsLocation{}, fmt.Errorf("[%v]: error creating CwmsLocationAttributes from provided information; %s", *l, err.Error())
+		return CwmsLocation{}, fmt.Errorf("[%v]: error creating CwmsLocationAttributes from provided information; %s", l, err.Error())
 	}
 
 	return CwmsLocation{Location: l, CwmsLocationAttributes: cla}, nil
@@ -80,7 +80,7 @@ func NewCwmsLocationAttributes(la LocationAttributes) (CwmsLocationAttributes, e
 // Methods to Support LocationCreator Interface
 // ////////////////////////////////////////////
 
-func (l CwmsLocation) LocationInfo() *Location {
+func (l CwmsLocation) LocationInfo() Location {
 	return l.Location
 }
 

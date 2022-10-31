@@ -30,20 +30,34 @@ func (c *LocationCollection) UnmarshalJSON(b []byte) error {
 
 func (lc LocationCollection) LocationCreatorCollection() (LocationCreatorCollection, error) {
 
-	cc := make([]LocationCreator, len(lc.Items))
+	empty := LocationCreatorCollection{
+		Items: make([]LocationCreator, 0),
+	}
 
+	cc := make([]LocationCreator, len(lc.Items))
 	for idx, item := range lc.Items {
 		switch item.DatasourceType {
 		case "cwms-location":
-			if l, err := NewCwmsLocation(&item); err != nil {
-				return LocationCreatorCollection{}, err
+			if l, err := NewCwmsLocation(item); err != nil {
+				return empty, err
+			} else {
+				cc[idx] = l
+			}
+		case "usgs-site":
+			if l, err := NewUsgsSite(item); err != nil {
+				return empty, err
+			} else {
+				cc[idx] = l
+			}
+		case "nws-site":
+			if l, err := NewNwsSite(item); err != nil {
+				return empty, err
 			} else {
 				cc[idx] = l
 			}
 		default:
 			return LocationCreatorCollection{}, fmt.Errorf("CREATE not implemented for datasource_type=%s", item.DatasourceType)
 		}
-
 	}
 	return LocationCreatorCollection{Items: cc}, nil
 }

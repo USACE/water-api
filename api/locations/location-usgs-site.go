@@ -13,7 +13,7 @@ type (
 	// UsgsSite holds UsgsSite-specific attributes and a pointer to the underlying Location
 	// It allows for specific implementation of CRUD Interfaces
 	UsgsSite struct {
-		Location           *Location
+		Location           Location
 		UsgsSiteAttributes UsgsSiteAttributes
 	}
 
@@ -25,11 +25,11 @@ type (
 	}
 )
 
-func NewUsgsSite(l *Location) (UsgsSite, error) {
+func NewUsgsSite(l Location) (UsgsSite, error) {
 
 	a, err := NewUsgsSiteAttributes(l.Attributes)
 	if err != nil {
-		return UsgsSite{}, fmt.Errorf("[%v]: error creating UsgsSiteAttributes from provided information; %s", *l, err.Error())
+		return UsgsSite{}, fmt.Errorf("[%v]: error creating UsgsSiteAttributes from provided information; %s", l, err.Error())
 	}
 
 	return UsgsSite{Location: l, UsgsSiteAttributes: a}, nil
@@ -80,7 +80,7 @@ func NewUsgsSiteAttributes(la LocationAttributes) (UsgsSiteAttributes, error) {
 // Methods to Support LocationCreator Interface
 // ////////////////////////////////////////////
 
-func (l UsgsSite) LocationInfo() *Location {
+func (l UsgsSite) LocationInfo() Location {
 	return l.Location
 }
 

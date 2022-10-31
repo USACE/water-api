@@ -12,7 +12,7 @@ type (
 	// NwsSite holds NwsSite-specific attributes and a pointer to the underlying Location
 	// It allows for specific implementation of CRUD Interfaces
 	NwsSite struct {
-		Location          *Location
+		Location          Location
 		NwsSiteAttributes NwsSiteAttributes
 	}
 
@@ -23,11 +23,11 @@ type (
 	}
 )
 
-func NewNwsSite(l *Location) (NwsSite, error) {
+func NewNwsSite(l Location) (NwsSite, error) {
 
 	a, err := NewNwsSiteAttributes(l.Attributes)
 	if err != nil {
-		return NwsSite{}, fmt.Errorf("[%v]: error creating NwsSiteAttributes from provided information; %s", *l, err.Error())
+		return NwsSite{}, fmt.Errorf("[%v]: error creating NwsSiteAttributes from provided information; %s", l, err.Error())
 	}
 
 	return NwsSite{Location: l, NwsSiteAttributes: a}, nil
@@ -67,7 +67,7 @@ func NewNwsSiteAttributes(la LocationAttributes) (NwsSiteAttributes, error) {
 // Methods to Support LocationCreator Interface
 // ////////////////////////////////////////////
 
-func (l NwsSite) LocationInfo() *Location {
+func (l NwsSite) LocationInfo() Location {
 	return l.Location
 }
 

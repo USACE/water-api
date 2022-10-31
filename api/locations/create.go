@@ -14,7 +14,7 @@ type (
 	// LocationCreator defines the behaviors that must be supported for all
 	// location types to create records in the database using the Create method
 	LocationCreator interface {
-		LocationInfo() *Location
+		LocationInfo() Location
 		CreateAttributes(tx *pgx.Tx, locationID *uuid.UUID) error
 	}
 
