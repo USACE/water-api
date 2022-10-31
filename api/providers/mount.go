@@ -17,5 +17,5 @@ func Mount(conn *pgxpool.Pool, e *echo.Echo, config *app.Config) {
 	public := e.Group("")
 
 	public.GET("/providers", s.ListProviders)
-
+	public.GET("/datasources", s.ListDatasources)
 }
