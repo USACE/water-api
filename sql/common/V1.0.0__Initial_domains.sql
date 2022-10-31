@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS location (
 
 CREATE TABLE IF NOT EXISTS cwms_location (
     location_id UUID NOT NULL REFERENCES location(id) ON DELETE CASCADE,
-    name VARCHAR,
+    name VARCHAR NOT NULL,
     public_name VARCHAR,
     kind_id UUID NOT NULL REFERENCES cwms_location_kind(id)
 );
