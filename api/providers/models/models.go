@@ -9,8 +9,8 @@ import (
 )
 
 type Provider struct {
-	Slug string `json:"provider" db:"provider"`
-	Name string `json:"provider_name" db:"provider_name"`
+	Slug string `json:"provider" db:"slug"`
+	Name string `json:"provider_name" db:"name"`
 }
 
 type Datasource struct {
