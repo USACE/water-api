@@ -8,6 +8,345 @@
 	},
 	"item": [
 		{
+			"name": "Datasources",
+			"item": [
+				{
+					"name": "List Datasources",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/datasources",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"datasources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Datasources (cwms-location)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/datasources?datasource_type=cwms-location",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"datasources"
+							],
+							"query": [
+								{
+									"key": "datasource_type",
+									"value": "cwms-location"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Datasource (cwms-location, lrn)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/datasources?datasource_type=cwms-location&provider=lrn",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"datasources"
+							],
+							"query": [
+								{
+									"key": "datasource_type",
+									"value": "cwms-location"
+								},
+								{
+									"key": "provider",
+									"value": "lrn"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Datasource (cwms-level, mvp)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/datasources?datasource_type=cwms-level&provider=mvp",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"datasources"
+							],
+							"query": [
+								{
+									"key": "datasource_type",
+									"value": "cwms-level"
+								},
+								{
+									"key": "provider",
+									"value": "mvp"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Datasource (usgs-site, usgs)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/datasources?datasource_type=usgs-site&provider=usgs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"datasources"
+							],
+							"query": [
+								{
+									"key": "datasource_type",
+									"value": "usgs-site"
+								},
+								{
+									"key": "provider",
+									"value": "usgs"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Datasource (nws-site, noaa-nws)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/datasources?datasource_type=nws-site&provider=noaa-nws",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"datasources"
+							],
+							"query": [
+								{
+									"key": "datasource_type",
+									"value": "nws-site"
+								},
+								{
+									"key": "provider",
+									"value": "noaa-nws"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Offices",
 			"item": [
 				{
@@ -44,7 +383,7 @@
 			]
 		},
 		{
-			"name": "Locations",
+			"name": "Locations-old",
 			"item": [
 				{
 					"name": "List Locations",
@@ -2179,6 +2518,497 @@
 							"path": [
 								"visualizations",
 								"{{new_visualization_slug}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Locations - CWMS",
+			"item": [
+				{
+					"name": "List Locations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Location (One)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provider\": \"mvp\",\n    \"datasource_type\": \"cwms-location\",\n    \"slug\": \"regression-test-cwms-location-create-1\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    },\n    \"attributes\": {\n        \"name\": \"Regression Test CWMS Location Create One\",\n        \"public_name\": \"Regression Test CWMS Location Create One\",\n        \"kind\": \"PROJECT\"\n    },\n    \"state\": \"mn\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Locations (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-2\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.222,\n                37.222\n            ]\n        },\n        \"attributes\": {\n            \"name\": \"Regression Test CWMS Location Create #2\",\n            \"public_name\": \"Regression Test CWMS Location Create #2\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-3\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.333,\n                37.333\n            ]\n        },\n        \"attributes\": {\n            \"name\": \"Regression Test CWMS Location Create #3\",\n            \"public_name\": \"Regression Test CWMS Location Create #3\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync Locations (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-2\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.2,\n                37.2\n            ]\n        },\n        \"attributes\": {\n            \"name\": \"Regression Test CWMS Location Create #2\",\n            \"public_name\": \"Regression Test CWMS Location Create #2 - Renamed after sync\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-3\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.3,\n                37.3\n            ]\n        },\n        \"attributes\": {\n            \"name\": \"Regression Test CWMS Location Create #3\",\n            \"public_name\": \"Regression Test CWMS Location Create #3 - Renamed after sync\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/locations/sync",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"locations",
+								"sync"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Location",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provider\": \"mvp\",\n    \"datasource_type\": \"cwms-location\",\n    \"slug\": \"regression-test-cwms-location-create-3\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.999,\n            37.999\n        ]\n    },\n    \"attributes\": {\n        \"name\": \"Regression Test CWMS Location Create #3\",\n        \"public_name\": \"Regression Test CWMS Location Create #3 - Renamed after PUT\",\n        \"kind\": \"PROJECT\"\n    },\n    \"state\": \"mn\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/locations/regression-test-cwms-location-create-3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"locations",
+								"regression-test-cwms-location-create-3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Location",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/locations/regression-test-cwms-location-create-3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"locations",
+								"regression-test-cwms-location-create-3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Locations - USGS",
+			"item": [
+				{
+					"name": "List Locations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Location (One)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provider\": \"usgs\",\n    \"datasource_type\": \"usgs-site\",\n    \"slug\": \"01091500\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city\",\n        \"site_number\": \"01091500\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Locations (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provider\": \"usgs\",\n    \"datasource_type\": \"usgs-site\",\n    \"slug\": \"01091500\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city\",\n        \"site_number\": \"01091500\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Providers",
+			"item": [
+				{
+					"name": "List Providers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers"
 							]
 						}
 					},
