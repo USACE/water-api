@@ -1,12 +1,7 @@
 package locations
 
 import (
-	"context"
 	"fmt"
-
-	"github.com/USACE/water-api/api/helpers"
-	"github.com/google/uuid"
-	"github.com/jackc/pgx/v4"
 )
 
 type (
@@ -14,44 +9,30 @@ type (
 	// CwmsLocation holds CwmsLocation-specific attributes and a pointer to the underlying Location
 	// It allows for specific implementation of CRUD Interfaces
 	CwmsLocation struct {
-		Location               Location
+		Info                   LocationInfo // private attribute
 		CwmsLocationAttributes CwmsLocationAttributes
 	}
 
 	// CwmsLocation holds CwmsLocation-specific attributes
 	CwmsLocationAttributes struct {
-		Name       string
 		PublicName string
 		Kind       string
 	}
 )
 
-func NewCwmsLocation(l Location) (CwmsLocation, error) {
+func NewCwmsLocation(l LocationInfo) (CwmsLocation, error) {
 
 	cla, err := NewCwmsLocationAttributes(l.Attributes)
 	if err != nil {
 		return CwmsLocation{}, fmt.Errorf("[%v]: error creating CwmsLocationAttributes from provided information; %s", l, err.Error())
 	}
 
-	l.Slug = helpers.Slugify(cla.Name) // enforce name attribute used in slug creation
-
-	return CwmsLocation{Location: l, CwmsLocationAttributes: cla}, nil
+	return CwmsLocation{Info: l, CwmsLocationAttributes: cla}, nil
 }
 
 func NewCwmsLocationAttributes(la LocationAttributes) (CwmsLocationAttributes, error) {
 
 	var cla CwmsLocationAttributes
-
-	// Name Attribute
-	a1, ok := la["name"]
-	if !ok {
-		return CwmsLocationAttributes{}, fmt.Errorf("attribute 'name' is required")
-	}
-	name, ok := a1.(string)
-	if !ok {
-		return CwmsLocationAttributes{}, fmt.Errorf("attribute 'name' must be a string")
-	}
-	cla.Name = name
 
 	// Public Name
 	a2, ok := la["public_name"]
@@ -80,22 +61,14 @@ func NewCwmsLocationAttributes(la LocationAttributes) (CwmsLocationAttributes, e
 }
 
 // ////////////////////////////////////////////
-// Methods to Support LocationCreator Interface
+// Methods to Support Location Interface
 // ////////////////////////////////////////////
 
-func (l CwmsLocation) LocationInfo() Location {
-	return l.Location
-}
-
-func (l CwmsLocation) CreateAttributes(tx *pgx.Tx, locationID *uuid.UUID) error {
-	t := *tx
-	if _, err := t.Exec(
-		context.Background(),
-		`INSERT INTO cwms_location (location_id, name, public_name, kind_id) VALUES
-		    ($1, $2, $3, (SELECT id FROM cwms_location_kind WHERE UPPER(name) = UPPER($4)))`,
-		locationID, l.CwmsLocationAttributes.Name, l.CwmsLocationAttributes.PublicName, l.CwmsLocationAttributes.Kind,
-	); err != nil {
-		return err
+func (cl CwmsLocation) LocationInfo() *LocationInfo {
+	li := LocationInfo(cl.Info)
+	li.Attributes = LocationAttributes{
+		"public_name": cl.CwmsLocationAttributes.PublicName,
+		"kind":        cl.CwmsLocationAttributes.Kind,
 	}
-	return nil
+	return &li
 }

@@ -6,27 +6,10 @@ import (
 	"github.com/USACE/water-api/api/helpers"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-type (
-	// LocationCreator defines the behaviors that must be supported for all
-	// location types to create records in the database using the Create method
-	LocationCreator interface {
-		LocationInfo() Location
-		CreateAttributes(tx *pgx.Tx, locationID *uuid.UUID) error
-	}
-
-	// LocationCreatorCollection holds LocationCreator interfaces
-	// to support different behaviors for locations that have different
-	// underlying datasource_type properties
-	LocationCreatorCollection struct {
-		Items []LocationCreator
-	}
-)
-
-func (cc LocationCreatorCollection) Create(db *pgxpool.Pool) ([]Location, error) {
+func (cc LocationCollection) Create(db *pgxpool.Pool) ([]Location, error) {
 
 	tx, err := db.Begin(context.Background())
 	if err != nil {
@@ -44,7 +27,7 @@ func (cc LocationCreatorCollection) Create(db *pgxpool.Pool) ([]Location, error)
 	for _, n := range cc.Items {
 		info := n.LocationInfo()
 		// Get Unique Slug for Each Location
-		slug, err := helpers.GetUniqueSlug(info.Slug, slugMap)
+		slug, err := helpers.GetUniqueSlug(info.Code, slugMap)
 		if err != nil {
 			return make([]Location, 0), err
 		}
@@ -53,7 +36,7 @@ func (cc LocationCreatorCollection) Create(db *pgxpool.Pool) ([]Location, error)
 
 		rows, err := tx.Query(
 			context.Background(),
-			`INSERT INTO location (datasource_id, slug, geometry, state_id)
+			`INSERT INTO location (datasource_id, slug, geometry, state_id, attributes)
 			 VALUES (
 			    (
 					SELECT id 
@@ -67,9 +50,10 @@ func (cc LocationCreatorCollection) Create(db *pgxpool.Pool) ([]Location, error)
 					SELECT gid
 				      FROM tiger_data.state_all
 				     WHERE UPPER(stusps) = UPPER($5)
-				)
+				),
+				$6
 			 ) RETURNING id`,
-			info.DatasourceType, info.Provider, slug, info.Geometry.EWKT(6), info.State,
+			info.DatasourceType, info.Provider, slug, info.Geometry.EWKT(6), info.State, info.Attributes,
 		)
 		if err != nil {
 			tx.Rollback(context.Background())
@@ -77,14 +61,6 @@ func (cc LocationCreatorCollection) Create(db *pgxpool.Pool) ([]Location, error)
 		}
 		var id uuid.UUID
 		if err := pgxscan.ScanOne(&id, rows); err != nil {
-			tx.Rollback(context.Background())
-			return make([]Location, 0), err
-		}
-
-		// CreateAttributes. Delegated to each different kind of location
-		// Pass a transaction pointer and the location_id
-		// and let the Createable take care of the rest.
-		if err := n.CreateAttributes(&tx, &id); err != nil {
 			tx.Rollback(context.Background())
 			return make([]Location, 0), err
 		}

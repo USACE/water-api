@@ -65,32 +65,13 @@ CREATE TABLE IF NOT EXISTS location (
     id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     datasource_id UUID NOT NULL REFERENCES datasource(id),
     slug VARCHAR UNIQUE NOT NULL,
+    code VARCHAR NOT NULL,
     geometry geometry NOT NULL, 
     state_id INTEGER REFERENCES tiger_data.state_all(gid),
     create_date TIMESTAMPTZ NOT NULL DEFAULT now(),
-    update_date TIMESTAMPTZ
-);
-
-----------------
--- CWMS LOCATION
-----------------
-
-CREATE TABLE IF NOT EXISTS cwms_location (
-    location_id UUID NOT NULL REFERENCES location(id) ON DELETE CASCADE,
-    name VARCHAR NOT NULL,
-    public_name VARCHAR,
-    kind_id UUID NOT NULL REFERENCES cwms_location_kind(id)
-);
-
-----------------
--- USGS SITE
-----------------
-
-CREATE TABLE IF NOT EXISTS usgs_site (
-    location_id UUID NOT NULL REFERENCES location(id) ON DELETE CASCADE,
-    site_number VARCHAR UNIQUE NOT NULL,
-    station_name VARCHAR NOT NULL,
-    site_type_id UUID NOT NULL REFERENCES usgs_site_type(id)
+    update_date TIMESTAMPTZ,
+    attributes JSONB NOT NULL DEFAULT "{}"::jsonb,
+    CONSTRAINT datasource_unique_code UNIQUE(datasource_id, code)
 );
 
 
@@ -117,16 +98,6 @@ CREATE TABLE IF NOT EXISTS usgs_measurements (
     usgs_site_parameters_id UUID NOT NULL REFERENCES usgs_site_parameters (id) ON DELETE CASCADE,
     CONSTRAINT site_parameters_unique_time UNIQUE(usgs_site_parameters_id, time),
     PRIMARY KEY (usgs_site_parameters_id, time)
-);
-
-----------------
--- NWS SITE
-----------------
-
-CREATE TABLE IF NOT EXISTS nws_site (
-    location_id UUID NOT NULL REFERENCES location(id) ON DELETE CASCADE,
-    name VARCHAR NOT NULL,
-    nws_li VARCHAR UNIQUE NOT NULL
 );
 
 -- watershed
