@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "d2f481c3-387a-45bf-8120-73cd8a45c8c7",
+		"_postman_id": "a2a16366-817f-470b-b2ec-c70cc1fb313a",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20040250"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -2602,7 +2601,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"provider\": \"mvp\",\n    \"datasource_type\": \"cwms-location\",\n    \"slug\": \"regression-test-cwms-location-create-1\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    },\n    \"attributes\": {\n        \"name\": \"Regression Test CWMS Location Create One\",\n        \"public_name\": \"Regression Test CWMS Location Create One\",\n        \"kind\": \"PROJECT\"\n    },\n    \"state\": \"mn\"\n}",
+							"raw": "{\n    \"provider\": \"mvp\",\n    \"datasource_type\": \"cwms-location\",\n    \"slug\": \"regression-test-cwms-location-create-1\",\n    \"code\": \"Regression Test CWMS Location Create One\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    },\n    \"attributes\": {\n        \"public_name\": \"Regression Test CWMS Location Create One\",\n        \"kind\": \"PROJECT\"\n    },\n    \"state\": \"mn\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2649,7 +2648,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-2\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.222,\n                37.222\n            ]\n        },\n        \"attributes\": {\n            \"name\": \"Regression Test CWMS Location Create #2\",\n            \"public_name\": \"Regression Test CWMS Location Create #2\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-3\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.333,\n                37.333\n            ]\n        },\n        \"attributes\": {\n            \"name\": \"Regression Test CWMS Location Create #3\",\n            \"public_name\": \"Regression Test CWMS Location Create #3\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    }\n]",
+							"raw": "[\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-2\",\n        \"code\": \"Regression Test CWMS Location Create #2\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.222,\n                37.222\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test CWMS Location Create #2\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-3\",\n        \"code\": \"Regression Test CWMS Location Create #3\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.333,\n                37.333\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test CWMS Location Create #3\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2696,7 +2695,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-2\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.2,\n                37.2\n            ]\n        },\n        \"attributes\": {\n            \"name\": \"Regression Test CWMS Location Create #2\",\n            \"public_name\": \"Regression Test CWMS Location Create #2 - Renamed after sync\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-3\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.3,\n                37.3\n            ]\n        },\n        \"attributes\": {\n            \"name\": \"Regression Test CWMS Location Create #3\",\n            \"public_name\": \"Regression Test CWMS Location Create #3 - Renamed after sync\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    }\n]",
+							"raw": "[\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-2\",\n        \"code\": \"Regression Test CWMS Location Create #2\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.2,\n                37.2\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test CWMS Location Create #2 - Renamed after sync\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-3\",\n        \"code\": \"Regression Test CWMS Location Create #3\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.3,\n                37.3\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test CWMS Location Create #3 - Renamed after sync\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2744,7 +2743,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"provider\": \"mvp\",\n    \"datasource_type\": \"cwms-location\",\n    \"slug\": \"regression-test-cwms-location-create-3\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.999,\n            37.999\n        ]\n    },\n    \"attributes\": {\n        \"name\": \"Regression Test CWMS Location Create #3\",\n        \"public_name\": \"Regression Test CWMS Location Create #3 - Renamed after PUT\",\n        \"kind\": \"PROJECT\"\n    },\n    \"state\": \"mn\"\n}\n",
+							"raw": "{\n    \"provider\": \"mvp\",\n    \"datasource_type\": \"cwms-location\",\n    \"slug\": \"regression-test-cwms-location-create-3\",\n    \"code\": \"Regression Test CWMS Location Create #3\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.999,\n            37.999\n        ]\n    },\n    \"attributes\": {\n        \"public_name\": \"Regression Test CWMS Location Create #3 - Renamed after PUT\",\n        \"kind\": \"PROJECT\"\n    },\n    \"state\": \"mn\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2893,7 +2892,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"provider\": \"usgs\",\n    \"datasource_type\": \"usgs-site\",\n    \"slug\": \"01091500\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city\",\n        \"site_number\": \"01091500\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n}",
+							"raw": "{\n    \"provider\": \"usgs\",\n    \"datasource_type\": \"usgs-site\",\n    \"slug\": \"01091400\",\n    \"code\": \"01091400\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.111,\n            37.111\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city #1\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2901,13 +2900,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/providers/mvp/locations",
+							"raw": "{{base_url}}/providers/usgs/locations",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"providers",
-								"mvp",
+								"usgs",
 								"locations"
 							]
 						}
@@ -2940,7 +2939,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"provider\": \"usgs\",\n    \"datasource_type\": \"usgs-site\",\n    \"slug\": \"01091500\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city\",\n        \"site_number\": \"01091500\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n}",
+							"raw": "[{\n    \"provider\": \"usgs\",\n    \"datasource_type\": \"usgs-site\",\n    \"slug\": \"01091500\",\n    \"code\": \"01091500\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.222,\n            37.222\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city #2\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n},\n{\n    \"provider\": \"usgs\",\n    \"datasource_type\": \"usgs-site\",\n    \"slug\": \"01091600\",\n    \"code\": \"01091600\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.333,\n            37.333\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city #3\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n}]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2948,13 +2947,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/providers/mvp/locations",
+							"raw": "{{base_url}}/providers/usgs/locations",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"providers",
-								"mvp",
+								"usgs",
 								"locations"
 							]
 						}

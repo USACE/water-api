@@ -36,7 +36,7 @@ func (cc LocationCollection) Create(db *pgxpool.Pool) ([]Location, error) {
 
 		rows, err := tx.Query(
 			context.Background(),
-			`INSERT INTO location (datasource_id, slug, geometry, state_id, attributes)
+			`INSERT INTO location (datasource_id, slug, code, geometry, state_id, attributes)
 			 VALUES (
 			    (
 					SELECT id 
@@ -46,14 +46,15 @@ func (cc LocationCollection) Create(db *pgxpool.Pool) ([]Location, error) {
 				),
 				$3,
 				$4,
+				$5,
 				(
 					SELECT gid
 				      FROM tiger_data.state_all
-				     WHERE UPPER(stusps) = UPPER($5)
+				     WHERE UPPER(stusps) = UPPER($6)
 				),
-				$6
+				$7
 			 ) RETURNING id`,
-			info.DatasourceType, info.Provider, slug, info.Geometry.EWKT(6), info.State, info.Attributes,
+			info.DatasourceType, info.Provider, slug, info.Code, info.Geometry.EWKT(6), info.State, info.Attributes,
 		)
 		if err != nil {
 			tx.Rollback(context.Background())
