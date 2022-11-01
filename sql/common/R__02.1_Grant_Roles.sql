@@ -18,16 +18,13 @@ GRANT SELECT ON tiger_data.state_all TO water_user;
 
 GRANT SELECT ON
     config,
-    cwms_location,
     cwms_location_kind,
     datasource,
     datasource_type,
     location,    
-    nws_site,
     provider,
     timeseries,
     upload_status,  
-    usgs_site,
     usgs_huc2,
     usgs_huc2_simple,
     usgs_huc4,
@@ -53,16 +50,13 @@ TO water_reader;
 -- Tables specific to water app
 GRANT INSERT,UPDATE,DELETE ON
     config,
-    cwms_location,
     cwms_location_kind,
     datasource,
     datasource_type,
     location,    
-    nws_site,
     provider,
     timeseries,
     upload_status,
-    usgs_site,
     usgs_measurements,
     usgs_site_parameters,
     usgs_parameter,

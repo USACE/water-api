@@ -1,22 +1,22 @@
 
-INSERT INTO cwms_location_kind (id, name) VALUES
-	('83726bc6-82ca-423b-97d2-0309bee76fa7','SITE'),
-	('460ea73b-c65e-4fc8-907a-6e6fd2907a99','PROJECT'),
-	('c5841fa2-f6cf-4feb-abd6-48798b6cbd48','STREAM'),
-	('1e77acaf-fdee-4e7c-b659-101bce76a229','STREAM_LOCATION'),
-	('a8ab21ac-ca4c-48d3-8f84-27d920faad14','PUMP'),
-	('3598d16a-7ac3-4b94-8f7e-cf73d3ac03c7','EMBANKMENT'),
-	('b9494fd2-7504-4412-8216-b38a6d1d0552','OUTLET'),
-	('d61950ae-7df0-4fd2-8f03-570ac9fd23bf','GATE'),
-	('6bfa45de-1a20-48ba-9ca6-ab267b5e81c7','BASIN'),
-	('c7dfa48d-f601-4489-a96b-3d51406e4701','LOCK'),
-	('b4c79a9c-0c3f-4934-9270-a611489ed17b','TURBINE'),
-	('78a97f08-de50-49e6-b664-5fded7dcb490','STREAM_REACH');
+INSERT INTO cwms_location_kind (name) VALUES
+	('SITE'),
+	('PROJECT'),
+	('STREAM'),
+	('STREAM_LOCATION'),
+	('PUMP'),
+	('EMBANKMENT'),
+	('OUTLET'),
+	('GATE'),
+	('BASIN'),
+	('LOCK'),
+	('TURBINE'),
+	('STREAM_REACH');
 
-INSERT INTO usgs_site_type (id, abbreviation, name) VALUES
-	('896c45b0-e458-4621-840d-512f962427cb','LK', 'Lake, Reservoir, Impoundment'),
-    ('c34cb071-9163-4240-83fc-e0e691f61523','ST', 'Stream'),
-    ('de46a4ab-b9ae-49d0-bac0-04fa07debc3d','ST-TS', 'Tidal Stream');
+INSERT INTO usgs_site_type (abbreviation, name) VALUES
+	('LK', 'Lake, Reservoir, Impoundment'),
+    ('ST', 'Stream'),
+    ('ST-TS', 'Tidal Stream');
 
 INSERT INTO provider (id, name, slug, parent_id) VALUES
     ('91cf44dc-6384-4622-bd9f-0f36e4343413','Great Lakes and Ohio River Division','lrd',Null),

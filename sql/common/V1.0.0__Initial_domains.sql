@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS config (
 ------------------------
 
 CREATE TABLE IF NOT EXISTS cwms_location_kind (
-    id UUID PRIMARY KEY NOT NULL,
     name VARCHAR UNIQUE NOT NULL
 );
 
@@ -20,7 +19,6 @@ CREATE TABLE IF NOT EXISTS cwms_location_kind (
 -------------------
 
 CREATE TABLE IF NOT EXISTS usgs_site_type (
-    id UUID PRIMARY KEY NOT NULL,
     abbreviation VARCHAR UNIQUE NOT NULL,
     name VARCHAR UNIQUE NOT NULL
 );
@@ -70,7 +68,7 @@ CREATE TABLE IF NOT EXISTS location (
     state_id INTEGER REFERENCES tiger_data.state_all(gid),
     create_date TIMESTAMPTZ NOT NULL DEFAULT now(),
     update_date TIMESTAMPTZ,
-    attributes JSONB NOT NULL DEFAULT "{}"::jsonb,
+    attributes JSONB NOT NULL DEFAULT '{}'::jsonb,
     CONSTRAINT datasource_unique_code UNIQUE(datasource_id, code)
 );
 

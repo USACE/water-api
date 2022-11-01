@@ -82,17 +82,15 @@ for state in states.keys():
     #         print(k, '=>', v)
 
     loc_sql = f"-- {state} sites\n"
-    loc_sql += (
-        "INSERT INTO location (id, datasource_id, slug, geometry, state_id) VALUES\n"
-    )
+    loc_sql += "INSERT INTO location (datasource_id, slug, code, geometry, state_id, attributes) VALUES\n"
 
-    usgs_site_sql = ""
-    usgs_site_sql += "INSERT INTO usgs_site (location_id, site_number, station_name, site_type_id) VALUES\n"
+    # usgs_site_sql = ""
+    # usgs_site_sql += "INSERT INTO usgs_site (location_id, site_number, station_name, site_type_id) VALUES\n"
     last_line = len(result)
 
     for idx, line in enumerate(result):
 
-        new_loc_id = uuid.uuid4()
+        # new_loc_id = uuid.uuid4()
 
         site_type = line["site_tp_cd"].strip()
 
@@ -107,9 +105,11 @@ for state in states.keys():
         # except:
         #     vertical_datum_id = vertical_datum["UNKNOWN"]
 
-        loc_sql += f"('{new_loc_id}', '77dc8cf9-5804-434a-a53f-8b65c0358a6b', '{line['site_no'].strip()}', ST_GeomFromText('POINT({line['dec_long_va'].strip()} {line['dec_lat_va'].strip()})',4326), {states[state]})"
+        loc_sql += f"""('77dc8cf9-5804-434a-a53f-8b65c0358a6b', '{line['site_no'].strip()}', '{line['site_no'].strip()}',"""
+        loc_sql += f"""ST_GeomFromText('POINT({line['dec_long_va'].strip()} {line['dec_lat_va'].strip()})',4326), {states[state]},"""
+        loc_sql += f"""'{{"station_name":"{name}","site_type":"{site_type}"}}')"""
 
-        usgs_site_sql += f"('{new_loc_id}', '{line['site_no'].strip()}', '{name}', '{site_types[site_type]}')"
+        # usgs_site_sql += f"('{new_loc_id}', '{line['site_no'].strip()}', '{name}', '{site_types[site_type]}')"
 
         # loc_sql += f"('{line['site_no'].strip()}','{name}', ST_GeomFromText('POINT({line['dec_long_va'].strip()} {line['dec_lat_va'].strip()})',4326), "
         # loc_sql += f"{elevation}, {horizontal_datum_id},'{vertical_datum_id}', {huc}, '{state}')"
@@ -117,14 +117,14 @@ for state in states.keys():
         # handle last set of values
         if idx + 1 == last_line:
             loc_sql += ";"
-            usgs_site_sql += ";"
+            # usgs_site_sql += ";"
         else:
             loc_sql += ","
-            usgs_site_sql += ","
+            # usgs_site_sql += ","
 
         loc_sql += "\n"
-        usgs_site_sql += "\n"
+        # usgs_site_sql += "\n"
 
     print(loc_sql)
 
-    print(usgs_site_sql)
+    # print(usgs_site_sql)
