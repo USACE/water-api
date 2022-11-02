@@ -14,6 +14,7 @@ import (
 	"github.com/USACE/water-api/api/middleware"
 	"github.com/USACE/water-api/api/nws"
 	"github.com/USACE/water-api/api/providers"
+	"github.com/USACE/water-api/api/timeseries"
 	"github.com/USACE/water-api/api/usgs"
 	"github.com/USACE/water-api/api/visualizations"
 	"github.com/USACE/water-api/api/watersheds"
@@ -68,6 +69,7 @@ func main() {
 	usgs.Mount(st.Connection, e, &config)                   // USGS
 	visualizations.Mount(st.Connection, e, &config)         // Visualizations
 	watersheds.Mount(st.Connection, e, &config)             // Watersheds
+	timeseries.Mount(st.Connection, e, &config)             // Timeseries
 
 	// Start Server
 	s := &http2.Server{

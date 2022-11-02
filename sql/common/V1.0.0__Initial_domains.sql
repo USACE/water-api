@@ -154,6 +154,15 @@ CREATE TABLE IF NOT EXISTS timeseries (
     CONSTRAINT timeseries_unique_datasource UNIQUE(datasource_id, datasource_key)
 );
 
+-- timeseries_measurement
+CREATE TABLE IF NOT EXISTS timeseries_measurement (
+    timeseries_id UUID NOT NULL REFERENCES timeseries (id) ON DELETE CASCADE,
+    time TIMESTAMPTZ NOT NULL,
+    value DOUBLE PRECISION NOT NULL,
+    CONSTRAINT timeseries_id_unique_time UNIQUE(timeseries_id, time),
+    PRIMARY KEY (timeseries_id, time)
+);
+
 --------------
 -- CHART
 --------------

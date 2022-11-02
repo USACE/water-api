@@ -75,10 +75,10 @@ func Mount(conn *pgxpool.Pool, e *echo.Echo, config *app.Config, chartserver *ch
 	// States
 	public.GET("/states", s.ListStates)
 
-	// Timeseries
-	public.GET("/timeseries", s.ListTimeseries)
-	key.POST("/timeseries/measurements", s.CreateOrUpdateTimeseriesMeasurements)
-	key.POST("/timeseries", s.CreateTimeseries) // (airflow - array of objects in payload)
+	// // Timeseries
+	// public.GET("/timeseries", s.ListTimeseries)
+	// key.POST("/timeseries/measurements", s.CreateOrUpdateTimeseriesMeasurements)
+	// key.POST("/timeseries", s.CreateTimeseries) // (airflow - array of objects in payload)
 	// public.POST "/:provider_slug/timeseries"
 	// "/levels/latest/config/:owner"
 
