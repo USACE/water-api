@@ -80,12 +80,10 @@ nws_site_sql = ""
 for state in ["CA", "FL", "OH", "TN", "MN", "WV"]:
     last_line = len(result)
     loc_sql += f"\n-- {state} NWS Locations"
-    loc_sql += (
-        "\nINSERT INTO location (datasource_id, slug, geometry, state_id) VALUES\n"
-    )
+    loc_sql += "\nINSERT INTO location (datasource_id, slug, code, geometry, state_id, attributes) VALUES\n"
 
-    nws_site_sql += f"\n-- {state} NWS Sites"
-    nws_site_sql += "\nINSERT INTO nws_site (location_id, name, nws_li) VALUES\n"
+    # nws_site_sql += f"\n-- {state} NWS Sites"
+    # nws_site_sql += "\nINSERT INTO nws_site (location_id, name, nws_li) VALUES\n"
 
     for idx, line in enumerate(result):
 
@@ -123,17 +121,17 @@ for state in ["CA", "FL", "OH", "TN", "MN", "WV"]:
                     else 0
                 )
 
-                loc_sql += f"(nws_site_datasource_id, '{nws_li.lower()}', ST_GeomFromText('POINT({longitude} {latitude})',4326), (SELECT gid from tiger_data.state_all where lower(stusps) = '{state.lower()}')),\n"
+                loc_sql += f"""(nws_site_datasource_id, '{nws_li.lower()}', '{nws_li.lower()}', ST_GeomFromText('POINT({longitude} {latitude})',4326), (SELECT gid from tiger_data.state_all where lower(stusps) = '{state.lower()}'), '{{"name":"{name}"}}'),\n"""
 
-                nws_site_sql += f"((SELECT id from location where slug = '{nws_li}'), '{name}', '{nws_li}'),\n"
+                # nws_site_sql += f"((SELECT id from location where slug = '{nws_li}'), '{name}', '{nws_li}'),\n"
 
     # semi-colon on last line
     loc_sql = loc_sql[0:-2] + ";"
-    nws_site_sql = nws_site_sql[0:-2] + ";"
+    # nws_site_sql = nws_site_sql[0:-2] + ";"
 
     # last_state = state
 
 print(loc_sql)
-print(nws_site_sql)
+# print(nws_site_sql)
 
 print("\n\nEND$$;")
