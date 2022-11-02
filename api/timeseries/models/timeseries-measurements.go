@@ -3,7 +3,6 @@ package models
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/georgysavva/scany/pgxscan"
@@ -117,7 +116,6 @@ func CreateOrUpdateTimeseriesMeasurements(db *pgxpool.Pool, c TimeseriesCollecti
 	for i := range timeseriesIdsUpdated {
 
 		timeseriesId := timeseriesIdsUpdated[i]
-		fmt.Println(timeseriesId)
 
 		type Row struct {
 			T time.Time
@@ -131,8 +129,6 @@ func CreateOrUpdateTimeseriesMeasurements(db *pgxpool.Pool, c TimeseriesCollecti
 			println(err.Error())
 			return nil, err
 		}
-
-		fmt.Println(maxTime)
 
 		_, err := tx.Exec(
 			context.Background(),
