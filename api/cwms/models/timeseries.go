@@ -18,13 +18,13 @@ import (
 //	Creates a Timeseries may or may not have a Measurements struct.  A measurements struct has two fields. Times, Values. Each is an array with zero or more values []
 //	Creates metadata that will be associated with all related timeseries measurements
 type Timeseries struct {
-	ID             *uuid.UUID    `json:"id,omitempty"`
-	Provider       string        `json:"provider" db:"provider"`
-	DatasourceType string        `json:"datasource_type" db:"datasource_type"`
-	Key            string        `json:"key"`
-	LatestTime     *time.Time    `json:"latest_time,omitempty"`
-	LatestValue    *float64      `json:"latest_value,omitempty"`
-	Measurements   *Measurements `json:"measurements,omitempty"`
+	ID           *uuid.UUID    `json:"id,omitempty"`
+	Provider     string        `json:"provider" db:"provider"`
+	Datatype     string        `json:"datatype" db:"datatype"`
+	Key          string        `json:"key"`
+	LatestTime   *time.Time    `json:"latest_time,omitempty"`
+	LatestValue  *float64      `json:"latest_value,omitempty"`
+	Measurements *Measurements `json:"measurements,omitempty"`
 }
 
 type TimeseriesCollection struct {
@@ -44,16 +44,16 @@ func (c *TimeseriesCollection) UnmarshalJSON(b []byte) error {
 }
 
 type TimeseriesFilter struct {
-	DatasourceType *string `json:"datasource_type" query:"datasource_type"`
-	Provider       *string `query:"provider"`
-	OnlyMapped     bool    `query:"only_mapped"`
-	Q              *string `query:"q"`
+	Datatype   *string `json:"datatype" query:"datatype"`
+	Provider   *string `query:"provider"`
+	OnlyMapped bool    `query:"only_mapped"`
+	Q          *string `query:"q"`
 }
 
 func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 
 	q := sq.Select(
-		`dt.slug 			AS datasource_type,
+		`dt.slug 			AS datatype,
 		 p.slug  			AS provider,
 		 t.datasource_key 	AS key,
 		 t.latest_time,
@@ -63,7 +63,7 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 	).Join(
 		"datasource d ON d.id = t.datasource_id",
 	).Join(
-		"datasource_type dt ON dt.id = d.datasource_type_id",
+		"datatype dt ON dt.id = d.datatype_id",
 	).Join(
 		"provider p ON p.id = d.provider_id",
 	)
@@ -74,9 +74,9 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 		if f.Provider != nil {
 			q = q.Where("lower(p.slug) = lower(?)", *f.Provider)
 		}
-		// Filter by DatasourceType
-		if f.DatasourceType != nil {
-			q = q.Where("lower(dt.slug) = lower(?)", *f.DatasourceType)
+		// Filter by Datatype
+		if f.Datatype != nil {
+			q = q.Where("lower(dt.slug) = lower(?)", *f.Datatype)
 		}
 		// Filter by IsMapped
 		if f.OnlyMapped {
@@ -128,7 +128,7 @@ func CreateTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Timeseries, e
 
 	queryDataSourceID := `
 		SELECT d.id FROM datasource d 
-		JOIN datasource_type dt ON dt.id = d.datasource_type_id 
+		JOIN datatype dt ON dt.id = d.datatype_id 
 		JOIN provider p ON p.id = d.provider_id 
 		WHERE lower(p.slug) = lower($2) AND lower(dt.slug) = lower($1)
 	`
@@ -140,7 +140,7 @@ func CreateTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Timeseries, e
 			VALUES((`+queryDataSourceID+`), $3)	
 			ON CONFLICT DO NOTHING		
 			RETURNING id`,
-			t.DatasourceType, t.Provider, t.Key,
+			t.Datatype, t.Provider, t.Key,
 		)
 		if err != nil {
 			return make([]Timeseries, 0), err

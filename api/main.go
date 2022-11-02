@@ -60,7 +60,8 @@ func main() {
 	features.Use(middleware.PgFeatureservProxy(config.PgFeatureservUrl))
 
 	// Mount Routes
-	cwms.Mount(st.Connection, e, &config, chartserver)      // CWMS
+	cwms.Mount(st.Connection, e, &config, chartserver) // CWMS
+	// datasources.Mount(st.Connection, e, &config)            // Datasources
 	locations.Mount(st.Connection, e, &config, chartserver) // Locations
 	nws.Mount(st.Connection, e, &config)                    // National Weather Service
 	providers.Mount(st.Connection, e, &config)              // Providers

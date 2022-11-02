@@ -18,7 +18,7 @@ func (s Store) ListProviders(c echo.Context) error {
 // ListDatasources
 func (s Store) ListDatasources(c echo.Context) error {
 	p := c.QueryParam("provider")
-	d := c.QueryParam("datasource_type")
+	d := c.QueryParam("datatype")
 	dd, err := models.ListDatasources(s.Connection, p, d)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())

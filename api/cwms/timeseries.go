@@ -10,7 +10,7 @@ import (
 )
 
 func (s Store) ListTimeseries(c echo.Context) error {
-	// Get filters from query provider= or datasource_type=
+	// Get filters from query provider= or datatype=
 	var f models.TimeseriesFilter
 	if err := c.Bind(&f); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())

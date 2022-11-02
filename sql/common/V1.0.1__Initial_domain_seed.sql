@@ -75,7 +75,7 @@ INSERT INTO provider (id, name, slug, parent_id) VALUES
 
 
 
-INSERT into datasource_type(id, slug, name, uri) VALUES
+INSERT into datatype(id, slug, name, uri) VALUES
     ('a138e363-30ea-4e0d-8d8f-cce03cb8e1d0', 'cwms-timeseries', 'CWMS Timeseries', 'https://cwms-data.usace.army.mil/cwms-data/timeseries'),
     ('97920d27-ee54-4d35-aec4-c01ec31221a2', 'cwms-level', 'CWMS Level', 'https://cwms-data.usace.army.mil/cwms-data/levels'),
     ('a2d0956a-251c-4994-b8a8-3a240227ca4e', 'cwms-location', 'CWMS Location', 'https://cwms-data.usace.army.mil/cwms-data/location'),

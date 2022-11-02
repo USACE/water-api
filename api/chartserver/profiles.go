@@ -46,7 +46,7 @@ func GetDamProfileByLocation(db *pgxpool.Pool, locationSlug *string) (*DamProfil
 				FROM chart_variable_mapping cvm 
 				JOIN timeseries t ON t.id = cvm.timeseries_id 
 				JOIN datasource d ON d.id = t.datasource_id 
-				JOIN datasource_type dt ON dt.id = d.datasource_type_id 
+				JOIN datatype dt ON dt.id = d.datatype_id 
 				JOIN chart c ON c.id = cvm.chart_id 
 			WHERE dt.slug = 'cwms-levels'
 		),		
@@ -61,7 +61,7 @@ func GetDamProfileByLocation(db *pgxpool.Pool, locationSlug *string) (*DamProfil
 				FROM chart_variable_mapping cvm 
 				JOIN timeseries t ON t.id = cvm.timeseries_id 
 				JOIN datasource d ON d.id = t.datasource_id 
-				JOIN datasource_type dt ON dt.id = d.datasource_type_id 
+				JOIN datatype dt ON dt.id = d.datatype_id 
 				JOIN chart c ON c.id = cvm.chart_id
 			WHERE dt.slug = 'cwms-timeseries'
 		)		
@@ -81,7 +81,7 @@ func GetDamProfileByLocation(db *pgxpool.Pool, locationSlug *string) (*DamProfil
 		JOIN chart_variable_mapping cvm ON cvm.chart_id = c.id 
 		JOIN timeseries t ON t.id = vvm.timeseries_id 
 		JOIN datasource d ON d.id = t.datasource_id 
-		JOIN datasource_type dt ON dt.id = d.datasource_type_id 
+		JOIN datatype dt ON dt.id = d.datatype_id 
 		JOIN "location" l ON l.id = c.location_id 
 		LEFT JOIN viz_ts ON viz_ts.chart_id = cvm.chart_id AND viz_ts.variable = cvm.variable
 		JOIN lvl_ts ON lvl_ts.chart_id = c.id AND lvl_ts.key = t.datasource_key

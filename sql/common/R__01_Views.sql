@@ -15,7 +15,7 @@ CREATE OR REPLACE VIEW v_usgs_site AS (
         l.update_date
         FROM "location" l 
         JOIN datasource d ON d.id = l.datasource_id 
-        JOIN datasource_type dt ON dt.id = d.datasource_type_id
+        JOIN datatype  dt ON dt.id = d.datatype_id
         JOIN tiger_data.state_all sa ON sa.gid = l.state_id
         LEFT JOIN (
             SELECT array_agg(code) AS parameter_codes, b.location_id 

@@ -38,21 +38,21 @@ CREATE TABLE IF NOT EXISTS provider (
 -- DATASOURCE
 ----------------
 
--- datasource_type table
-CREATE TABLE IF NOT EXISTS datasource_type (
+-- datatype table
+CREATE TABLE IF NOT EXISTS datatype (
     id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     slug VARCHAR UNIQUE NOT NULL,
     name VARCHAR NOT NULL,
     uri VARCHAR NOT NULL,
-    CONSTRAINT datasource_type_slug_unique_uri UNIQUE(slug, uri)
+    CONSTRAINT datatype_unique_uri UNIQUE(slug, uri)
 );
 
 -- datasource table
 CREATE TABLE IF NOT EXISTS datasource (
     id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     provider_id UUID NOT NULL REFERENCES provider(id),
-    datasource_type_id UUID NOT NULL REFERENCES datasource_type(id),
-    CONSTRAINT datasource_unique_provider_id UNIQUE(provider_id, datasource_type_id)
+    datatype_id UUID NOT NULL REFERENCES datatype(id),
+    CONSTRAINT datasource_unique_provider_id UNIQUE(provider_id, datatype_id)
 );
 
 ------------

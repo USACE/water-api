@@ -7,7 +7,7 @@ BEGIN
 
     SELECT d.id into lrh_cwms_location_datasource_id
     FROM datasource d 
-    JOIN datasource_type dt ON dt.id = d.datasource_type_id 
+    JOIN datatype dt ON dt.id = d.datatype_id 
     JOIN provider p ON p.id = d.provider_id 
     WHERE dt.slug = 'cwms-location' AND p.slug = 'lrh';
 

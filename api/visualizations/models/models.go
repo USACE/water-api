@@ -17,7 +17,7 @@ type VisualizationMapping struct {
 	Slug            string     `json:"slug,omitempty" db:"slug"`
 	Variable        string     `json:"variable,omitempty" db:"variable"`
 	Key             string     `json:"key,omitempty"`
-	DatasourceType  string     `json:"datasource_type,omitempty" query:"datasource_type"`
+	Datatype        string     `json:"datatype,omitempty" query:"datatype"`
 	LatestTime      *time.Time `json:"latest_time,omitempty"`
 	LatestValue     *float64   `json:"latest_value,omitempty"`
 	Provider        string     `json:"provider,omitempty" db:"provider"`
@@ -89,7 +89,7 @@ func GetVisualization(db *pgxpool.Pool, visualizationSlug *string) (*Visualizati
 								p.slug AS provider_slug,
 								COALESCE(json_agg(json_build_object(
 									'variable', cvm.variable,
-									'datasource_type', dt.slug,
+									'datatype', dt.slug,
 									'provider', tp.slug,
 									'key', t.datasource_key,
 									'latest_time', t.latest_time,
@@ -101,7 +101,7 @@ func GetVisualization(db *pgxpool.Pool, visualizationSlug *string) (*Visualizati
 								LEFT JOIN chart_variable_mapping cvm ON cvm.chart_id = c.id
 								LEFT JOIN timeseries t ON t.id = cvm.timeseries_id
 								LEFT JOIN datasource d ON d.id = t.datasource_id 
-								LEFT JOIN datasource_type dt ON dt.id = d.datasource_type_id
+								LEFT JOIN datatype dt ON dt.id = d.datatype_id
 								LEFT JOIN timeseries_providers tp ON tp.id = t.id
 								WHERE lower(c.slug) = lower($1)
 								GROUP BY l.slug, c.slug, c.name, c.type_id, p.name, p.slug
@@ -202,7 +202,7 @@ func CreateOrUpdateVisualizationMapping(db *pgxpool.Pool, c VisualizationMapping
 				$2,
 				(SELECT t.id from timeseries t
 					JOIN datasource d ON d.id = t.datasource_id 
-					JOIN datasource_type dt ON dt.id = d.datasource_type_id
+					JOIN datatype dt ON dt.id = d.datatype_id
 					JOIN provider p ON p.id = d.provider_id 
 					WHERE lower(datasource_key) = lower($3)
 					AND lower(dt.slug) = lower($4)
@@ -214,7 +214,7 @@ func CreateOrUpdateVisualizationMapping(db *pgxpool.Pool, c VisualizationMapping
 			variable = $2
 			WHERE chart_variable_mapping.chart_id = (SELECT id from chart WHERE lower(slug) = lower($1))
 			RETURNING chart_id`,
-			*visualizationSlug, v.Variable, v.Key, v.DatasourceType, v.Provider,
+			*visualizationSlug, v.Variable, v.Key, v.Datatype, v.Provider,
 		)
 		if err != nil {
 			return make([]VisualizationMapping, 0), err

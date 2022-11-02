@@ -17,7 +17,7 @@ type (
 
 	// LocationCreatorCollection holds LocationCreator interfaces
 	// to support different behaviors for locations that have different
-	// underlying datasource_type properties
+	// underlying datatype properties
 	LocationCollection struct {
 		Items []Location
 	}
@@ -28,15 +28,15 @@ type (
 	// regardless of the kind of location and is used to serialize/deserialize
 	// location information from structs to JSON for all kinds of locations
 	LocationInfo struct {
-		Provider           string             `json:"provider"`
-		ProviderName       string             `json:"provider_name"`
-		DatasourceType     string             `json:"datasource_type"`
-		DatasourceTypeName string             `json:"datasource_type_name"`
-		Code               string             `json:"code"` // unique string; e.g. cwms-location: "name", usgs-site: "station number", nws-site: "nws_li"
-		Slug               string             `json:"slug"`
-		Geometry           helpers.Geometry   `json:"geometry"`
-		State              *string            `json:"state"`
-		Attributes         LocationAttributes `json:"attributes"` // Non-Standard Attributes
+		Provider     string             `json:"provider"`
+		ProviderName string             `json:"provider_name"`
+		Datatype     string             `json:"datatype"`
+		DatatypeName string             `json:"datatype_name"`
+		Code         string             `json:"code"` // unique string; e.g. cwms-location: "name", usgs-site: "station number", nws-site: "nws_li"
+		Slug         string             `json:"slug"`
+		Geometry     helpers.Geometry   `json:"geometry"`
+		State        *string            `json:"state"`
+		Attributes   LocationAttributes `json:"attributes"` // Non-Standard Attributes
 	}
 
 	// LocationInfoCollection supports marshal/unmarshal of Locations passed either a single
@@ -67,7 +67,7 @@ func (lc LocationInfoCollection) LocationCollection() (LocationCollection, error
 
 	cc := make([]Location, len(lc.Items))
 	for idx, item := range lc.Items {
-		switch item.DatasourceType {
+		switch item.Datatype {
 		case "cwms-location":
 			if l, err := NewCwmsLocation(item); err != nil {
 				return empty, err
@@ -87,7 +87,7 @@ func (lc LocationInfoCollection) LocationCollection() (LocationCollection, error
 				cc[idx] = l
 			}
 		default:
-			return LocationCollection{}, fmt.Errorf("CREATE not implemented for datasource_type=%s", item.DatasourceType)
+			return LocationCollection{}, fmt.Errorf("CREATE not implemented for datatype=%s", item.Datatype)
 		}
 	}
 	return LocationCollection{Items: cc}, nil

@@ -54,12 +54,12 @@ func CreateOrUpdateTimeseriesMeasurements(db *pgxpool.Pool, c TimeseriesCollecti
 			WHERE datasource_key = $3
 			AND datasource_id = (
 				SELECT d.id FROM datasource d 
-				JOIN datasource_type dt ON dt.id = d.datasource_type_id 
+				JOIN datatype dt ON dt.id = d.datatype_id 
 				JOIN provider p ON p.id = d.provider_id 
 				WHERE lower(p.slug) = lower($2) AND lower(dt.slug) = lower($1)
 			)
 			RETURNING id`,
-			t.DatasourceType, t.Provider, t.Key, t.Measurements.LatestTime(), t.Measurements.LatestValue(),
+			t.Datatype, t.Provider, t.Key, t.Measurements.LatestTime(), t.Measurements.LatestValue(),
 		)
 		if err != nil {
 			return make([]Timeseries, 0), err

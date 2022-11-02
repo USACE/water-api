@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a2a16366-817f-470b-b2ec-c70cc1fb313a",
+		"_postman_id": "3100616d-e089-462b-86b6-21f647d49430",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -94,7 +94,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/datasources?datasource_type=cwms-location",
+							"raw": "{{base_url}}/datasources?datatype=cwms-location",
 							"host": [
 								"{{base_url}}"
 							],
@@ -103,7 +103,7 @@
 							],
 							"query": [
 								{
-									"key": "datasource_type",
+									"key": "datatype",
 									"value": "cwms-location"
 								}
 							]
@@ -148,7 +148,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/datasources?datasource_type=cwms-location&provider=lrn",
+							"raw": "{{base_url}}/datasources?datatype=cwms-location&provider=lrn",
 							"host": [
 								"{{base_url}}"
 							],
@@ -157,7 +157,7 @@
 							],
 							"query": [
 								{
-									"key": "datasource_type",
+									"key": "datatype",
 									"value": "cwms-location"
 								},
 								{
@@ -206,7 +206,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/datasources?datasource_type=cwms-level&provider=mvp",
+							"raw": "{{base_url}}/datasources?datatype=cwms-level&provider=mvp",
 							"host": [
 								"{{base_url}}"
 							],
@@ -215,7 +215,7 @@
 							],
 							"query": [
 								{
-									"key": "datasource_type",
+									"key": "datatype",
 									"value": "cwms-level"
 								},
 								{
@@ -264,7 +264,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/datasources?datasource_type=usgs-site&provider=usgs",
+							"raw": "{{base_url}}/datasources?datatype=usgs-site&provider=usgs",
 							"host": [
 								"{{base_url}}"
 							],
@@ -273,7 +273,7 @@
 							],
 							"query": [
 								{
-									"key": "datasource_type",
+									"key": "datatype",
 									"value": "usgs-site"
 								},
 								{
@@ -322,7 +322,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/datasources?datasource_type=nws-site&provider=noaa-nws",
+							"raw": "{{base_url}}/datasources?datatype=nws-site&provider=noaa-nws",
 							"host": [
 								"{{base_url}}"
 							],
@@ -331,7 +331,7 @@
 							],
 							"query": [
 								{
-									"key": "datasource_type",
+									"key": "datatype",
 									"value": "nws-site"
 								},
 								{
@@ -1907,7 +1907,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Dam\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Streambed\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Flood\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datasource_type\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Bottom of Flood\",\n        \"provider\": \"LRH\"\n        \n    }\n]",
+							"raw": "[\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Dam\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Streambed\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Flood\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Bottom of Flood\",\n        \"provider\": \"LRH\"\n        \n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1946,7 +1946,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T20:15:00-00:00\", \"2022-09-13T20:30:00-00:00\"],\n            \"values\": [755.90, 756.22]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T20:15:00-00:00\", \"2022-09-13T20:30:00-00:00\"],\n            \"values\": [305, 307]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T21:00:00-00:00\", \"2022-09-13T21:15:00-00:00\"],\n            \"values\": [459.20, 459.55]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T21:00:00-00:00\", \"2022-09-13T21:15:00-00:00\"],\n            \"values\": [15.20, 16.55]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-level\",\n        \"key\": \"TestLocation.Elev.Inst.0.Streambed\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [700.55]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-level\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Dam\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [800.55]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-level\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Flood\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [780.55]\n        }\n        \n    },\n    {\n        \"datasource_type\": \"cwms-level\",\n        \"key\": \"TestLocation.Elev.Inst.0.Bottom of Flood\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [750.0]\n        }\n        \n    }\n]",
+							"raw": "[\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T20:15:00-00:00\", \"2022-09-13T20:30:00-00:00\"],\n            \"values\": [755.90, 756.22]\n        }\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T20:15:00-00:00\", \"2022-09-13T20:30:00-00:00\"],\n            \"values\": [305, 307]\n        }\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T21:00:00-00:00\", \"2022-09-13T21:15:00-00:00\"],\n            \"values\": [459.20, 459.55]\n        }\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T21:00:00-00:00\", \"2022-09-13T21:15:00-00:00\"],\n            \"values\": [15.20, 16.55]\n        }\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"TestLocation.Elev.Inst.0.Streambed\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [700.55]\n        }\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Dam\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [800.55]\n        }\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Flood\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [780.55]\n        }\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"TestLocation.Elev.Inst.0.Bottom of Flood\",\n        \"provider\": \"LRH\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [750.0]\n        }\n        \n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2057,7 +2057,7 @@
 					"response": []
 				},
 				{
-					"name": "List Timeseries by provider and datasource_type",
+					"name": "List Timeseries by provider and datatype",
 					"event": [
 						{
 							"listen": "test",
@@ -2087,7 +2087,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/timeseries?provider=lrh&datasource_type=cwms-timeseries",
+							"raw": "{{base_url}}/timeseries?provider=lrh&datatype=cwms-timeseries",
 							"host": [
 								"{{base_url}}"
 							],
@@ -2100,7 +2100,7 @@
 									"value": "lrh"
 								},
 								{
-									"key": "datasource_type",
+									"key": "datatype",
 									"value": "cwms-timeseries"
 								}
 							]
@@ -2139,7 +2139,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/timeseries?provider=lrh&datasource_type=cwms-timeseries&only_mapped=1",
+							"raw": "{{base_url}}/timeseries?provider=lrh&datatype=cwms-timeseries&only_mapped=1",
 							"host": [
 								"{{base_url}}"
 							],
@@ -2152,7 +2152,7 @@
 									"value": "lrh"
 								},
 								{
-									"key": "datasource_type",
+									"key": "datatype",
 									"value": "cwms-timeseries"
 								},
 								{
@@ -2195,7 +2195,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/timeseries?provider=lrh&datasource_type=cwms-level",
+							"raw": "{{base_url}}/timeseries?provider=lrh&datatype=cwms-level",
 							"host": [
 								"{{base_url}}"
 							],
@@ -2208,7 +2208,7 @@
 									"value": "lrh"
 								},
 								{
-									"key": "datasource_type",
+									"key": "datatype",
 									"value": "cwms-level"
 								}
 							]
@@ -2367,7 +2367,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"variable\": \"pool\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"datasource_type\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"tail\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"datasource_type\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"inflow\",\n        \"key\": \"TestLocation-Lake.Flow.Inst.15Minutes.0.OBS\",\n        \"datasource_type\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"outflow\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"datasource_type\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"streambed\",\n        \"key\": \"TestLocation.Elev.Inst.0.Streambed\",\n        \"datasource_type\": \"cwms-levels\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"top-of-dam\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Dam\",\n        \"datasource_type\": \"cwms-levels\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"top-of-flood\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Flood\",\n        \"datasource_type\": \"cwms-levels\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"bottom-of-flood\",\n        \"key\": \"TestLocation.Elev.Inst.0.Bottom of Flood\",\n        \"datasource_type\": \"cwms-levels\",\n        \"provider\": \"lrh\"\n    }\n]   ",
+							"raw": "[\n    {\n        \"variable\": \"pool\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"datatype\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"tail\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"datatype\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"inflow\",\n        \"key\": \"TestLocation-Lake.Flow.Inst.15Minutes.0.OBS\",\n        \"datatype\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"outflow\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"datatype\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"streambed\",\n        \"key\": \"TestLocation.Elev.Inst.0.Streambed\",\n        \"datatype\": \"cwms-levels\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"top-of-dam\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Dam\",\n        \"datatype\": \"cwms-levels\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"top-of-flood\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Flood\",\n        \"datatype\": \"cwms-levels\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"bottom-of-flood\",\n        \"key\": \"TestLocation.Elev.Inst.0.Bottom of Flood\",\n        \"datatype\": \"cwms-levels\",\n        \"provider\": \"lrh\"\n    }\n]   ",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2601,7 +2601,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"provider\": \"mvp\",\n    \"datasource_type\": \"cwms-location\",\n    \"slug\": \"regression-test-cwms-location-create-1\",\n    \"code\": \"Regression Test CWMS Location Create One\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    },\n    \"attributes\": {\n        \"public_name\": \"Regression Test CWMS Location Create One\",\n        \"kind\": \"PROJECT\"\n    },\n    \"state\": \"mn\"\n}",
+							"raw": "{\n    \"provider\": \"mvp\",\n    \"datatype\": \"cwms-location\",\n    \"slug\": \"regression-test-cwms-location-create-1\",\n    \"code\": \"Regression Test CWMS Location Create One\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    },\n    \"attributes\": {\n        \"public_name\": \"Regression Test CWMS Location Create One\",\n        \"kind\": \"PROJECT\"\n    },\n    \"state\": \"mn\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2648,7 +2648,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-2\",\n        \"code\": \"Regression Test CWMS Location Create #2\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.222,\n                37.222\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test CWMS Location Create #2\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-3\",\n        \"code\": \"Regression Test CWMS Location Create #3\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.333,\n                37.333\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test CWMS Location Create #3\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    }\n]",
+							"raw": "[\n    {\n        \"provider\": \"mvp\",\n        \"datatype\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-2\",\n        \"code\": \"Regression Test CWMS Location Create #2\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.222,\n                37.222\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test CWMS Location Create #2\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datatype\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-3\",\n        \"code\": \"Regression Test CWMS Location Create #3\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.333,\n                37.333\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test CWMS Location Create #3\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2695,7 +2695,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-2\",\n        \"code\": \"Regression Test CWMS Location Create #2\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.2,\n                37.2\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test CWMS Location Create #2 - Renamed after sync\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datasource_type\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-3\",\n        \"code\": \"Regression Test CWMS Location Create #3\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.3,\n                37.3\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test CWMS Location Create #3 - Renamed after sync\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    }\n]",
+							"raw": "[\n    {\n        \"provider\": \"mvp\",\n        \"datatype\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-2\",\n        \"code\": \"Regression Test CWMS Location Create #2\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.2,\n                37.2\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test CWMS Location Create #2 - Renamed after sync\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datatype\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-3\",\n        \"code\": \"Regression Test CWMS Location Create #3\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.3,\n                37.3\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test CWMS Location Create #3 - Renamed after sync\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2743,7 +2743,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"provider\": \"mvp\",\n    \"datasource_type\": \"cwms-location\",\n    \"slug\": \"regression-test-cwms-location-create-3\",\n    \"code\": \"Regression Test CWMS Location Create #3\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.999,\n            37.999\n        ]\n    },\n    \"attributes\": {\n        \"public_name\": \"Regression Test CWMS Location Create #3 - Renamed after PUT\",\n        \"kind\": \"PROJECT\"\n    },\n    \"state\": \"mn\"\n}\n",
+							"raw": "{\n    \"provider\": \"mvp\",\n    \"datatype\": \"cwms-location\",\n    \"slug\": \"regression-test-cwms-location-create-3\",\n    \"code\": \"Regression Test CWMS Location Create #3\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.999,\n            37.999\n        ]\n    },\n    \"attributes\": {\n        \"public_name\": \"Regression Test CWMS Location Create #3 - Renamed after PUT\",\n        \"kind\": \"PROJECT\"\n    },\n    \"state\": \"mn\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2892,7 +2892,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"provider\": \"usgs\",\n    \"datasource_type\": \"usgs-site\",\n    \"slug\": \"01091400\",\n    \"code\": \"01091400\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.111,\n            37.111\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city #1\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n}",
+							"raw": "{\n    \"provider\": \"usgs\",\n    \"datatype\": \"usgs-site\",\n    \"slug\": \"01091400\",\n    \"code\": \"01091400\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.111,\n            37.111\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city #1\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2939,7 +2939,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[{\n    \"provider\": \"usgs\",\n    \"datasource_type\": \"usgs-site\",\n    \"slug\": \"01091500\",\n    \"code\": \"01091500\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.222,\n            37.222\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city #2\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n},\n{\n    \"provider\": \"usgs\",\n    \"datasource_type\": \"usgs-site\",\n    \"slug\": \"01091600\",\n    \"code\": \"01091600\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.333,\n            37.333\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city #3\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n}]",
+							"raw": "[{\n    \"provider\": \"usgs\",\n    \"datatype\": \"usgs-site\",\n    \"slug\": \"01091500\",\n    \"code\": \"01091500\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.222,\n            37.222\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city #2\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n},\n{\n    \"provider\": \"usgs\",\n    \"datatype\": \"usgs-site\",\n    \"slug\": \"01091600\",\n    \"code\": \"01091600\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.333,\n            37.333\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city #3\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n}]",
 							"options": {
 								"raw": {
 									"language": "json"

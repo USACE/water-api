@@ -12,31 +12,31 @@ BEGIN
 
     SELECT d.id into lrn_cwms_timeseries_ds_id
     FROM datasource d 
-    JOIN datasource_type dt ON dt.id = d.datasource_type_id 
+    JOIN datatype dt ON dt.id = d.datatype_id 
     JOIN provider p ON p.id = d.provider_id 
     WHERE dt.slug = 'cwms-timeseries' AND p.slug = 'lrn';
 
     SELECT d.id into mvp_cwms_timeseries_ds_id
     FROM datasource d 
-    JOIN datasource_type dt ON dt.id = d.datasource_type_id 
+    JOIN datatype dt ON dt.id = d.datatype_id 
     JOIN provider p ON p.id = d.provider_id 
     WHERE dt.slug = 'cwms-timeseries' AND p.slug = 'mvp';
 
     SELECT d.id into nwo_cwms_timeseries_ds_id
     FROM datasource d 
-    JOIN datasource_type dt ON dt.id = d.datasource_type_id 
+    JOIN datatype dt ON dt.id = d.datatype_id 
     JOIN provider p ON p.id = d.provider_id 
     WHERE dt.slug = 'cwms-timeseries' AND p.slug = 'nwo';
 
     SELECT d.id into nwp_cwms_timeseries_ds_id
     FROM datasource d 
-    JOIN datasource_type dt ON dt.id = d.datasource_type_id 
+    JOIN datatype dt ON dt.id = d.datatype_id 
     JOIN provider p ON p.id = d.provider_id 
     WHERE dt.slug = 'cwms-timeseries' AND p.slug = 'nwp';
 
     SELECT d.id into nws_cwms_timeseries_ds_id
     FROM datasource d 
-    JOIN datasource_type dt ON dt.id = d.datasource_type_id 
+    JOIN datatype dt ON dt.id = d.datatype_id 
     JOIN provider p ON p.id = d.provider_id 
     WHERE dt.slug = 'cwms-timeseries' AND p.slug = 'nws';
 

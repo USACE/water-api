@@ -7,7 +7,7 @@ BEGIN
 
     SELECT d.id into nws_level_ds_id
     FROM datasource d 
-    JOIN datasource_type dt ON dt.id = d.datasource_type_id 
+    JOIN datatype dt ON dt.id = d.datatype_id 
     JOIN provider p ON p.id = d.provider_id 
     WHERE dt.slug = 'nws-level' AND p.slug = 'noaa-nws';
 

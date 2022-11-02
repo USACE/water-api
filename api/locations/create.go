@@ -41,8 +41,8 @@ func (cc LocationCollection) Create(db *pgxpool.Pool) ([]Location, error) {
 			    (
 					SELECT id 
 				      FROM datasource
-				     WHERE datasource_type_id = (SELECT id FROM datasource_type WHERE slug = $1)
-					   AND provider_id        = (SELECT id FROM provider WHERE slug = $2)
+				     WHERE datatype_id = (SELECT id FROM datatype WHERE slug = $1)
+					   AND provider_id = (SELECT id FROM provider WHERE slug = $2)
 				),
 				$3,
 				$4,
@@ -54,7 +54,7 @@ func (cc LocationCollection) Create(db *pgxpool.Pool) ([]Location, error) {
 				),
 				$7
 			 ) RETURNING id`,
-			info.DatasourceType, info.Provider, slug, info.Code, info.Geometry.EWKT(6), info.State, info.Attributes,
+			info.Datatype, info.Provider, slug, info.Code, info.Geometry.EWKT(6), info.State, info.Attributes,
 		)
 		if err != nil {
 			tx.Rollback(context.Background())
