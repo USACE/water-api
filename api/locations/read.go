@@ -1,98 +1,111 @@
 package locations
 
-// import (
-// 	"context"
+import (
+	"context"
 
-// 	sq "github.com/Masterminds/squirrel"
-// 	"github.com/georgysavva/scany/pgxscan"
-// 	"github.com/jackc/pgx/v4/pgxpool"
-// )
+	sq "github.com/Masterminds/squirrel"
+	"github.com/georgysavva/scany/pgxscan"
+	"github.com/google/uuid"
+	"github.com/jackc/pgx/v4/pgxpool"
+)
 
 type LocationFilter struct {
-	Slugs    *[]string // not supported as query param at this time
-	Slug     *string   `query:"location" param:"location"` // binds to either /locations/:slug or /locations?slug=
-	State    *string   `query:"state"`
-	Provider *string   `query:"provider"`
-	Q        *string   `query:"q"`
+	IDs      *[]uuid.UUID // not supported as query param;
+	State    *string      `query:"state"`
+	Provider *string      `query:"provider"`
+	Datatype *string      `query:"datatype"`
+	Q        *string      `query:"q"`
 }
 
-// func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
+func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 
-// 	q := sq.Select(
-// 		`p.slug                         AS provider_slug,
-// 	     p.name                         AS provider_name,
-// 		 a.slug                         AS slug,
-// 	     a.name                         AS name,
-// 		 s.abbreviation                 AS state,
-// 		 ST_AsGeoJSON(a.geometry)::json AS geometry`,
-// 	).From(
-// 		"location_v2 a",
-// 	)
+	q := sq.Select(
+		`p.slug                         AS provider,
+	     p.name                         AS provider_name,
+		 dt.slug                        AS datatype,
+		 dt.name                        AS datatype_name,
+		 l.code                         AS code,
+		 l.slug                         AS slug,
+		 ST_AsGeoJSON(l.geometry)::json AS geometry,
+		 s.abbreviation                 AS state,
+		 l.attributes                   AS attributes`,
+	).From(
+		"location l",
+	)
 
-// 	// Basic Join Statements
-// 	jS := "tiger.state s ON s.gid         = a.state_id"    // join tiger.state
-// 	jD := "datasource  d ON d.provider_id = a.provider_id" // join datasource
-// 	jP := "provider    p ON p.id          = d.provider_id" // join provider
+	// Join Statements
+	jS, jSParams := "tiger.state  s  ON s.gid  = l.state_id", make([]interface{}, 0)      // join tiger.state
+	jDS, jDSParams := "datasource ds ON ds.id  = l.datasource_id", make([]interface{}, 0) // join datasource
+	jP, jPParams := "provider     p  ON p.id   = ds.provider_id", make([]interface{}, 0)  // join provider
+	jDT, jDTParams := "datatype   dt ON dt.id  = ds.datatype_id", make([]interface{}, 0)  // join datatype
 
-// 	// Apply Filters (excluding Search Query String)
-// 	if f != nil {
-// 		// Filter by State
-// 		if f.State != nil {
-// 			q = q.Join(jS+" AND s.abbreviation = ?", f.State)
-// 			q = q.Where("s.abbreviation = ?", f.State)
-// 		} else {
-// 			q = q.Join(jS) // always join tiger.state
-// 		}
+	// Apply Filters (excluding Search Query String)
+	if f != nil {
+		// Filter by State
+		if f.State != nil {
+			// Limit JOIN using ?state= query param
+			jS += " AND s.abbreviation = ?"
+			jSParams = append(jSParams, f.State)
+			// WHERE
+			q = q.Where("s.abbreviation = ?", f.State)
+		}
 
-// 		// Filter by Provider
-// 		if f.Provider != nil {
-// 			q = q.Join(jD) // Join datasource. todo; additional qualifier needed
-// 			q = q.Join(jP) // Join provider. todo; additioinal qualifier needed
-// 			q = q.Where("p.slug = ?", f.Provider)
-// 		} else {
-// 			q = q.Join(jD)
-// 			q = q.Join(jP)
-// 		}
+		// Filter by Provider
+		if f.Provider != nil {
+			// Limit datasource join by ?provider= query param
+			jDS += " AND ds.provider_id = (SELECT id from provider WHERE slug = ?)"
+			jDSParams = append(jDSParams, f.Provider)
+			// Limit provider join by ?provider= query param
+			jP += " AND p.id = (SELECT id FROM provider WHERE slug = ?)"
+			jPParams = append(jPParams, f.Provider)
+			// WHERE
+			q = q.Where("p.slug = ?", f.Provider)
+		}
 
-// 		// Filter by Search String
-// 		if f.Q != nil {
-// 			q = q.Where("a.slug || a.name ILIKE '%' || ? || '%'", f.Q) // filter by query string
-// 		}
-// 	} else {
-// 		q = q.Join(jS).Join(jD).Join(jP) // always join state, datasource, provider tables even if no filters in url
-// 	}
+		// Filter by Datatype
+		if f.Datatype != nil {
+			// Limit datasource join by ?datatype= query param
+			jDS += " AND ds.datatype_id = (SELECT id from datatype WHERE slug = ?)"
+			jDSParams = append(jDSParams, f.Datatype)
+			// Limit datatype join by ?datatype= query param
+			jDT += " AND dt.id = (SELECT id FROM datatype WHERE slug = ?)"
+			jDTParams = append(jDTParams, f.Provider)
+			// WHERE
+			q = q.Where("dt.slug = ?", f.Datatype)
+		}
 
-// 	return q.PlaceholderFormat(sq.Dollar), nil
-// }
+		// Filter by Search String
+		if f.Q != nil {
+			q = q.Where("l.slug || l.code ILIKE '%' || ? || '%'", f.Q) // filter by query string
+		}
 
-// func ListLocations(db *pgxpool.Pool, f *LocationFilter) ([]Location, error) {
-// 	q, err := ListLocationsQuery(f)
-// 	if err != nil {
-// 		return make([]Location, 0), err
-// 	}
-// 	sql, args, err := q.ToSql()
-// 	if err != nil {
-// 		return make([]Location, 0), err
-// 	}
-// 	ll := make([]Location, 0)
-// 	if err := pgxscan.Select(context.Background(), db, &ll, sql, args...); err != nil {
-// 		return make([]Location, 0), err
-// 	}
-// 	return ll, nil
-// }
+		// Filter by list of known UUIDs
+		// This is used after CreateLocations when UUIDs of newly created locations are known
+		if f.IDs != nil {
+			q = q.Where(sq.Eq{"l.id": f.IDs})
+		}
+	}
 
-// func GetLocation(db *pgxpool.Pool, f *LocationFilter) (*Location, error) {
-// 	q, err := ListLocationsQuery(f)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	sql, args, err := q.ToSql()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	var l Location
-// 	if err := pgxscan.Get(context.Background(), db, &l, sql, args...); err != nil {
-// 		return nil, err
-// 	}
-// 	return &l, nil
-// }
+	q.Join(jS, jSParams...)   // join state
+	q.Join(jDS, jDSParams...) // join datasource
+	q.Join(jP, jPParams...)   // join provider
+	q.Join(jDT, jDTParams...) // join datatype
+
+	return q.PlaceholderFormat(sq.Dollar), nil
+}
+
+func ListLocations(db *pgxpool.Pool, f *LocationFilter) ([]LocationInfo, error) {
+	q, err := ListLocationsQuery(f)
+	if err != nil {
+		return make([]LocationInfo, 0), err
+	}
+	sql, args, err := q.ToSql()
+	if err != nil {
+		return make([]LocationInfo, 0), err
+	}
+	ll := make([]LocationInfo, 0)
+	if err := pgxscan.Select(context.Background(), db, &ll, sql, args...); err != nil {
+		return make([]LocationInfo, 0), err
+	}
+	return ll, nil
+}

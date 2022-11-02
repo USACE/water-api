@@ -38,3 +38,16 @@ func (s Store) CreateLocations(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, ll)
 }
+
+func (s Store) ListLocations(c echo.Context) error {
+	// Get filters from query params kind_id= or office_id=
+	var f LocationFilter
+	if err := c.Bind(&f); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	ll, err := ListLocations(s.Connection, &f)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, ll)
+}

@@ -21,16 +21,14 @@ func Mount(conn *pgxpool.Pool, e *echo.Echo, config *app.Config, chartserver *ch
 	}
 
 	// Public Routes
-	// public := e.Group("")
+	public := e.Group("")
 
 	// Key Only Group
 	key := e.Group("")
 	key.Use(middleware.KeyAuth(config.ApplicationKey))
 
 	// LOCATIONS; :location corresponds to unique location slug
-	// public.GET("/v2/locations", s.ListLocations)                           // LIST
-	// public.GET("/v2/locations/:location", s.GetLocation)                   // GET
-	// public.GET("/v2/locations/:location/details", s.GetLocationDetail)     // GET DETAILS
+	public.GET("/locations", s.ListLocations) // LIST
 	// public.GET("/v2/locations/:location/profile-chart", s.GetProfileChart) // GET PROFILE CHART
 	key.POST("/providers/:provider/locations", s.CreateLocations) // CREATE
 	// key.PUT("/v2/locations/:location", s.UpdateLocation)                   // UPDATE
