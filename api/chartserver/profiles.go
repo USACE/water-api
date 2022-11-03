@@ -32,7 +32,7 @@ func (s ChartServer) DamProfileChart(input DamProfileChartInput) (string, error)
 }
 
 func GetDamProfileByLocation(db *pgxpool.Pool, locationSlug *string) (*DamProfileChartInput, error) {
-	visualizationTypeId, _ := uuid.Parse("53da77d0-6550-4f02-abf8-4bcd1a596a7c")
+	chartTypeId, _ := uuid.Parse("53da77d0-6550-4f02-abf8-4bcd1a596a7c")
 
 	var damProfileSQL = `
 		WITH lvl_ts AS (
@@ -92,7 +92,7 @@ func GetDamProfileByLocation(db *pgxpool.Pool, locationSlug *string) (*DamProfil
 		LIMIT 1`
 
 	var v DamProfileChartInput
-	if err := pgxscan.Get(context.Background(), db, &v, damProfileSQL, locationSlug, visualizationTypeId); err != nil {
+	if err := pgxscan.Get(context.Background(), db, &v, damProfileSQL, locationSlug, chartTypeId); err != nil {
 		return nil, err
 	}
 	return &v, nil

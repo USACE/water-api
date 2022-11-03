@@ -19,7 +19,6 @@ func (s Store) GetProfileChart(c echo.Context) error {
 
 	locationSlug := c.Param("location_slug")
 
-	//v, err := water.GetVisualizationByLocation(s.Connection, &locationSlug, &visualizationTypeId)
 	v, err := chartserver.GetDamProfileByLocation(s.Connection, &locationSlug)
 
 	if err != nil {

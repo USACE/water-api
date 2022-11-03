@@ -12,18 +12,18 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-type VisualizationMapping struct {
-	VisualizationID *uuid.UUID `json:"visualization_id,omitempty" db:"chart_id"`
-	Slug            string     `json:"slug,omitempty" db:"slug"`
-	Variable        string     `json:"variable,omitempty" db:"variable"`
-	Key             string     `json:"key,omitempty"`
-	Datatype        string     `json:"datatype,omitempty" query:"datatype"`
-	LatestTime      *time.Time `json:"latest_time,omitempty"`
-	LatestValue     *float64   `json:"latest_value,omitempty"`
-	Provider        string     `json:"provider,omitempty" db:"provider"`
+type ChartMapping struct {
+	ChartID     *uuid.UUID `json:"chart_id,omitempty" db:"chart_id"`
+	Slug        string     `json:"slug,omitempty" db:"slug"`
+	Variable    string     `json:"variable,omitempty" db:"variable"`
+	Key         string     `json:"key,omitempty"`
+	Datatype    string     `json:"datatype,omitempty" query:"datatype"`
+	LatestTime  *time.Time `json:"latest_time,omitempty"`
+	LatestValue *float64   `json:"latest_value,omitempty"`
+	Provider    string     `json:"provider,omitempty" db:"provider"`
 }
 
-type Visualization struct {
+type Chart struct {
 	LocationSlug *string   `json:"location_slug" db:"location_slug"`
 	Name         string    `json:"name" db:"name"`
 	Slug         string    `json:"slug" db:"slug"`
@@ -31,48 +31,48 @@ type Visualization struct {
 	ProviderName string    `json:"provider_name" db:"provider_name"`
 	ProviderSlug string    `json:"provider_slug" db:"provider_slug"`
 
-	Mapping *[]VisualizationMapping `json:"mapping,omitempty"`
+	Mapping *[]ChartMapping `json:"mapping,omitempty"`
 }
 
-type VisualizationMappingCollection struct {
-	Items []VisualizationMapping `json:"items"`
+type ChartMappingCollection struct {
+	Items []ChartMapping `json:"items"`
 }
 
-func (c *VisualizationMappingCollection) UnmarshalJSON(b []byte) error {
+func (c *ChartMappingCollection) UnmarshalJSON(b []byte) error {
 	switch helpers.JSONType(b) {
 	case "ARRAY":
 		return json.Unmarshal(b, &c.Items)
 	case "OBJECT":
-		c.Items = make([]VisualizationMapping, 1)
+		c.Items = make([]ChartMapping, 1)
 		return json.Unmarshal(b, &c.Items[0])
 	default:
 		return errors.New("payload not recognized as JSON array or object")
 	}
 }
 
-var listVisualizationsSQL = `SELECT 
+var listChartsSQL = `SELECT 
 							l.slug AS location_slug, 
 							v.name, v.slug, v.type_id, 
 							p."name" AS provider_name, 
 							p.slug AS provider_slug
-							FROM visualization v
+							FROM chart v
 							LEFT JOIN "location" l ON l.id = v.location_id
 							JOIN provider p ON p.id = v.provider_id`
 
-func ListVisualizations(db *pgxpool.Pool) ([]Visualization, error) {
-	vv := make([]Visualization, 0)
+func ListCharts(db *pgxpool.Pool) ([]Chart, error) {
+	vv := make([]Chart, 0)
 	if err := pgxscan.Select(
-		context.Background(), db, &vv, listVisualizationsSQL+" ORDER BY p.slug, v.slug",
+		context.Background(), db, &vv, listChartsSQL+" ORDER BY p.slug, v.slug",
 	); err != nil {
-		return make([]Visualization, 0), err
+		return make([]Chart, 0), err
 	}
 	return vv, nil
 }
 
-// GetVisualization returns a single Visualization
-func GetVisualization(db *pgxpool.Pool, visualizationSlug *string) (*Visualization, error) {
+// GetChart returns a single Chart
+func GetChart(db *pgxpool.Pool, chartSlug *string) (*Chart, error) {
 
-	var getVisualizationSQL = `
+	var getChartSQL = `
 								WITH timeseries_providers AS (
 									-- make sure we get the provider attached
 									-- to the timeseries instead of the viz/chart
@@ -97,7 +97,7 @@ func GetVisualization(db *pgxpool.Pool, visualizationSlug *string) (*Visualizati
 								)), '[]') AS mapping
 								FROM chart c
 								LEFT JOIN "location" l ON l.id = c.location_id
-								JOIN provider p ON p.id = v.provider_id
+								JOIN provider p ON p.id = c.provider_id
 								LEFT JOIN chart_variable_mapping cvm ON cvm.chart_id = c.id
 								LEFT JOIN timeseries t ON t.id = cvm.timeseries_id
 								LEFT JOIN datasource d ON d.id = t.datasource_id 
@@ -107,17 +107,17 @@ func GetVisualization(db *pgxpool.Pool, visualizationSlug *string) (*Visualizati
 								GROUP BY l.slug, c.slug, c.name, c.type_id, p.name, p.slug
 								LIMIT 1`
 
-	var v Visualization
-	//if err := pgxscan.Get(context.Background(), db, &v, listVisualizationsSQL+" WHERE lower(v.slug) = lower($1)", visualizationSlug); err != nil {
-	if err := pgxscan.Get(context.Background(), db, &v, getVisualizationSQL, visualizationSlug); err != nil {
+	var v Chart
+	//if err := pgxscan.Get(context.Background(), db, &v, listChartsSQL+" WHERE lower(v.slug) = lower($1)", chartSlug); err != nil {
+	if err := pgxscan.Get(context.Background(), db, &v, getChartSQL, chartSlug); err != nil {
 		return nil, err
 	}
 	return &v, nil
 }
 
-func GetVisualizationByLocation(db *pgxpool.Pool, locationSlug *string, visualizationTypeId *uuid.UUID) (*Visualization, error) {
+func GetChartByLocation(db *pgxpool.Pool, locationSlug *string, chartTypeId *uuid.UUID) (*Chart, error) {
 
-	var getVisualizationSQL = `SELECT
+	var getChartSQL = `SELECT
 							l.slug AS location_slug,
 							c.name AS name,
 							c.slug AS slug,
@@ -140,18 +140,18 @@ func GetVisualizationByLocation(db *pgxpool.Pool, locationSlug *string, visualiz
 							GROUP BY l.slug, c.slug, c.name, c.type_id, p.name, p.slug
 							LIMIT 1`
 
-	var v Visualization
-	if err := pgxscan.Get(context.Background(), db, &v, getVisualizationSQL, locationSlug, visualizationTypeId); err != nil {
+	var v Chart
+	if err := pgxscan.Get(context.Background(), db, &v, getChartSQL, locationSlug, chartTypeId); err != nil {
 		return nil, err
 	}
 	return &v, nil
 }
 
-// CreateVisualization creates a single Visualization
-func CreateVisualization(db *pgxpool.Pool, v *Visualization) (*Visualization, error) {
+// CreateChart creates a single Chart
+func CreateChart(db *pgxpool.Pool, v *Chart) (*Chart, error) {
 
 	// Insert Into Database Using New Slug
-	slug, err := helpers.NextUniqueSlug(db, "visualization", "slug", v.Name, "", "")
+	slug, err := helpers.NextUniqueSlug(db, "chart", "slug", v.Name, "", "")
 	if err != nil {
 		return nil, err
 	}
@@ -177,15 +177,15 @@ func CreateVisualization(db *pgxpool.Pool, v *Visualization) (*Visualization, er
 		}
 	}
 
-	return GetVisualization(db, &vSlug)
+	return GetChart(db, &vSlug)
 
 }
 
-func CreateOrUpdateVisualizationMapping(db *pgxpool.Pool, c VisualizationMappingCollection, visualizationSlug *string) ([]VisualizationMapping, error) {
+func CreateOrUpdateChartMapping(db *pgxpool.Pool, c ChartMappingCollection, chartSlug *string) ([]ChartMapping, error) {
 
 	tx, err := db.Begin(context.Background())
 	if err != nil {
-		return make([]VisualizationMapping, 0), err
+		return make([]ChartMapping, 0), err
 	}
 	defer tx.Rollback(context.Background())
 
@@ -214,10 +214,10 @@ func CreateOrUpdateVisualizationMapping(db *pgxpool.Pool, c VisualizationMapping
 			variable = $2
 			WHERE chart_variable_mapping.chart_id = (SELECT id from chart WHERE lower(slug) = lower($1))
 			RETURNING chart_id`,
-			*visualizationSlug, v.Variable, v.Key, v.Datatype, v.Provider,
+			*chartSlug, v.Variable, v.Key, v.Datatype, v.Provider,
 		)
 		if err != nil {
-			return make([]VisualizationMapping, 0), err
+			return make([]ChartMapping, 0), err
 		}
 		var id uuid.UUID
 		if err := pgxscan.ScanOne(&id, rows); err != nil {
@@ -238,8 +238,8 @@ func CreateOrUpdateVisualizationMapping(db *pgxpool.Pool, c VisualizationMapping
 
 }
 
-func DeleteVisualization(db *pgxpool.Pool, visualizationSlug *string) error {
-	if _, err := db.Exec(context.Background(), `DELETE FROM chart WHERE slug=$1`, visualizationSlug); err != nil {
+func DeleteChart(db *pgxpool.Pool, chartSlug *string) error {
+	if _, err := db.Exec(context.Background(), `DELETE FROM chart WHERE slug=$1`, chartSlug); err != nil {
 		return err
 	}
 	return nil

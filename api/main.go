@@ -8,6 +8,7 @@ import (
 	"golang.org/x/net/http2"
 
 	"github.com/USACE/water-api/api/app"
+	"github.com/USACE/water-api/api/charts"
 	"github.com/USACE/water-api/api/chartserver"
 	"github.com/USACE/water-api/api/cwms"
 	"github.com/USACE/water-api/api/locations"
@@ -16,7 +17,6 @@ import (
 	"github.com/USACE/water-api/api/providers"
 	"github.com/USACE/water-api/api/timeseries"
 	"github.com/USACE/water-api/api/usgs"
-	"github.com/USACE/water-api/api/visualizations"
 	"github.com/USACE/water-api/api/watersheds"
 
 	_ "github.com/jackc/pgx/v4"
@@ -67,7 +67,7 @@ func main() {
 	nws.Mount(st.Connection, e, &config)                    // National Weather Service
 	providers.Mount(st.Connection, e, &config)              // Providers
 	usgs.Mount(st.Connection, e, &config)                   // USGS
-	visualizations.Mount(st.Connection, e, &config)         // Visualizations
+	charts.Mount(st.Connection, e, &config)                 // Charts
 	watersheds.Mount(st.Connection, e, &config)             // Watersheds
 	timeseries.Mount(st.Connection, e, &config)             // Timeseries
 
