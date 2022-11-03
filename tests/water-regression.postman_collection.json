@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "3100616d-e089-462b-86b6-21f647d49430",
+		"_postman_id": "f5303226-21f2-4895-9f40-c147464299bb",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20040250"
 	},
 	"item": [
 		{
@@ -1907,7 +1908,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Dam\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Streambed\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Flood\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-levels\",\n        \"key\": \"TestLocation.Elev.Inst.0.Bottom of Flood\",\n        \"provider\": \"LRH\"\n        \n    }\n]",
+							"raw": "[\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Lake.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Dam\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"TestLocation.Elev.Inst.0.Streambed\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Flood\",\n        \"provider\": \"LRH\"\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"TestLocation.Elev.Inst.0.Bottom of Flood\",\n        \"provider\": \"LRH\"\n        \n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2219,10 +2220,10 @@
 			]
 		},
 		{
-			"name": "Visualizations",
+			"name": "Charts",
 			"item": [
 				{
-					"name": "List Visualizations",
+					"name": "List Charts",
 					"event": [
 						{
 							"listen": "test",
@@ -2252,19 +2253,19 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/visualizations",
+							"raw": "{{base_url}}/charts",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"visualizations"
+								"charts"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Create Visualization (One)",
+					"name": "Create Chart (One)",
 					"event": [
 						{
 							"listen": "test",
@@ -2274,7 +2275,7 @@
 									"    pm.response.to.have.status(201);",
 									"});",
 									"let r = JSON.parse(responseBody);",
-									"pm.environment.set(\"new_visualization_slug\", r.slug);"
+									"pm.environment.set(\"new_chart_slug\", r.slug);"
 								],
 								"type": "text/javascript"
 							}
@@ -2293,12 +2294,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/visualizations",
+							"raw": "{{base_url}}/charts",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"visualizations"
+								"charts"
 							]
 						}
 					},
@@ -2335,13 +2336,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/visualizations/{{new_visualization_slug}}",
+							"raw": "{{base_url}}/charts/{{new_chart_slug}}",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"visualizations",
-								"{{new_visualization_slug}}"
+								"charts",
+								"{{new_chart_slug}}"
 							]
 						}
 					},
@@ -2367,7 +2368,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"variable\": \"pool\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"datatype\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"tail\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"datatype\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"inflow\",\n        \"key\": \"TestLocation-Lake.Flow.Inst.15Minutes.0.OBS\",\n        \"datatype\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"outflow\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"datatype\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"streambed\",\n        \"key\": \"TestLocation.Elev.Inst.0.Streambed\",\n        \"datatype\": \"cwms-levels\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"top-of-dam\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Dam\",\n        \"datatype\": \"cwms-levels\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"top-of-flood\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Flood\",\n        \"datatype\": \"cwms-levels\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"bottom-of-flood\",\n        \"key\": \"TestLocation.Elev.Inst.0.Bottom of Flood\",\n        \"datatype\": \"cwms-levels\",\n        \"provider\": \"lrh\"\n    }\n]   ",
+							"raw": "[\n    {\n        \"variable\": \"pool\",\n        \"key\": \"TestLocation-Lake.Elev.Inst.15Minutes.0.OBS\",\n        \"datatype\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"tail\",\n        \"key\": \"TestLocation-Outflow.Stage.Inst.15Minutes.0.OBS\",\n        \"datatype\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"inflow\",\n        \"key\": \"TestLocation-Lake.Flow.Inst.15Minutes.0.OBS\",\n        \"datatype\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"outflow\",\n        \"key\": \"TestLocation-Outflow.Flow.Inst.15Minutes.0.OBS\",\n        \"datatype\": \"cwms-timeseries\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"streambed\",\n        \"key\": \"TestLocation.Elev.Inst.0.Streambed\",\n        \"datatype\": \"cwms-level\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"top-of-dam\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Dam\",\n        \"datatype\": \"cwms-level\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"top-of-flood\",\n        \"key\": \"TestLocation.Elev.Inst.0.Top of Flood\",\n        \"datatype\": \"cwms-level\",\n        \"provider\": \"lrh\"\n    },\n    {\n        \"variable\": \"bottom-of-flood\",\n        \"key\": \"TestLocation.Elev.Inst.0.Bottom of Flood\",\n        \"datatype\": \"cwms-level\",\n        \"provider\": \"lrh\"\n    }\n]   ",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2375,13 +2376,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/visualizations/{{new_visualization_slug}}/assign",
+							"raw": "{{base_url}}/charts/{{new_chart_slug}}/assign",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"visualizations",
-								"{{new_visualization_slug}}",
+								"charts",
+								"{{new_chart_slug}}",
 								"assign"
 							]
 						}
@@ -2564,12 +2565,18 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/locations",
+							"raw": "{{base_url}}/locations?datatype=cwms-location",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"locations"
+							],
+							"query": [
+								{
+									"key": "datatype",
+									"value": "cwms-location"
+								}
 							]
 						}
 					},
@@ -2855,12 +2862,22 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/locations",
+							"raw": "{{base_url}}/locations?datatype=usgs-site&provider=usgs",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"locations"
+							],
+							"query": [
+								{
+									"key": "datatype",
+									"value": "usgs-site"
+								},
+								{
+									"key": "provider",
+									"value": "usgs"
+								}
 							]
 						}
 					},
@@ -2892,7 +2909,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"provider\": \"usgs\",\n    \"datatype\": \"usgs-site\",\n    \"slug\": \"01091400\",\n    \"code\": \"01091400\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.111,\n            37.111\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city #1\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n}",
+							"raw": "{\n    \"provider\": \"usgs\",\n    \"datatype\": \"usgs-site\",\n    \"slug\": \"01091400\",\n    \"code\": \"01091400\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.111,\n            37.111\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"USGS Example station near example city #1\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2939,7 +2956,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[{\n    \"provider\": \"usgs\",\n    \"datatype\": \"usgs-site\",\n    \"slug\": \"01091500\",\n    \"code\": \"01091500\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.222,\n            37.222\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city #2\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n},\n{\n    \"provider\": \"usgs\",\n    \"datatype\": \"usgs-site\",\n    \"slug\": \"01091600\",\n    \"code\": \"01091600\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.333,\n            37.333\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"Example station near example city #3\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n}]",
+							"raw": "[{\n    \"provider\": \"usgs\",\n    \"datatype\": \"usgs-site\",\n    \"slug\": \"01091500\",\n    \"code\": \"01091500\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.222,\n            37.222\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"USGS Example station near example city #2\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n},\n{\n    \"provider\": \"usgs\",\n    \"datatype\": \"usgs-site\",\n    \"slug\": \"01091600\",\n    \"code\": \"01091600\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.333,\n            37.333\n        ]\n    },\n    \"attributes\": {\n        \"station_name\": \"USGS Example station near example city #3\",\n        \"site_type\": \"lk\"\n    },\n    \"state\": \"mn\"\n}]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2954,6 +2971,163 @@
 							"path": [
 								"providers",
 								"usgs",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Locations - NWS",
+			"item": [
+				{
+					"name": "List Locations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/locations?datatype=nws-site&provider=noaa-nws",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"locations"
+							],
+							"query": [
+								{
+									"key": "datatype",
+									"value": "nws-site"
+								},
+								{
+									"key": "provider",
+									"value": "noaa-nws"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Location (One)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provider\": \"noaa-nws\",\n    \"datatype\": \"nws-site\",\n    \"slug\": \"br549\",\n    \"code\": \"br549\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.111,\n            37.111\n        ]\n    },\n    \"attributes\": {\n        \"name\": \"NWS Example station near example city #1\"\n    },\n    \"state\": \"mn\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/noaa-nws/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"noaa-nws",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Locations (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"provider\": \"noaa-nws\",\n        \"datatype\": \"nws-site\",\n        \"slug\": \"br550\",\n        \"code\": \"br550\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.111,\n                37.111\n            ]\n        },\n        \"attributes\": {\n            \"name\": \"NWS Example station near example city #2\"\n        },\n        \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"noaa-nws\",\n        \"datatype\": \"nws-site\",\n        \"slug\": \"br551\",\n        \"code\": \"br551\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.111,\n                37.111\n            ]\n        },\n        \"attributes\": {\n            \"name\": \"NWS Example station near example city #3\"\n        },\n        \"state\": \"mn\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/noaa-nws/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"noaa-nws",
 								"locations"
 							]
 						}
