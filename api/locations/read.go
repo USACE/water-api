@@ -14,6 +14,7 @@ type LocationFilter struct {
 	State    *string      `query:"state"`
 	Provider *string      `query:"provider"`
 	Datatype *string      `query:"datatype"`
+	Code     *string      `query:"code"`
 	Q        *string      `query:"q"`
 }
 
@@ -27,7 +28,7 @@ func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 		 l.code                         AS code,
 		 l.slug                         AS slug,
 		 ST_AsGeoJSON(l.geometry)::json AS geometry,
-		 s.abbreviation                 AS state,
+		 s.stusps                       AS state,
 		 l.attributes                   AS attributes`,
 	).From(
 		"location l",
@@ -44,19 +45,19 @@ func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 		// Filter by State
 		if f.State != nil {
 			// Limit JOIN using ?state= query param
-			jS += " AND s.abbreviation = ?"
+			jS += " AND s.gid = (SELECT gid FROM tiger.state WHERE stusps = UPPER(?))"
 			jSParams = append(jSParams, f.State)
 			// WHERE
-			q = q.Where("s.abbreviation = ?", f.State)
+			q = q.Where("s.gid = (SELECT gid FROM tiger.state WHERE stusps = UPPER(?))", f.State)
 		}
 
 		// Filter by Provider
 		if f.Provider != nil {
 			// Limit datasource join by ?provider= query param
-			jDS += " AND ds.provider_id = (SELECT id from provider WHERE slug = ?)"
+			jDS += " AND ds.provider_id = (SELECT id from provider WHERE slug = LOWER(?))"
 			jDSParams = append(jDSParams, f.Provider)
 			// Limit provider join by ?provider= query param
-			jP += " AND p.id = (SELECT id FROM provider WHERE slug = ?)"
+			jP += " AND p.slug = LOWER(?)"
 			jPParams = append(jPParams, f.Provider)
 			// WHERE
 			q = q.Where("p.slug = ?", f.Provider)
@@ -65,13 +66,18 @@ func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 		// Filter by Datatype
 		if f.Datatype != nil {
 			// Limit datasource join by ?datatype= query param
-			jDS += " AND ds.datatype_id = (SELECT id from datatype WHERE slug = ?)"
+			jDS += " AND ds.datatype_id = (SELECT id from datatype WHERE slug = LOWER(?))"
 			jDSParams = append(jDSParams, f.Datatype)
 			// Limit datatype join by ?datatype= query param
-			jDT += " AND dt.id = (SELECT id FROM datatype WHERE slug = ?)"
-			jDTParams = append(jDTParams, f.Provider)
+			jDT += " AND dt.slug = LOWER(?)"
+			jDTParams = append(jDTParams, f.Datatype)
 			// WHERE
 			q = q.Where("dt.slug = ?", f.Datatype)
+		}
+
+		// Filter by Code
+		if f.Code != nil {
+			q = q.Where("UPPER(l.code) = UPPER(?)", f.Code) // todo; confirm case insensitive is desired behavior
 		}
 
 		// Filter by Search String
@@ -86,10 +92,10 @@ func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 		}
 	}
 
-	q.Join(jS, jSParams...)   // join state
-	q.Join(jDS, jDSParams...) // join datasource
-	q.Join(jP, jPParams...)   // join provider
-	q.Join(jDT, jDTParams...) // join datatype
+	q = q.Join(jS, jSParams...)   // join state
+	q = q.Join(jDS, jDSParams...) // join datasource
+	q = q.Join(jP, jPParams...)   // join provider
+	q = q.Join(jDT, jDTParams...) // join datatype
 
 	return q.PlaceholderFormat(sq.Dollar), nil
 }

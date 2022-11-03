@@ -15,11 +15,14 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/labstack/echo/v4 v4.9.1
 	github.com/paulmach/orb v0.7.1
+	github.com/stretchr/testify v1.8.0
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb
+	golang.org/x/exp v0.0.0-20221031165847-c99f073a8326
 	golang.org/x/net v0.0.0-20221017152216-f25eb7ecb193
 )
 
 require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gosimple/unidecode v1.0.1 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
@@ -34,11 +37,12 @@ require (
 	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	golang.org/x/crypto v0.0.0-20221012134737-56aed061732a // indirect
-	golang.org/x/exp v0.0.0-20221031165847-c99f073a8326 // indirect
 	golang.org/x/sys v0.1.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.1.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
