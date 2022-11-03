@@ -2216,6 +2216,58 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get Timeseries Levels (NWS Levels)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/timeseries?provider=noaa-nws&datatype=nws-level",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"timeseries"
+							],
+							"query": [
+								{
+									"key": "provider",
+									"value": "noaa-nws"
+								},
+								{
+									"key": "datatype",
+									"value": "nws-level"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
