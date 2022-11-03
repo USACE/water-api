@@ -149,6 +149,7 @@ CREATE TABLE IF NOT EXISTS timeseries (
     id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     datasource_id UUID NOT NULL REFERENCES datasource(id),
     datasource_key VARCHAR NOT NULL,
+    location_id UUID NOT NULL REFERENCES location(id),
     latest_value DOUBLE PRECISION,
     latest_time TIMESTAMPTZ,
     CONSTRAINT timeseries_unique_datasource UNIQUE(datasource_id, datasource_key)

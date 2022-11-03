@@ -42,7 +42,9 @@ GRANT SELECT ON
     chart_variable_mapping,
     watershed,
     watershed_shapefile_uploads,
-    watershed_usgs_sites,    
+    watershed_usgs_sites,
+    v_datasource,
+    v_location,
     v_usgs_site,
     v_watershed
 TO water_reader;
