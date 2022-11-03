@@ -60,7 +60,7 @@ func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 			jP += " AND p.slug = LOWER(?)"
 			jPParams = append(jPParams, f.Provider)
 			// WHERE
-			q = q.Where("p.slug = ?", f.Provider)
+			q = q.Where("p.slug = LOWER(?)", f.Provider)
 		}
 
 		// Filter by Datatype
@@ -72,12 +72,12 @@ func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 			jDT += " AND dt.slug = LOWER(?)"
 			jDTParams = append(jDTParams, f.Datatype)
 			// WHERE
-			q = q.Where("dt.slug = ?", f.Datatype)
+			q = q.Where("dt.slug = LOWER(?)", f.Datatype)
 		}
 
 		// Filter by Code
 		if f.Code != nil {
-			q = q.Where("UPPER(l.code) = UPPER(?)", f.Code) // todo; confirm case insensitive is desired behavior
+			q = q.Where("l.code = LOWER(?)", f.Code) // todo; confirm case insensitive is desired behavior
 		}
 
 		// Filter by Search String

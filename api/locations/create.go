@@ -41,16 +41,16 @@ func (cc LocationCollection) Create(db *pgxpool.Pool) ([]LocationInfo, error) {
 			    (
 					SELECT id 
 				      FROM datasource
-				     WHERE datatype_id = (SELECT id FROM datatype WHERE slug = $1)
-					   AND provider_id = (SELECT id FROM provider WHERE slug = $2)
+				     WHERE datatype_id = (SELECT id FROM datatype WHERE slug = LOWER($1))
+					   AND provider_id = (SELECT id FROM provider WHERE slug = LOWER($2))
 				),
 				$3,
-				$4,
+				LOWER($4),
 				$5,
 				(
 					SELECT gid
 				      FROM tiger_data.state_all
-				     WHERE UPPER(stusps) = UPPER($6)
+				     WHERE stusps = UPPER($6)
 				),
 				$7
 			 ) ON CONFLICT ON CONSTRAINT datasource_unique_code DO NOTHING

@@ -30,7 +30,7 @@ func (cc LocationCollection) Update(db *pgxpool.Pool) ([]LocationInfo, error) {
 				FROM datasource
 				WHERE datatype_id = (SELECT id FROM datatype WHERE slug = LOWER($4)) AND provider_id = (SELECT id FROM provider WHERE slug = LOWER($5))
 			 )
-			 AND code = $6
+			 AND code = LOWER($6)
 			 RETURNING id`,
 			info.Geometry.EWKT(6), info.State, info.Attributes, info.Datatype, info.Provider, info.Code,
 		)
