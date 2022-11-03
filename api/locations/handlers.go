@@ -36,6 +36,11 @@ func (s Store) CreateLocations(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
+	// If 0 new locations were created, return a RESTful 200
+	if len(ll) == 0 {
+		return c.JSON(http.StatusOK, ll)
+	}
+	// If at least 1 location was created, return 201 with array of new locations
 	return c.JSON(http.StatusCreated, ll)
 }
 

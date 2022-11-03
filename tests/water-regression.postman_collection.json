@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "f5303226-21f2-4895-9f40-c147464299bb",
+		"_postman_id": "13996cb7-90cd-4f4e-b264-ebe46a6100fc",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20040250"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -2682,6 +2681,53 @@
 					"response": []
 				},
 				{
+					"name": "Update Locations (One)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provider\": \"mvp\",\n    \"provider_name\": \"St. Paul District\",\n    \"datatype\": \"cwms-location\",\n    \"datatype_name\": \"CWMS Location\",\n    \"code\": \"Regression Test CWMS Location Create One\",\n    \"slug\": \"regression-test-cwms-location-create-one\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88,\n            37\n        ]\n    },\n    \"state\": \"MN\",\n    \"attributes\": {\n        \"kind\": \"PROJECT\",\n        \"public_name\": \"Regression Test CWMS Location Create One UPDATE PUBLIC NAME\"\n    }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Locations (Many)",
 					"event": [
 						{
@@ -2729,55 +2775,7 @@
 					"response": []
 				},
 				{
-					"name": "Sync Locations (Many)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 201\", function () {",
-									"    pm.response.to.have.status(201);",
-									"});",
-									"pm.test(\"Response time is less than 200 ms\", function () {",
-									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
-									"});",
-									"pm.test(\"Valid JSON response\", function () {",
-									"    pm.expect(pm.response.json());",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[\n    {\n        \"provider\": \"mvp\",\n        \"datatype\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-2\",\n        \"code\": \"Regression Test CWMS Location Create #2\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.2,\n                37.2\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test CWMS Location Create #2 - Renamed after sync\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datatype\": \"cwms-location\",\n        \"slug\": \"regression-test-cwms-location-create-3\",\n        \"code\": \"Regression Test CWMS Location Create #3\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.3,\n                37.3\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test CWMS Location Create #3 - Renamed after sync\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    }\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/providers/mvp/locations/sync",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"providers",
-								"mvp",
-								"locations",
-								"sync"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Location",
+					"name": "Update Locations (Many)",
 					"event": [
 						{
 							"listen": "test",
@@ -2802,7 +2800,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"provider\": \"mvp\",\n    \"datatype\": \"cwms-location\",\n    \"slug\": \"regression-test-cwms-location-create-3\",\n    \"code\": \"Regression Test CWMS Location Create #3\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.999,\n            37.999\n        ]\n    },\n    \"attributes\": {\n        \"public_name\": \"Regression Test CWMS Location Create #3 - Renamed after PUT\",\n        \"kind\": \"PROJECT\"\n    },\n    \"state\": \"mn\"\n}\n",
+							"raw": "[\n    {\n        \"provider\": \"mvp\",\n        \"provider_name\": \"St. Paul District\",\n        \"datatype\": \"cwms-location\",\n        \"datatype_name\": \"CWMS Location\",\n        \"code\": \"Regression Test CWMS Location Create #2\",\n        \"slug\": \"regression-test-cwms-location-create-2\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88,\n                37\n            ]\n        },\n        \"state\": \"MN\",\n        \"attributes\": {\n            \"kind\": \"PROJECT\",\n            \"public_name\": \"Regression Test CWMS Location Create #2 UPDATE PUBLIC NAME\"\n        }\n    },\n    {\n        \"provider\": \"mvp\",\n        \"provider_name\": \"St. Paul District\",\n        \"datatype\": \"cwms-location\",\n        \"datatype_name\": \"CWMS Location\",\n        \"code\": \"Regression Test CWMS Location Create #3\",\n        \"slug\": \"regression-test-cwms-location-create-3\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88,\n                37\n            ]\n        },\n        \"state\": \"MN\",\n        \"attributes\": {\n            \"kind\": \"PROJECT\",\n            \"public_name\": \"Regression Test CWMS Location Create #3 UPDATE PUBLIC NAME AGAIN AGAIN AGAIN\"\n        }\n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2810,15 +2808,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/providers/mvp/locations/regression-test-cwms-location-create-3",
+							"raw": "{{base_url}}/providers/mvp/locations",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"providers",
 								"mvp",
-								"locations",
-								"regression-test-cwms-location-create-3"
+								"locations"
 							]
 						}
 					},
