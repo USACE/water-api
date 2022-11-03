@@ -31,7 +31,7 @@ func Mount(conn *pgxpool.Pool, e *echo.Echo, config *app.Config, chartserver *ch
 	public.GET("/locations", s.ListLocations) // LIST
 	// public.GET("/v2/locations/:location/profile-chart", s.GetProfileChart) // GET PROFILE CHART
 	key.POST("/providers/:provider/locations", s.CreateLocations) // CREATE
-	// key.PUT("/v2/locations/:location", s.UpdateLocation)                   // UPDATE
+	key.PUT("/providers/:provider/locations", s.UpdateLocations)  // UPDATE
 	// key.DELETE("/v2/locations/:location", s.DeleteLocation)                // DELETE
 
 	// Sync Locations

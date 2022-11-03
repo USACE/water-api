@@ -39,6 +39,38 @@ func (s Store) CreateLocations(c echo.Context) error {
 	return c.JSON(http.StatusCreated, ll)
 }
 
+func (s Store) UpdateLocations(c echo.Context) error {
+
+	var nn LocationInfoCollection
+	if err := c.Bind(&nn); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	// ensure provider slug for all posted locations matches route param :provider
+	// if not, return status unauthorized
+	routeProvider := c.Param("provider")
+	for _, item := range nn.Items {
+		if !strings.EqualFold(routeProvider, item.Provider) {
+			return c.String(
+				http.StatusBadRequest,
+				"location in post body has provider that does not match route param :provider",
+			)
+		}
+	}
+
+	cc, err := nn.LocationCollection() // convert to LocationCollection
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	ll, err := cc.Update(s.Connection) // run sql
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusCreated, ll)
+}
+
 func (s Store) ListLocations(c echo.Context) error {
 	// Get filters from query params kind_id= or office_id=
 	var f LocationFilter
