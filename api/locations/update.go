@@ -40,10 +40,9 @@ func (cc LocationCollection) Update(db *pgxpool.Pool) ([]LocationInfo, error) {
 		}
 		var id uuid.UUID
 		if err := pgxscan.ScanOne(&id, rows); err != nil {
-			tx.Rollback(context.Background())
-			return make([]LocationInfo, 0), err
-		} // todo; test coverage and confirm behavior when UPDATE called on site that does not exist.
-
+			// Row was not updated; Do not include ID in list of updated records
+			continue
+		}
 		IDs = append(IDs, id)
 	}
 	tx.Commit(context.Background())

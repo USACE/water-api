@@ -68,7 +68,7 @@ func (s Store) UpdateLocations(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusCreated, ll)
+	return c.JSON(http.StatusOK, ll)
 }
 
 func (s Store) ListLocations(c echo.Context) error {
