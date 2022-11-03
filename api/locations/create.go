@@ -9,11 +9,11 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-func (cc LocationCollection) Create(db *pgxpool.Pool) ([]Location, error) {
+func (cc LocationCollection) Create(db *pgxpool.Pool) ([]LocationInfo, error) {
 
 	tx, err := db.Begin(context.Background())
 	if err != nil {
-		return make([]Location, 0), err
+		return make([]LocationInfo, 0), err
 	}
 	defer tx.Rollback(context.Background())
 	newIDs := make([]uuid.UUID, 0)
@@ -22,14 +22,14 @@ func (cc LocationCollection) Create(db *pgxpool.Pool) ([]Location, error) {
 	// Append the map each time a new location is created and another slug is taken.
 	slugMap, err := helpers.SlugMap(db, "location", "slug", "", "")
 	if err != nil {
-		return make([]Location, 0), err
+		return make([]LocationInfo, 0), err
 	}
 	for _, n := range cc.Items {
 		info := n.LocationInfo()
 		// Get Unique Slug for Each Location
 		slug, err := helpers.GetUniqueSlug(info.Code, slugMap)
 		if err != nil {
-			return make([]Location, 0), err
+			return make([]LocationInfo, 0), err
 		}
 		// Add slug to map so it's not reused within this transaction
 		slugMap[slug] = true
@@ -58,19 +58,18 @@ func (cc LocationCollection) Create(db *pgxpool.Pool) ([]Location, error) {
 		)
 		if err != nil {
 			tx.Rollback(context.Background())
-			return make([]Location, 0), err
+			return make([]LocationInfo, 0), err
 		}
 		var id uuid.UUID
 		if err := pgxscan.ScanOne(&id, rows); err != nil {
 			tx.Rollback(context.Background())
-			return make([]Location, 0), err
+			return make([]LocationInfo, 0), err
 		}
 
 		newIDs = append(newIDs, id)
 	}
 	tx.Commit(context.Background())
 
-	return make([]Location, 0), nil
-	// todo
-	// return ListLocationsForIDs(db, newIDs)
+	return ListLocations(db, &LocationFilter{IDs: &newIDs})
+
 }
