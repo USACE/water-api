@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "13996cb7-90cd-4f4e-b264-ebe46a6100fc",
+		"_postman_id": "7b54662d-ad42-45e4-9163-78d24aa56da1",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -338,42 +338,6 @@
 									"key": "provider",
 									"value": "noaa-nws"
 								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Offices",
-			"item": [
-				{
-					"name": "List Offices",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/offices",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"offices"
 							]
 						}
 					},
