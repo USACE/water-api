@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/USACE/water-api/api/helpers"
+	"github.com/paulmach/orb/geojson"
 )
 
 type (
@@ -34,7 +35,7 @@ type (
 		DatatypeName string             `json:"datatype_name"`
 		Code         string             `json:"code"` // unique string; e.g. cwms-location: "name", usgs-site: "station number", nws-site: "nws_li"
 		Slug         string             `json:"slug"`
-		Geometry     helpers.Geometry   `json:"geometry"`
+		Geometry     geojson.Geometry   `json:"geometry"`
 		State        *string            `json:"state"`
 		Attributes   LocationAttributes `json:"attributes"` // Non-Standard Attributes
 	}
@@ -74,6 +75,12 @@ func (lc LocationInfoCollection) LocationCollection() (LocationCollection, error
 			} else {
 				cc[idx] = l
 			}
+		case "cwms-watershed":
+			if l, err := NewCwmsWatershed(item); err != nil {
+				return empty, err
+			} else {
+				cc[idx] = l
+			}
 		case "usgs-site":
 			if l, err := NewUsgsSite(item); err != nil {
 				return empty, err
@@ -86,6 +93,7 @@ func (lc LocationInfoCollection) LocationCollection() (LocationCollection, error
 			} else {
 				cc[idx] = l
 			}
+
 		default:
 			return LocationCollection{}, fmt.Errorf("CREATE not implemented for datatype=%s", item.Datatype)
 		}

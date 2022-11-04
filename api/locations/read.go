@@ -2,6 +2,7 @@ package locations
 
 import (
 	"context"
+	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/georgysavva/scany/pgxscan"
@@ -11,6 +12,7 @@ import (
 
 type LocationFilter struct {
 	IDs      *[]uuid.UUID // not supported as query param;
+	Slug     *string      `param:"location"` // if set, should always return 0 or 1 locations
 	State    *string      `query:"state"`
 	Provider *string      `query:"provider"`
 	Datatype *string      `query:"datatype"`
@@ -42,6 +44,11 @@ func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 
 	// Apply Filters (excluding Search Query String)
 	if f != nil {
+		// Filter by Slug
+		// Slug is globally unique, query should return 1 row
+		if f.Slug != nil {
+			q = q.Where("l.slug = lower(?)", f.Slug)
+		}
 		// Filter by State
 		if f.State != nil {
 			// Limit JOIN using ?state= query param
@@ -92,10 +99,10 @@ func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 		}
 	}
 
-	q = q.Join(jS, jSParams...)   // join state
-	q = q.Join(jDS, jDSParams...) // join datasource
-	q = q.Join(jP, jPParams...)   // join provider
-	q = q.Join(jDT, jDTParams...) // join datatype
+	q = q.LeftJoin(jS, jSParams...) // join state
+	q = q.Join(jDS, jDSParams...)   // join datasource
+	q = q.Join(jP, jPParams...)     // join provider
+	q = q.Join(jDT, jDTParams...)   // join datatype
 
 	return q.PlaceholderFormat(sq.Dollar), nil
 }
@@ -105,13 +112,37 @@ func ListLocations(db *pgxpool.Pool, f *LocationFilter) ([]LocationInfo, error) 
 	if err != nil {
 		return make([]LocationInfo, 0), err
 	}
+
 	sql, args, err := q.ToSql()
 	if err != nil {
 		return make([]LocationInfo, 0), err
 	}
+	fmt.Println(sql)
+
 	ll := make([]LocationInfo, 0)
 	if err := pgxscan.Select(context.Background(), db, &ll, sql, args...); err != nil {
 		return make([]LocationInfo, 0), err
 	}
+
 	return ll, nil
+}
+
+func GetLocation(db *pgxpool.Pool, f *LocationFilter) (*LocationInfo, error) {
+
+	q, err := ListLocationsQuery(f)
+	if err != nil {
+		return nil, err
+	}
+
+	sql, args, err := q.ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var l LocationInfo
+	if err := pgxscan.Get(context.Background(), db, &l, sql, args...); err != nil {
+		return nil, err
+	}
+
+	return &l, nil
 }

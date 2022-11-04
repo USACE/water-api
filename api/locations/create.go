@@ -46,7 +46,7 @@ func (cc LocationCollection) Create(db *pgxpool.Pool) ([]LocationInfo, error) {
 				),
 				$3,
 				LOWER($4),
-				$5,
+				ST_GeomFromGeoJSON($5::json),
 				(
 					SELECT gid
 				      FROM tiger_data.state_all
@@ -55,7 +55,7 @@ func (cc LocationCollection) Create(db *pgxpool.Pool) ([]LocationInfo, error) {
 				$7
 			 ) ON CONFLICT ON CONSTRAINT datasource_unique_code DO NOTHING
 			 RETURNING id`,
-			info.Datatype, info.Provider, slug, info.Code, info.Geometry.EWKT(6), info.State, info.Attributes,
+			info.Datatype, info.Provider, slug, info.Code, info.Geometry, info.State, info.Attributes,
 		)
 		if err != nil {
 			tx.Rollback(context.Background())

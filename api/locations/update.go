@@ -22,7 +22,7 @@ func (cc LocationCollection) Update(db *pgxpool.Pool) ([]LocationInfo, error) {
 		rows, err := tx.Query(
 			context.Background(),
 			`UPDATE location
-			 SET geometry = $1,
+			 SET geometry = ST_GeomFromGeoJSON($1::json),
 			     state_id = (SELECT gid FROM tiger_data.state_all WHERE stusps = UPPER($2)),
 			     attributes = $3
 			 WHERE datasource_id = (
@@ -32,7 +32,7 @@ func (cc LocationCollection) Update(db *pgxpool.Pool) ([]LocationInfo, error) {
 			 )
 			 AND code = LOWER($6)
 			 RETURNING id`,
-			info.Geometry.EWKT(6), info.State, info.Attributes, info.Datatype, info.Provider, info.Code,
+			info.Geometry, info.State, info.Attributes, info.Datatype, info.Provider, info.Code,
 		)
 		if err != nil {
 			tx.Rollback(context.Background())

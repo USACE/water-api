@@ -72,15 +72,17 @@ CREATE OR REPLACE VIEW v_location AS (
 --------------
 -- V_WATERSHED
 --------------
+-- TODO; rethink or refactor this view
 -- This should rebuild after being deleted in 1.0.7
 CREATE OR REPLACE VIEW v_watershed AS (
-    SELECT w.id,
-           w.slug,
-           w.name,
-           w.geometry AS geometry,
-           w.provider_id,
-           p.slug AS provider_slug
-	FROM   watershed w
-    LEFT JOIN provider p ON w.provider_id = p.id
-	WHERE NOT w.deleted
+    SELECT l.id       AS id,
+           l.slug     AS slug,
+           l.code     AS name,
+           l.geometry AS geometry,
+           p.id       AS provider_id,
+           p.slug     AS provider_slug
+	FROM   location l
+    JOIN datasource d on d.id = l.datasource_id
+        AND d.datatype_id = (SELECT id FROM datatype WHERE slug = 'cwms-watershed')
+    JOIN provider p ON p.id = d.provider_id
 );

@@ -40,9 +40,9 @@ GRANT SELECT ON
     usgs_parameter,
     chart,
     chart_variable_mapping,
-    watershed,
-    watershed_shapefile_uploads,
-    watershed_usgs_sites,
+    -- watershed,
+    -- watershed_shapefile_uploads,
+    -- watershed_usgs_sites,
     v_datasource,
     v_location,
     v_usgs_site,
@@ -65,10 +65,10 @@ GRANT INSERT,UPDATE,DELETE ON
     usgs_site_parameters,
     usgs_parameter,
     chart,
-    chart_variable_mapping,
-    watershed,
-    watershed_shapefile_uploads,
-    watershed_usgs_sites
+    chart_variable_mapping
+    -- watershed,
+    -- watershed_shapefile_uploads,
+    -- watershed_usgs_sites
 TO water_writer;
 
 -- Role postgis_reader

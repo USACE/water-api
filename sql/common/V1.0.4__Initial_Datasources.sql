@@ -5,7 +5,7 @@ cwms_provider_array varchar[] := '{LRB, LRC, LRD, LRE, LRH, LRL, LRN, LRP, MVD, 
                                  'NWK, NWO, NWP, NWS, NWW, POA, POH, SAC, SAD, SAJ, SAM, SAS, SAW, SPA, SPD, SPK, SPL, SPN, SWD, SWF, SWL, SWT}';
 cwms_provider varchar;
 
-cwms_data_type_array varchar[] := '{cwms-timeseries, cwms-level, cwms-location}';
+cwms_data_type_array varchar[] := '{cwms-timeseries, cwms-level, cwms-location, cwms-watershed}';
 cwms_data_type varchar;
 
 BEGIN

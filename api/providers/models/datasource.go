@@ -9,11 +9,11 @@ import (
 )
 
 type Datasource struct {
-	Provider     string `json:"provider"`
-	ProviderName string `json:"provider_name"`
-	Datatype     string `json:"datatype"`
-	DatatypeName string `json:"datatype_name"`
-	DatatypeUri  string `json:"datatype_uri"`
+	Provider     string  `json:"provider"`
+	ProviderName string  `json:"provider_name"`
+	Datatype     string  `json:"datatype"`
+	DatatypeName string  `json:"datatype_name"`
+	DatatypeUri  *string `json:"datatype_uri"`
 }
 
 // ListDatasources

@@ -82,9 +82,32 @@ func (s Store) ListLocations(c echo.Context) error {
 	if err := c.Bind(&f); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
+
 	ll, err := ListLocations(s.Connection, &f)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
+
+	if len(ll) == 0 {
+		return c.JSON(http.StatusNotFound, ll)
+	}
+
 	return c.JSON(http.StatusOK, ll)
+}
+
+func (s Store) GetLocation(c echo.Context) error {
+	// Get filters from query params; The :location route parameter is all that is needed,
+	// as this is globally unique for a location.  Binding LocationFilter for shared behavior
+	// with ListLocationsQuery()
+	var f LocationFilter
+	if err := c.Bind(&f); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	l, err := GetLocation(s.Connection, &f)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, l)
 }

@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS datatype (
     id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     slug VARCHAR UNIQUE NOT NULL,
     name VARCHAR NOT NULL,
-    uri VARCHAR NOT NULL,
-    CONSTRAINT datatype_unique_uri UNIQUE(slug, uri)
+    uri VARCHAR
+    -- CONSTRAINT datatype_unique_uri UNIQUE(slug, uri)  // todo; delete; this constraint will always be met because slug is globally unique
 );
 
 -- datasource table
@@ -98,24 +98,24 @@ CREATE TABLE IF NOT EXISTS usgs_measurements (
     PRIMARY KEY (usgs_site_parameters_id, time)
 );
 
--- watershed
-CREATE TABLE IF NOT EXISTS watershed (
-    id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-    slug VARCHAR UNIQUE NOT NULL,
-    name VARCHAR NOT NULL,
-    geometry geometry NOT NULL DEFAULT ST_GeomFromText('POLYGON ((0 0, 0 0, 0 0, 0 0, 0 0))',4326),
-    provider_id UUID NOT NULL REFERENCES provider(id),
-	deleted boolean NOT NULL DEFAULT false
-);
+-- -- watershed
+-- CREATE TABLE IF NOT EXISTS watershed (
+--     id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+--     slug VARCHAR UNIQUE NOT NULL,
+--     name VARCHAR NOT NULL,
+--     geometry geometry NOT NULL DEFAULT ST_GeomFromText('POLYGON ((0 0, 0 0, 0 0, 0 0, 0 0))',4326),
+--     provider_id UUID NOT NULL REFERENCES provider(id),
+-- 	deleted boolean NOT NULL DEFAULT false
+-- );
 
--- watershed_usgs_sites
-CREATE TABLE IF NOT EXISTS watershed_usgs_sites (
-    watershed_id UUID NOT NULL REFERENCES watershed(id),
-    usgs_site_parameter_id UUID NOT NULL REFERENCES usgs_site_parameters(id),
-    CONSTRAINT watershed_unique_site_param UNIQUE(watershed_id, usgs_site_parameter_id)
-);
--- Add comment to describe table
-COMMENT ON TABLE watershed_usgs_sites IS 'This is a bridge table.  Each entry represent a watershed/site/parameter that has been requested for USGS data acquisition.';
+-- -- watershed_usgs_sites
+-- CREATE TABLE IF NOT EXISTS watershed_usgs_sites (
+--     watershed_id UUID NOT NULL REFERENCES watershed(id),
+--     usgs_site_parameter_id UUID NOT NULL REFERENCES usgs_site_parameters(id),
+--     CONSTRAINT watershed_unique_site_param UNIQUE(watershed_id, usgs_site_parameter_id)
+-- );
+-- -- Add comment to describe table
+-- COMMENT ON TABLE watershed_usgs_sites IS 'This is a bridge table.  Each entry represent a watershed/site/parameter that has been requested for USGS data acquisition.';
 
 
 -------------------
@@ -128,17 +128,17 @@ CREATE TABLE IF NOT EXISTS upload_status (
     name VARCHAR NOT NULL
 );
 
--- watershed_shapefile_uploads definition
-CREATE TABLE IF NOT EXISTS watershed_shapefile_uploads (
-	id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-	watershed_id UUID NOT NULL REFERENCES watershed(id),
-	file VARCHAR NOT NULL,
-	date_time TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	file_size INTEGER NOT NULL,
-    processing_info VARCHAR,
-    user_id UUID,
-    upload_status_id UUID NOT NULL DEFAULT 'b5d777fc-c46b-4a10-a488-1415e3d7849d' REFERENCES upload_status(id)
-);
+-- -- watershed_shapefile_uploads definition
+-- CREATE TABLE IF NOT EXISTS watershed_shapefile_uploads (
+-- 	id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+-- 	watershed_id UUID NOT NULL REFERENCES watershed(id),
+-- 	file VARCHAR NOT NULL,
+-- 	date_time TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- 	file_size INTEGER NOT NULL,
+--     processing_info VARCHAR,
+--     user_id UUID,
+--     upload_status_id UUID NOT NULL DEFAULT 'b5d777fc-c46b-4a10-a488-1415e3d7849d' REFERENCES upload_status(id)
+-- );
 
 --------------
 -- TIMESERIES
