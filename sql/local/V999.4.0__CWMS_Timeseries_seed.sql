@@ -36,15 +36,15 @@ BEGIN
 
     -- Locations
     SELECT id into lrh_alumcr_cwms_location_id FROM v_location 
-        WHERE slug = 'alumcr' and datatype = 'cwms-location' AND provider = 'lrh';
+        WHERE lower(code) = 'alumcr' and datatype = 'cwms-location' AND provider = 'lrh';
     SELECT id into lrh_alumcr_lake_cwms_location_id FROM v_location 
-        WHERE slug = 'alumcr-lake' and datatype = 'cwms-location' AND provider = 'lrh';
+        WHERE lower(code) = 'alumcr-lake' and datatype = 'cwms-location' AND provider = 'lrh';
     SELECT id into lrh_alumcr_outflow_cwms_location_id FROM v_location 
-        WHERE slug = 'alumcr-outflow' and datatype = 'cwms-location' AND provider = 'lrh';    
+        WHERE lower(code) = 'alumcr-outflow' and datatype = 'cwms-location' AND provider = 'lrh';    
     SELECT id into lrn_barkley_cwms_location_id FROM v_location 
-        WHERE slug = 'bahk2-barkley' and datatype = 'cwms-location' AND provider = 'lrn';
+        WHERE lower(code) = 'bahk2-barkley' and datatype = 'cwms-location' AND provider = 'lrn';
     SELECT id into mvp_baldhill_cwms_location_id FROM v_location 
-        WHERE slug = 'baldhill-dam' and datatype = 'cwms-location' AND provider = 'mvp';
+        WHERE lower(code) = 'baldhill_dam' and datatype = 'cwms-location' AND provider = 'mvp';
     -- SELECT id into nwo_cwms_location_id FROM v_location WHERE datatype = 'cwms-timeseries' AND provider = 'nwo';
     -- SELECT id into nwp_cwms_location_id FROM v_location WHERE datatype = 'cwms-timeseries' AND provider = 'nwp';
     -- SELECT id into nws_cwms_location_id FROM v_location WHERE datatype = 'cwms-timeseries' AND provider = 'nws';

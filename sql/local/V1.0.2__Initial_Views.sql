@@ -24,7 +24,7 @@ CREATE OR REPLACE VIEW v_location AS (
         JOIN datasource d ON d.id = l.datasource_id
         JOIN "datatype" dt ON dt.id = d.datatype_id
         JOIN provider p ON p.id = d.provider_id 
-        JOIN tiger_data.state_all sa ON sa.gid = l.state_id
+        LEFT JOIN tiger_data.state_all sa ON sa.gid = l.state_id
 );
 
 --------------
