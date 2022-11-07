@@ -22,6 +22,7 @@ type Timeseries struct {
 	Provider     string        `json:"provider" db:"provider"`
 	Datatype     string        `json:"datatype" db:"datatype"`
 	Key          string        `json:"key"`
+	LocationSlug string        `json:"location_slug,omitempty"`
 	LatestTime   *time.Time    `json:"latest_time,omitempty"`
 	LatestValue  *float64      `json:"latest_value,omitempty"`
 	Measurements *Measurements `json:"measurements,omitempty"`
@@ -55,6 +56,7 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 	q := sq.Select(
 		`dt.slug 			AS datatype,
 		 p.slug  			AS provider,
+		 l.slug				AS location_slug,
 		 t.datasource_key 	AS key,
 		 t.latest_time,
 		 t.latest_value`,
@@ -67,6 +69,8 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 	).Join(
 		"provider p ON p.id = d.provider_id",
 	)
+
+	q = q.Join("location l on l.id = t.location_id")
 
 	if f != nil {
 
@@ -136,11 +140,11 @@ func CreateTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Timeseries, e
 	for _, t := range c.Items {
 		rows, err := tx.Query(
 			context.Background(),
-			`INSERT INTO timeseries (datasource_id, datasource_key)
-			VALUES((`+queryDataSourceID+`), $3)	
+			`INSERT INTO timeseries (datasource_id, datasource_key, location_id)
+			VALUES((`+queryDataSourceID+`), $3, (SELECT id from location where lower(slug) = lower($4)))	
 			ON CONFLICT DO NOTHING		
 			RETURNING id`,
-			t.Datatype, t.Provider, t.Key,
+			t.Datatype, t.Provider, t.Key, t.LocationSlug,
 		)
 		if err != nil {
 			return make([]Timeseries, 0), err
