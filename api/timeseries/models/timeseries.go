@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/USACE/water-api/api/helpers"
@@ -15,26 +14,24 @@ import (
 
 type (
 	TimeseriesFilter struct {
-		IDs      *[]uuid.UUID // intentionally not supported as query param
-		Datatype *string      `query:"datatype"`
-		Provider *string      `query:"provider"`
-		Q        *string      `query:"q"`
+		IDs              *[]uuid.UUID // intentionally not supported as query param
+		Datatype         *string      `query:"datatype"`
+		Provider         *string      `query:"provider"`
+		EtlValuesEnabled *bool        `query:"etl_values_enabled"`
+		Q                *string      `query:"q"`
 	}
 
 	Timeseries struct {
-		Provider     string        `json:"provider"`
-		ProviderName string        `json:"provider_name"`
-		Datatype     string        `json:"datatype"`
-		DatatypeName string        `json:"datatype_name"`
-		Key          string        `json:"key"`
-		Location     *string       `json:"location"`                         // location slug
-		LocationCode *string       `json:"location_code" db:"location_code"` // location code
-		LatestTime   *time.Time    `json:"latest_time" db:"latest_time"`
-		LatestValue  *float64      `json:"latest_value" db:"latest_value"`
-		Measurements *Measurements `json:"measurements,omitempty"` // may be empty
-		//	Creates a Timeseries may or may not have a Measurements struct.
-		// A measurements struct has two fields. Times, Values. Each is an array with zero or more values []
-		//	Creates metadata that will be associated with all related timeseries measurements
+		Provider         string           `json:"provider"`
+		ProviderName     string           `json:"provider_name"`
+		Datatype         string           `json:"datatype"`
+		DatatypeName     string           `json:"datatype_name"`
+		Key              string           `json:"key"`
+		Location         *string          `json:"location"`                         // location slug
+		LocationCode     *string          `json:"location_code" db:"location_code"` // location code
+		LatestValue      *[]interface{}   `json:"latest_value" db:"latest_value"`   // e.g. ["2022-09-27T12:00:00-05:00", 888.14]
+		Values           *[][]interface{} `json:"values,omitempty"`                 // may be empty [] or [["2022-09-27T12:00:00-05:00", 888.00], ["2022-09-27T13:00:00-05:00", 888.15]]
+		EtlValuesEnabled *bool            `json:"etl_values_enabled,omitempty" db:"etl_values_enabled"`
 	}
 
 	TimeseriesCollection struct {
@@ -57,15 +54,17 @@ func (c *TimeseriesCollection) UnmarshalJSON(b []byte) error {
 func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 
 	q := sq.Select(
-		`p.slug  			AS provider,
-		 p.name             AS provider_name,
-		 dt.slug 			AS datatype,
-		 dt.name            AS datatype_name,
-		 l.code             AS location_code,
-		 l.slug				AS location,
-		 t.datasource_key 	AS key,
-		 t.latest_time,
-		 t.latest_value`,
+		`p.slug  			    AS provider,
+		 p.name                 AS provider_name,
+		 dt.slug 			    AS datatype,
+		 dt.name                AS datatype_name,
+		 l.code                 AS location_code,
+		 l.slug				    AS location,
+		 t.datasource_key 	    AS key,
+		 json_build_array(
+			t.latest_time,
+			t.latest_value
+		)::json                 AS latest_value`,
 	).From(
 		"timeseries t",
 	)
@@ -75,7 +74,6 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 	jDT, jDTParams := "datatype   dt ON dt.id  = ds.datatype_id", make([]interface{}, 0)  // join datatype
 
 	if f != nil {
-
 		// Filter by Provider
 		if f.Provider != nil {
 			// Limit datasource join by ?provider= query param
@@ -103,6 +101,11 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 		// Filter by search string
 		if f.Q != nil {
 			q = q.Where("t.datasource_key ILIKE '%' || lower(?) || '%' ", f.Q)
+		}
+
+		// Filter by etl_values_enabled
+		if f.EtlValuesEnabled != nil {
+			q = q.Where("t.etl_values_enabled = ?", f.EtlValuesEnabled)
 		}
 	}
 

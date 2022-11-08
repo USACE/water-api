@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "b96f6b05-1f74-4630-b3f7-ce536755fb78",
+		"_postman_id": "cb0fd30b-3817-486c-a565-caf5b29c6aaa",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20040250"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -2055,7 +2054,7 @@
 					"response": []
 				},
 				{
-					"name": "List Timeseries by provider, ds_type and mapped",
+					"name": "List Timeseries by provider, ds_type, etl_values_enabled",
 					"event": [
 						{
 							"listen": "test",
@@ -2085,7 +2084,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/timeseries?provider=lrh&datatype=cwms-timeseries&only_mapped=1",
+							"raw": "{{base_url}}/timeseries?provider=lrh&datatype=cwms-timeseries&etl_values_enabled=true",
 							"host": [
 								"{{base_url}}"
 							],
@@ -2102,8 +2101,8 @@
 									"value": "cwms-timeseries"
 								},
 								{
-									"key": "only_mapped",
-									"value": "1"
+									"key": "etl_values_enabled",
+									"value": "true"
 								}
 							]
 						}

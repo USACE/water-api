@@ -152,6 +152,7 @@ CREATE TABLE IF NOT EXISTS timeseries (
     location_id UUID NOT NULL REFERENCES location(id),
     latest_value DOUBLE PRECISION,
     latest_time TIMESTAMPTZ,
+    etl_values_enabled BOOLEAN NOT NULL DEFAULT false,
     CONSTRAINT timeseries_unique_datasource UNIQUE(datasource_id, datasource_key)
 );
 
