@@ -48,7 +48,7 @@ func Mount(conn *pgxpool.Pool, e *echo.Echo, config *app.Config) {
 	private.POST("/watersheds/:watershed_id/shapefile_uploads", s.UploadWatersheds, middleware.IsAdmin) // UPLOAD SHAPEFILE
 
 	// WATERSHED DATA EXTRACT OPERATIONS; @todo; This may belong in another module
-	public.GET("watersheds/:watershed_slug/extract", s.WatershedExtract) // Extract Timeseries values for all locations associated with a watershed
+	// public.GET("watersheds/:watershed_slug/extract", s.WatershedExtract) // Extract Timeseries values for all locations associated with a watershed
 
 	// ASSOCIATE USGS SITES/PARAMETERS WITH A WATERSHED
 	public.GET("/watersheds/usgs_sites", s.ListWatershedSiteParameters)                                                       // List watershed USGS Site Params mapped for data retrieval; Used by Airflow.

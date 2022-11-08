@@ -36,6 +36,6 @@ func Mount(conn *pgxpool.Pool, e *echo.Echo, config *app.Config) {
 	key.POST("/usgs/site_parameters", s.CreateSiteParameters)
 
 	// USGS Time Series
-	key.POST("/usgs/sites/:site_number/measurements", s.CreateOrUpdateUSGSMeasurements)
-	public.GET("/usgs/sites/:site_number/measurements", s.ListUSGSMeasurements)
+	// key.POST("/usgs/sites/:site_number/measurements", s.CreateOrUpdateUSGSMeasurements)
+	// public.GET("/usgs/sites/:site_number/measurements", s.ListUSGSMeasurements)
 }
