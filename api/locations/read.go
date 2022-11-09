@@ -2,7 +2,6 @@ package locations
 
 import (
 	"context"
-	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/georgysavva/scany/pgxscan"
@@ -117,7 +116,6 @@ func ListLocations(db *pgxpool.Pool, f *LocationFilter) ([]LocationInfo, error) 
 	if err != nil {
 		return make([]LocationInfo, 0), err
 	}
-	fmt.Println(sql)
 
 	ll := make([]LocationInfo, 0)
 	if err := pgxscan.Select(context.Background(), db, &ll, sql, args...); err != nil {

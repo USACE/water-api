@@ -27,10 +27,9 @@ type (
 		Datatype         string           `json:"datatype"`
 		DatatypeName     string           `json:"datatype_name"`
 		Key              string           `json:"key"`
-		Location         *string          `json:"location"`                         // location slug
-		LocationCode     *string          `json:"location_code" db:"location_code"` // location code
-		LatestValue      *[]interface{}   `json:"latest_value" db:"latest_value"`   // e.g. ["2022-09-27T12:00:00-05:00", 888.14]
-		Values           *[][]interface{} `json:"values,omitempty"`                 // may be empty [] or [["2022-09-27T12:00:00-05:00", 888.00], ["2022-09-27T13:00:00-05:00", 888.15]]
+		Location         *string          `json:"location"`                       // location slug
+		LatestValue      *[]interface{}   `json:"latest_value" db:"latest_value"` // e.g. ["2022-09-27T12:00:00-05:00", 888.14]
+		Values           *[][]interface{} `json:"values,omitempty"`               // may be empty [] or [["2022-09-27T12:00:00-05:00", 888.00], ["2022-09-27T13:00:00-05:00", 888.15]]
 		EtlValuesEnabled *bool            `json:"etl_values_enabled,omitempty" db:"etl_values_enabled"`
 	}
 
@@ -58,7 +57,6 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 		 p.name                 AS provider_name,
 		 dt.slug 			    AS datatype,
 		 dt.name                AS datatype_name,
-		 l.code                 AS location_code,
 		 l.slug				    AS location,
 		 t.datasource_key 	    AS key,
 		 json_build_array(
@@ -107,6 +105,12 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 		if f.EtlValuesEnabled != nil {
 			q = q.Where("t.etl_values_enabled = ?", f.EtlValuesEnabled)
 		}
+
+		// Filter by list of known UUIDs
+		// This is used after CreateTimeseries when UUIDs of newly created locations are known
+		if f.IDs != nil {
+			q = q.Where(sq.Eq{"t.id": f.IDs})
+		}
 	}
 
 	q = q.Join(jDS, jDSParams...)                        // join datasource
@@ -135,10 +139,8 @@ func ListTimeseries(db *pgxpool.Pool, f *TimeseriesFilter) ([]Timeseries, error)
 	return tt, nil
 }
 
-// func GetTimeseries() (*Timeseries, error) {}
-
 // func CreateTimeseries() ([]Timeseries, error) {}
-func CreateTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Timeseries, error) {
+func (tsc TimeseriesCollection) Create(db *pgxpool.Pool, providerSlug string) ([]Timeseries, error) {
 	tx, err := db.Begin(context.Background())
 	if err != nil {
 		return make([]Timeseries, 0), err
@@ -146,27 +148,16 @@ func CreateTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Timeseries, e
 	defer tx.Rollback(context.Background())
 
 	newIDs := make([]uuid.UUID, 0)
-	for _, t := range c.Items {
+	for _, t := range tsc.Items {
 		rows, err := tx.Query(
 			context.Background(),
 			`INSERT INTO timeseries (datasource_id, datasource_key, location_id)
-			VALUES(
-				(
-					SELECT id
-					  FROM datasource
-					 WHERE datatype_id = (SELECT id FROM datatype WHERE slug = LOWER($1))
-					   AND provider_id = (SELECT id FROM provider WHERE slug = LOWER($2))
-				),
-				$3,
-				(
-					SELECT id
-					  FROM location
-					 WHERE provider_id = (SELECT id FROM provider WHERE slug = LOWER($2))
-					   AND code        = LOWER($4)
-				)
-			ON CONFLICT DO NOTHING		
-			RETURNING id`,
-			t.Datatype, t.Provider, t.Key, t.LocationCode,
+             VALUES (
+                (SELECT id FROM v_datasource WHERE datatype = LOWER($1) AND provider = LOWER($2)),
+                $3,
+                (SELECT id FROM v_location WHERE slug = LOWER($4) AND provider = LOWER($2))
+             ) ON CONFLICT ON CONSTRAINT timeseries_unique_datasource DO NOTHING
+			 RETURNING id`, t.Datatype, t.Provider, t.Key, t.Location,
 		)
 		if err != nil {
 			tx.Rollback(context.Background())
@@ -182,5 +173,3 @@ func CreateTimeseries(db *pgxpool.Pool, c TimeseriesCollection) ([]Timeseries, e
 
 	return ListTimeseries(db, &TimeseriesFilter{IDs: &newIDs})
 }
-
-// func DeleteTimeseries() (something?) {}

@@ -40,19 +40,18 @@ func (s Store) CreateTimeseries(c echo.Context) error {
 		}
 	}
 
-	tt, err := models.CreateTimeseries(s.Connection, tsc)
+	tt, err := tsc.Create(s.Connection, strings.ToLower(routeProvider))
 	if err != nil {
-		if strings.Contains(err.Error(), "duplicate") {
-			return c.JSON(http.StatusBadRequest, messages.NewMessage("duplicate timeseries submitted"))
-		}
-		if strings.Contains(err.Error(), "constraint") {
-			return c.JSON(http.StatusBadRequest, messages.DefaultMessageBadRequest)
-		}
-		//return c.String(http.StatusInternalServerError, err.Error())
 		return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
 	}
 
-	return c.JSON(http.StatusAccepted, tt)
+	// If 0 new timeseries were created, return a RESTful 200
+	if len(tt) == 0 {
+		return c.JSON(http.StatusOK, tt)
+	}
+
+	// If at least 1 timeseries was created, return 201 with array of new timeseries
+	return c.JSON(http.StatusCreated, tt)
 }
 
 // func (s Store) CreateOrUpdateTimeseriesMeasurements(c echo.Context) error {

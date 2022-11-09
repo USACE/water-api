@@ -1,7 +1,6 @@
 package locations
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -29,6 +28,4 @@ func TestLocationsQueryProviderFilter(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, args)
 	assert.NotEmpty(t, sql)
-	fmt.Println(sql)
-	fmt.Println(args)
 }
