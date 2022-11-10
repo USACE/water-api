@@ -37,6 +37,7 @@ type (
 		Slug         string             `json:"slug"`
 		Geometry     geojson.Geometry   `json:"geometry"`
 		State        *string            `json:"state"`
+		StateName    *string            `json:"state_name"`
 		Attributes   LocationAttributes `json:"attributes"` // Non-Standard Attributes
 	}
 

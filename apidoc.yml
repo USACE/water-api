@@ -66,7 +66,7 @@ components:
             horizontal_datum_id: 4269
             vertical_datum_id: 3
             huc: '02070010'
-            state_abbrev: VA
+            state: VA
             state: Virginia
             vertical_datum: NAVD88
             create_date: '2021-08-17T12:53:49.933208Z'
@@ -103,7 +103,7 @@ components:
           type: array
           items:
             type: string
-        state_abbrev:
+        state:
           type: string
           maxLength: 2
           minLength: 2
@@ -554,7 +554,7 @@ paths:
                     horizontal_datum_id: 4269
                     vertical_datum_id: 3
                     huc: '02070002'
-                    state_abbrev: WV
+                    state: WV
                     parameter_codes: []
                     state: West Virginia
                     vertical_datum: NAVD88
@@ -571,7 +571,7 @@ paths:
                     horizontal_datum_id: 4269
                     vertical_datum_id: 0
                     huc: '05050003'
-                    state_abbrev: WV
+                    state: WV
                     parameter_codes: []
                     state: West Virginia
                     vertical_datum: UNKNOWN
@@ -608,7 +608,7 @@ paths:
                   huc:
                     type: string
                     minLength: 1
-                  state_abbrev:
+                  state:
                     type: string
                     minLength: 1
                 required:
@@ -617,7 +617,7 @@ paths:
                   - geometry
                   - horizontal_datum_id
                   - vertical_datum_id
-                  - state_abbrev
+                  - state
       tags:
         - USGS Sites
       x-internal: true

@@ -22,86 +22,58 @@ type LocationFilter struct {
 func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 
 	q := sq.Select(
-		`p.slug                         AS provider,
-	     p.name                         AS provider_name,
-		 dt.slug                        AS datatype,
-		 dt.name                        AS datatype_name,
-		 l.code                         AS code,
-		 l.slug                         AS slug,
-		 ST_AsGeoJSON(l.geometry)::json AS geometry,
-		 s.stusps                       AS state,
-		 l.attributes                   AS attributes`,
+		`provider,
+		 provider_name,
+		 datatype,
+		 datatype_name,
+		 code,
+		 slug,
+		 ST_AsGeoJSON(geometry)::json AS geometry,
+		 state,
+		 state_name,
+		 attributes`,
 	).From(
-		"location l",
+		"v_location l",
 	)
-
-	// Join Statements
-	jS, jSParams := "tiger.state  s  ON s.gid  = l.state_id", make([]interface{}, 0)      // join tiger.state
-	jDS, jDSParams := "datasource ds ON ds.id  = l.datasource_id", make([]interface{}, 0) // join datasource
-	jP, jPParams := "provider     p  ON p.id   = ds.provider_id", make([]interface{}, 0)  // join provider
-	jDT, jDTParams := "datatype   dt ON dt.id  = ds.datatype_id", make([]interface{}, 0)  // join datatype
 
 	// Apply Filters (excluding Search Query String)
 	if f != nil {
 		// Filter by Slug
-		// Slug is globally unique, query should return 1 row
 		if f.Slug != nil {
-			q = q.Where("l.slug = lower(?)", f.Slug)
+			q = q.Where("slug = lower(?)", f.Slug)
 		}
 		// Filter by State
 		if f.State != nil {
-			// Limit JOIN using ?state= query param
-			jS += " AND s.gid = (SELECT gid FROM tiger.state WHERE stusps = UPPER(?))"
-			jSParams = append(jSParams, f.State)
-			// WHERE
-			q = q.Where("s.gid = (SELECT gid FROM tiger.state WHERE stusps = UPPER(?))", f.State)
+			q = q.Where("state = UPPER(?)", f.State)
 		}
 
 		// Filter by Provider
 		if f.Provider != nil {
-			// Limit datasource join by ?provider= query param
-			jDS += " AND ds.provider_id = (SELECT id from provider WHERE slug = LOWER(?))"
-			jDSParams = append(jDSParams, f.Provider)
-			// Limit provider join by ?provider= query param
-			jP += " AND p.slug = LOWER(?)"
-			jPParams = append(jPParams, f.Provider)
-			// WHERE
-			q = q.Where("p.slug = LOWER(?)", f.Provider)
+			q = q.Where("provider = LOWER(?)", f.Provider)
 		}
 
 		// Filter by Datatype
 		if f.Datatype != nil {
-			// Limit datasource join by ?datatype= query param
-			jDS += " AND ds.datatype_id = (SELECT id from datatype WHERE slug = LOWER(?))"
-			jDSParams = append(jDSParams, f.Datatype)
-			// Limit datatype join by ?datatype= query param
-			jDT += " AND dt.slug = LOWER(?)"
-			jDTParams = append(jDTParams, f.Datatype)
 			// WHERE
-			q = q.Where("dt.slug = LOWER(?)", f.Datatype)
+			q = q.Where("datatype = LOWER(?)", f.Datatype)
 		}
 
 		// Filter by Code
 		if f.Code != nil {
-			q = q.Where("l.code = LOWER(?)", f.Code) // todo; confirm case insensitive is desired behavior
+			q = q.Where("code = LOWER(?)", f.Code)
 		}
 
 		// Filter by Search String
 		if f.Q != nil {
-			q = q.Where("l.slug || l.code ILIKE '%' || ? || '%'", f.Q) // filter by query string
+			q = q.Where("slug || code ILIKE '%' || ? || '%'", f.Q)
 		}
 
 		// Filter by list of known UUIDs
 		// This is used after CreateLocations when UUIDs of newly created locations are known
 		if f.IDs != nil {
-			q = q.Where(sq.Eq{"l.id": f.IDs})
+			q = q.Where(sq.Eq{"id": f.IDs})
 		}
 	}
-
-	q = q.LeftJoin(jS, jSParams...) // join state
-	q = q.Join(jDS, jDSParams...)   // join datasource
-	q = q.Join(jP, jPParams...)     // join provider
-	q = q.Join(jDT, jDTParams...)   // join datatype
 
 	return q.PlaceholderFormat(sq.Dollar), nil
 }

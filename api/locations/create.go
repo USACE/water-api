@@ -40,9 +40,8 @@ func (cc LocationCollection) Create(db *pgxpool.Pool) ([]LocationInfo, error) {
 			 VALUES (
 			    (
 					SELECT id 
-				      FROM datasource
-				     WHERE datatype_id = (SELECT id FROM datatype WHERE slug = LOWER($1))
-					   AND provider_id = (SELECT id FROM provider WHERE slug = LOWER($2))
+				      FROM v_datasource
+				     WHERE datatype = LOWER($1) AND provider = LOWER($2)
 				),
 				$3,
 				LOWER($4),
@@ -63,7 +62,7 @@ func (cc LocationCollection) Create(db *pgxpool.Pool) ([]LocationInfo, error) {
 		}
 		var id uuid.UUID
 		if err := pgxscan.ScanOne(&id, rows); err != nil {
-			continue // Location already exists having datasource_id and code; DO NOTHING on constraint bypasses RETURNING id
+			continue // Location already exists for given datasource and code; DO NOTHING on constraint bypasses RETURNING id
 		}
 		newIDs = append(newIDs, id)
 	}
