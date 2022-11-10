@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "cb0fd30b-3817-486c-a565-caf5b29c6aaa",
+		"_postman_id": "682d89e4-d414-4d7f-b514-55d7ca7d9d30",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20040250"
 	},
 	"item": [
 		{
@@ -740,8 +741,7 @@
 									"pm.test(\"Valid JSON response\", function () {",
 									"    pm.expect(pm.response.json());",
 									"});",
-									"let r = JSON.parse(responseBody);",
-									"pm.environment.set(\"regression_project_slug\", r[0].slug);"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -924,8 +924,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 201\", function () {",
-									"    pm.response.to.have.status(201);",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
 									"});",
 									"pm.test(\"Response time is less than 200 ms\", function () {",
 									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
@@ -1518,7 +1518,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Pool.Elev.Inst.15Minutes.0.OBS\",\n        \"location\": \"{{regression_project_pool_slug}}\",\n        \"provider\": \"MVP\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Pool.Flow.Inst.15Minutes.0.OBS\",\n        \"location\": \"{{regression_project_pool_slug}}\",\n        \"provider\": \"MVP\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Tailwater.Stage.Inst.15Minutes.0.OBS\",\n        \"location\": \"{{regression_project_tailwater_slug}}\",\n        \"provider\": \"MVP\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Tailwater.Flow.Inst.15Minutes.0.OBS\",\n        \"location\": \"{{regression_project_tailwater_slug}}\",\n        \"provider\": \"MVP\"\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Top of Dam\",\n        \"location\": \"{{regression_project_slug}}\",\n        \"provider\": \"MVP\"\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Streambed\",\n        \"location\": \"{{regression_project_slug}}\",\n        \"provider\": \"MVP\"\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Top of Flood\",\n        \"location\": \"{{regression_project_slug}}\",\n        \"provider\": \"MVP\"\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Bottom of Flood\",\n        \"location\": \"{{regression_project_slug}}\",\n        \"provider\": \"MVP\"\n        \n    }\n]",
+							"raw": "[\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Pool.Elev.Inst.15Minutes.0.OBS\",\n        \"location\": \"RegressionProject-Pool\",\n        \"provider\": \"MVP\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Pool.Flow.Inst.15Minutes.0.OBS\",\n        \"location\": \"RegressionProject-Pool\",\n        \"provider\": \"MVP\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Tailwater.Stage.Inst.15Minutes.0.OBS\",\n        \"location\": \"RegressionProject-Tailwater\",\n        \"provider\": \"MVP\"\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Tailwater.Flow.Inst.15Minutes.0.OBS\",\n        \"location\": \"RegressionProject-Tailwater\",\n        \"provider\": \"MVP\"\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Top of Dam\",\n        \"location\": \"RegressionProject\",\n        \"provider\": \"MVP\"\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Streambed\",\n        \"location\": \"RegressionProject\",\n        \"provider\": \"MVP\"\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Top of Flood\",\n        \"location\": \"RegressionProject\",\n        \"provider\": \"MVP\"\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Bottom of Flood\",\n        \"location\": \"RegressionProject\",\n        \"provider\": \"MVP\"\n        \n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
