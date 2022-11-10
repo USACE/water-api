@@ -45,6 +45,7 @@ GRANT SELECT ON
     -- watershed_usgs_sites,
     v_datasource,
     v_location,
+    v_timeseries,
     v_usgs_site,
     v_watershed
 TO water_reader;

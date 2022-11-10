@@ -69,6 +69,38 @@ CREATE OR REPLACE VIEW v_location AS (
         LEFT JOIN tiger_data.state_all sa ON sa.gid = l.state_id
 );
 
+
+---------------
+-- V_TIMESERIES
+---------------
+
+CREATE OR REPLACE VIEW v_timeseries AS (
+    SELECT p1.slug  			        AS provider,
+		   p1.name                      AS provider_name,
+		   dt1.slug 			        AS datatype,
+           dt1.name                     AS datatype_name,
+		   t.datasource_key 	        AS key,
+		   json_build_array(
+               t.latest_time,
+               t.latest_value
+           )::json                      AS latest_value,
+           json_build_object(
+               'slug'    ,   l.slug,
+               'provider',  p2.slug,
+               'datatype', dt2.slug,
+               'code'    ,   l.code
+		   )                            AS location,
+           t.etl_values_enabled         AS etl_values_enabled
+    FROM timeseries t
+    JOIN datasource   ds1 ON ds1.id =   t.datasource_id  -- timeseries' datasource
+    JOIN provider      p1 ON  p1.id = ds1.provider_id    -- timeseries' provider
+    JOIN datatype     dt1 ON dt1.id = ds1.datatype_id    -- timeseries' datatype
+    JOIN location       l ON   l.id =   t.location_id
+    JOIN datasource   ds2 ON ds2.id =   l.datasource_id  -- location's datasource
+    JOIN provider      p2 ON  p2.id = ds2.provider_id    -- location's provider
+    JOIN datatype     dt2 ON dt2.id = ds2.datatype_id    -- location's datatype
+);
+
 --------------
 -- V_WATERSHED
 --------------
