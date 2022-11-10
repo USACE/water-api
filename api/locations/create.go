@@ -44,7 +44,7 @@ func (cc LocationCollection) Create(db *pgxpool.Pool) ([]LocationInfo, error) {
 				     WHERE datatype = LOWER($1) AND provider = LOWER($2)
 				),
 				$3,
-				LOWER($4),
+				$4,
 				ST_GeomFromGeoJSON($5::json),
 				(
 					SELECT gid

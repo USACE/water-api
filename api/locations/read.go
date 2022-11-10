@@ -40,7 +40,7 @@ func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 	if f != nil {
 		// Filter by Slug
 		if f.Slug != nil {
-			q = q.Where("slug = lower(?)", f.Slug)
+			q = q.Where("slug = LOWER(?)", f.Slug)
 		}
 		// Filter by State
 		if f.State != nil {
@@ -60,7 +60,7 @@ func ListLocationsQuery(f *LocationFilter) (sq.SelectBuilder, error) {
 
 		// Filter by Code
 		if f.Code != nil {
-			q = q.Where("code = LOWER(?)", f.Code)
+			q = q.Where("LOWER(code) = LOWER(?)", f.Code)
 		}
 
 		// Filter by Search String
