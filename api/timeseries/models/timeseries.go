@@ -128,7 +128,7 @@ func (tsc TimeseriesCollection) Create(db *pgxpool.Pool, providerSlug string) ([
              VALUES (
                 (SELECT id FROM v_datasource WHERE datatype = LOWER($1) AND provider = LOWER($2)),
                 $3,
-                (SELECT id FROM v_location WHERE code = LOWER($4) AND provider = LOWER($$5))
+                (SELECT id FROM v_location WHERE code = LOWER($4) AND provider = LOWER($5))
              ) ON CONFLICT ON CONSTRAINT timeseries_unique_datasource DO NOTHING
 			 RETURNING id`, t.Datatype, t.Provider, t.Key, t.Location.Code, t.Location.Provider,
 		)

@@ -75,15 +75,16 @@ CREATE OR REPLACE VIEW v_location AS (
 ---------------
 
 CREATE OR REPLACE VIEW v_timeseries AS (
-    SELECT p1.slug  			        AS provider,
-		   p1.name                      AS provider_name,
-		   dt1.slug 			        AS datatype,
-           dt1.name                     AS datatype_name,
-		   t.datasource_key 	        AS key,
-		   json_build_array(
-               t.latest_time,
-               t.latest_value
-           )::json                      AS latest_value,
+    SELECT t.id              AS id,
+           p1.slug  		 AS provider,
+		   p1.name           AS provider_name,
+		   dt1.slug 		 AS datatype,
+           dt1.name          AS datatype_name,
+		   t.datasource_key  AS key,
+		   CASE
+               WHEN t.latest_time IS NULL OR t.latest_value IS NULL THEN NULL
+               ELSE json_build_array(t.latest_time, t.latest_value)::json
+           END AS latest_value,
            json_build_object(
                'slug'    ,   l.slug,
                'provider',  p2.slug,
