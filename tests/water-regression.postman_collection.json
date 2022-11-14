@@ -1498,6 +1498,47 @@
 			"name": "Timeseries",
 			"item": [
 				{
+					"name": "Create Timeseries (Many) Atwood",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 or 202\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"key\": \"Atwood-Outflow.Flow.Inst.0.Control Min\",\n        \"location\": {\n            \"provider\": \"LRH\",\n            \"datatype\": \"cwms-location\",\n            \"code\": \"Atwood-Outflow\"\n        },\n        \"datatype\": \"cwms-level\",\n        \"provider\": \"LRH\"\n    },\n    {\n        \"key\": \"Atwood-Outflow.Stage.Inst.0.Control Max with Dir\",\n        \"location\": {\n            \"provider\": \"LRH\",\n            \"datatype\": \"cwms-location\",\n            \"code\": \"Atwood-Outflow\"\n        },\n        \"datatype\": \"cwms-level\",\n        \"provider\": \"LRH\"\n    },\n    {\n        \"key\": \"Atwood-Outflow.Stage.Inst.0.Control Max Without Dir\",\n        \"location\": {\n            \"provider\": \"LRH\",\n            \"datatype\": \"cwms-location\",\n            \"code\": \"Atwood-Outflow\"\n        },\n        \"datatype\": \"cwms-level\",\n        \"provider\": \"LRH\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Timeseries (Many)",
 					"event": [
 						{

@@ -155,6 +155,8 @@ CREATE TABLE IF NOT EXISTS timeseries (
     etl_values_enabled BOOLEAN NOT NULL DEFAULT false,
     CONSTRAINT timeseries_unique_datasource UNIQUE(datasource_id, datasource_key)
 );
+-- Ensure case-insensitive uniqueness in datasource_key column (within a single datasource)
+CREATE UNIQUE INDEX timeseries_case_insensitive_unique_datasource_key ON timeseries (datasource_id, LOWER(datasource_key));
 
 -- timeseries_measurement
 CREATE TABLE IF NOT EXISTS timeseries_measurement (
@@ -176,7 +178,8 @@ CREATE TABLE IF NOT EXISTS chart (
     slug VARCHAR UNIQUE NOT NULL,
     name VARCHAR NOT NULL,
     type_id UUID NOT NULL,
-    provider_id UUID NOT NULL REFERENCES provider(id)
+    provider_id UUID NOT NULL REFERENCES provider(id),
+    CONSTRAINT provider_unique_name UNIQUE(provider_id, name)
 );
 
 -- chart_variable_mapping
