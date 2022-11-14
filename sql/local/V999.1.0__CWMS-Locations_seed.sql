@@ -40,7 +40,7 @@
 
 
 INSERT INTO location (datasource_id, code, slug, geometry, state_id, attributes) VALUES
-    ((SELECT id FROM v_datasource  WHERE datatype = 'cwms-location' AND provider = 'lrh'),'lrh-test-project','LRHTestProject',ST_GeomFromText('POINT(-0.0 0.0)',4326),1,'{"public_name":"LRH Test Project","kind":"PROJECT"}'),
+    ((SELECT id FROM v_datasource  WHERE datatype = 'cwms-location' AND provider = 'lrh'),'LRH Test Project','lrh-test-project',ST_GeomFromText('POINT(-0.0 0.0)',4326),1,'{"public_name":"LRH Test Project","kind":"PROJECT"}'),
 
 	((SELECT id FROM v_datasource  WHERE datatype = 'cwms-location' AND provider = 'lrn'),'ACST1',slugify('acst1'),ST_GeomFromText('POINT(-87.05111 36.32)',4326),30,'{"public_name": "Sycamore Creek near Ashland City, TN", "kind": "SITE"}'),
 	((SELECT id FROM v_datasource  WHERE datatype = 'cwms-location' AND provider = 'lrn'),'ACST1-SycamoreCr-AshlandCityTN',slugify('acst1-sycamorecr-ashlandcitytn'),ST_GeomFromText('POINT(-87.05111 36.32)',4326),30,'{"public_name": "Sycamore Creek near Ashland City, TN", "kind": "SITE"}'),
