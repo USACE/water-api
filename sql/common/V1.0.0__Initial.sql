@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS datasource (
     id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     provider_id UUID NOT NULL REFERENCES provider(id),
     datatype_id UUID NOT NULL REFERENCES datatype(id),
-    CONSTRAINT datasource_unique_provider_id UNIQUE(provider_id, datatype_id)
+    CONSTRAINT datasource_unique_provider_datatype UNIQUE(provider_id, datatype_id)
 );
 
 ------------
@@ -68,9 +68,11 @@ CREATE TABLE IF NOT EXISTS location (
     state_id INTEGER REFERENCES tiger_data.state_all(gid),
     create_date TIMESTAMPTZ NOT NULL DEFAULT now(),
     update_date TIMESTAMPTZ,
-    attributes JSONB NOT NULL DEFAULT '{}'::jsonb,
-    CONSTRAINT datasource_unique_code UNIQUE(datasource_id, code)
+    attributes JSONB NOT NULL DEFAULT '{}'::jsonb
 );
+-- Ensure case-insensitive uniqueness in code column (within datasource context)
+CREATE UNIQUE INDEX location_case_insensitive_unique_code ON location (datasource_id, LOWER(code));
+
 
 
 -- Create usgs_parameter table

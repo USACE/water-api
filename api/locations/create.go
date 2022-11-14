@@ -52,7 +52,7 @@ func (cc LocationCollection) Create(db *pgxpool.Pool) ([]LocationInfo, error) {
 				     WHERE stusps = UPPER($6)
 				),
 				$7
-			 ) ON CONFLICT ON CONSTRAINT datasource_unique_code DO NOTHING
+			 ) ON CONFLICT DO NOTHING
 			 RETURNING id`,
 			info.Datatype, info.Provider, slug, info.Code, info.Geometry, info.State, info.Attributes,
 		)
@@ -62,7 +62,7 @@ func (cc LocationCollection) Create(db *pgxpool.Pool) ([]LocationInfo, error) {
 		}
 		var id uuid.UUID
 		if err := pgxscan.ScanOne(&id, rows); err != nil {
-			continue // Location already exists for given datasource and code; DO NOTHING on constraint bypasses RETURNING id
+			continue // Location already exists for given datasource and code; DO NOTHING bypasses RETURNING id
 		}
 		newIDs = append(newIDs, id)
 	}

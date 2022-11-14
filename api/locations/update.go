@@ -25,12 +25,8 @@ func (cc LocationCollection) Update(db *pgxpool.Pool) ([]LocationInfo, error) {
 			 SET geometry = ST_GeomFromGeoJSON($1::json),
 			     state_id = (SELECT gid FROM tiger_data.state_all WHERE stusps = UPPER($2)),
 			     attributes = $3
-			 WHERE datasource_id = (
-				SELECT id
-				FROM datasource
-				WHERE datatype_id = (SELECT id FROM datatype WHERE slug = LOWER($4)) AND provider_id = (SELECT id FROM provider WHERE slug = LOWER($5))
-			 )
-			 AND code = LOWER($6)
+			 WHERE datasource_id = (SELECT id FROM v_datasource WHERE datatype = LOWER($4) AND provider = LOWER($5))
+			   AND LOWER(code) = LOWER($6)
 			 RETURNING id`,
 			info.Geometry, info.State, info.Attributes, info.Datatype, info.Provider, info.Code,
 		)
