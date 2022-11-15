@@ -725,54 +725,6 @@
 					"response": []
 				},
 				{
-					"name": "Create CWMS Location to delete (One)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 201\", function () {",
-									"    pm.response.to.have.status(201);",
-									"});",
-									"pm.test(\"Response time is less than 200 ms\", function () {",
-									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
-									"});",
-									"pm.test(\"Valid JSON response\", function () {",
-									"    pm.expect(pm.response.json());",
-									"});",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"provider\": \"mvp\",\n    \"datatype\": \"cwms-location\",\n    \"code\": \"Regression Delete Me\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    },\n    \"attributes\": {\n        \"public_name\": \"Regression Test for Deletion\",\n        \"kind\": \"PROJECT\"\n    },\n    \"state\": \"mn\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/providers/mvp/locations",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"providers",
-								"mvp",
-								"locations"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Update CWMS Locations (One)",
 					"event": [
 						{
@@ -917,7 +869,55 @@
 					"response": []
 				},
 				{
-					"name": "Delete CWMS Location",
+					"name": "Create CWMS Locations to Delete (Four)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n    \"provider\": \"mvp\",\n    \"datatype\": \"cwms-location\",\n    \"code\": \"Regression Delete Me 1\",\n    \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -88.22111,\n            37.02139\n        ]\n    },\n    \"attributes\": {\n        \"public_name\": \"Regression Test for Deletion 1\",\n        \"kind\": \"PROJECT\"\n    },\n    \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datatype\": \"cwms-location\",\n        \"code\": \"Regression Delete Me 2\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test for Deletion 2\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datatype\": \"cwms-location\",\n        \"code\": \"Regression Delete Me 3\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test for Deletion 3\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datatype\": \"cwms-location\",\n        \"code\": \"Regression Delete Me 4\",\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [\n                -88.22111,\n                37.02139\n            ]\n        },\n        \"attributes\": {\n            \"public_name\": \"Regression Test for Deletion 4\",\n            \"kind\": \"PROJECT\"\n        },\n        \"state\": \"mn\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete CWMS Location (One - Use Body)",
 					"event": [
 						{
 							"listen": "test",
@@ -942,7 +942,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "\n",
+							"raw": "{\n\"provider\": \"mvp\",\n\"datatype\": \"cwms-location\",\n\"code\": \"Regression Delete Me 1\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -950,7 +950,101 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/providers/mvp/locations/regression-delete-me",
+							"raw": "{{base_url}}/providers/mvp/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete CWMS Location (Many - Use Body)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n    \"provider\": \"mvp\",\n    \"datatype\": \"cwms-location\",\n    \"code\": \"Regression Delete Me 2\"\n    },\n    {\n        \"provider\": \"mvp\",\n        \"datatype\": \"cwms-location\",\n        \"code\": \"Regression Delete Me 3\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/locations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete CWMS Location (One - Use Slug)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/locations/regression-delete-me-4",
 							"host": [
 								"{{base_url}}"
 							],
@@ -958,7 +1052,7 @@
 								"providers",
 								"mvp",
 								"locations",
-								"regression-delete-me"
+								"regression-delete-me-4"
 							]
 						}
 					},
@@ -1599,7 +1693,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Pool.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"MVP\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T20:15:00-00:00\", \"2022-09-13T20:30:00-00:00\"],\n            \"values\": [755.90, 756.22]\n        }\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Pool.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"MVP\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T20:15:00-00:00\", \"2022-09-13T20:30:00-00:00\"],\n            \"values\": [305, 307]\n        }\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Tailwater.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"MVP\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T21:00:00-00:00\", \"2022-09-13T21:15:00-00:00\"],\n            \"values\": [459.20, 459.55]\n        }\n        \n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Tailwater.Stage.Inst.15Minutes.0.OBS\",\n        \"provider\": \"MVP\",\n        \"measurements\": {\n            \"times\": [\"2022-09-13T21:00:00-00:00\", \"2022-09-13T21:15:00-00:00\"],\n            \"values\": [15.20, 16.55]\n        }\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Streambed\",\n        \"provider\": \"MVP\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [700.55]\n        }\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Top of Dam\",\n        \"provider\": \"MVP\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [800.55]\n        }\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Top of Flood\",\n        \"provider\": \"MVP\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [780.55]\n        }\n        \n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Bottom of Flood\",\n        \"provider\": \"MVP\",\n        \"measurements\": {\n            \"times\": [\"2022-09-22T21:00:00-00:00\"],\n            \"values\": [750.0]\n        }\n        \n    }\n]",
+							"raw": "[\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Pool.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"MVP\",\n        \"values\": [\n            [\"2022-09-13T20:15:00-00:00\", 755.90],\n            [\"2022-09-13T20:30:00-00:00\", 756.22]\n        ]\n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Pool.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"MVP\",\n        \"values\": [\n            [\"2022-09-13T20:15:00-00:00\", 305],\n            [\"2022-09-13T20:30:00-00:00\", 307]\n        ]\n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Tailwater.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"MVP\",\n        \"values\": [\n            [\"2022-09-13T21:00:00-00:00\", 459.20],\n            [\"2022-09-13T21:15:00-00:00\", 459.55]\n        ]\n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Tailwater.Stage.Inst.15Minutes.0.OBS\",\n        \"provider\": \"MVP\",\n        \"values\": [\n            [\"2022-09-13T21:00:00-00:00\", 15.20],\n            [\"2022-09-13T21:15:00-00:00\", 16.55]\n        ]\n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Streambed\",\n        \"provider\": \"MVP\",\n        \"values\": [\n            [\"2022-09-22T21:00:00-00:00\", 700.55]\n        ]\n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Top of Dam\",\n        \"provider\": \"MVP\",\n        \"values\": [\n            [\"2022-09-22T21:00:00-00:00\", 800.55]\n        ]\n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Top of Flood\",\n        \"provider\": \"MVP\",\n        \"values\": [\n            [\"2022-09-22T21:00:00-00:00\", 780.55]\n        ]\n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Bottom of Flood\",\n        \"provider\": \"MVP\",\n        \"values\": [\n            [\"2022-09-22T21:00:00-00:00\", 750.0]\n        ]\n    }\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1607,11 +1701,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/timeseries/measurements",
+							"raw": "{{base_url}}/providers/mvp/timeseries/measurements",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
+								"providers",
+								"mvp",
 								"timeseries",
 								"measurements"
 							]

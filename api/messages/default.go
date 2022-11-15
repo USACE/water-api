@@ -10,6 +10,9 @@ func NewMessage(s string) Message {
 }
 
 // messages.DefaultMessageUnauthorized is the a default unauthorized (403) message
+var DefaultMessageOK = Message{Message: "ok"}
+
+// messages.DefaultMessageUnauthorized is the a default unauthorized (403) message
 var DefaultMessageUnauthorized = Message{Message: "User is not authorized to use this resource"}
 
 // DefaultMessageNotFound is the a default not found (404) message

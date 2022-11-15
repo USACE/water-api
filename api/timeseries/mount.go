@@ -29,10 +29,6 @@ func Mount(conn *pgxpool.Pool, e *echo.Echo, config *app.Config) {
 	// Timeseries
 	public.GET("/timeseries", s.ListTimeseries)
 	key.POST("/providers/:provider/timeseries", s.CreateTimeseries) // (airflow - array of objects in payload)
-	// key.POST("/providers/:provider/timeseries/measurements", s.CreateOrUpdateTimeseriesMeasurements)
-	// public.POST "/:provider_slug/timeseries"
-	// "/levels/latest/config/:owner"
+	key.POST("/providers/:provider/timeseries/measurements", s.CreateOrUpdateTimeseriesMeasurements)
 
-	// Maintenance/Automation
-	// key.POST("/automation/assign_states_to_locations", s.AssignStatesToLocations)
 }
