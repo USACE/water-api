@@ -74,6 +74,82 @@ CREATE OR REPLACE VIEW v_timeseries AS (
     JOIN datatype     dt2 ON dt2.id = ds2.datatype_id    -- location's datatype
 );
 
+----------
+-- V_CHART
+----------
+CREATE OR REPLACE VIEW v_chart AS (
+    SELECT c.id    AS id,
+           p1.slug AS provider,
+           p1.name AS provider_name,
+           c.type  AS type,
+           c.slug  AS slug,
+           c.name  AS name,
+           CASE
+               WHEN c.location_id IS NULL THEN NULL
+               ELSE json_build_object(
+                        'slug'    ,   l.slug,
+                        'provider',  p2.slug,
+                        'datatype',  dt.slug,
+                        'code'    ,   l.code
+                )
+            END AS location
+    FROM chart c
+    JOIN provider        p1 ON p1.id = c.provider_id   -- Join Provider on chart.provider_id
+    LEFT JOIN location    l ON l.id  = c.location_id
+    LEFT JOIN datasource ds ON ds.id = l.datasource_id
+    LEFT JOIN provider   p2 ON p2.id = ds.provider_id   -- Join Provider (again) for location's provider
+    LEFT JOIN datatype   dt ON dt.id = ds.datatype_id
+);
+
+
+-----------------
+-- V_CHART_DETAIL
+-----------------
+CREATE OR REPLACE VIEW v_chart_detail AS (
+    WITH mappings as (
+        SELECT m.chart_id as chart_id, 
+            COALESCE(json_agg(json_build_object(
+                'variable',     m.variable,
+                'datatype',    dt.slug,
+                'provider',     p.slug,
+                'key',          t.datasource_key,
+                'latest_value', CASE
+                                    WHEN t.latest_time IS NULL OR t.latest_value IS NULL THEN NULL
+                                    ELSE json_build_array(t.latest_time, t.latest_value)::json
+                                END
+            )), '[]') AS mapping
+        FROM chart_variable_mapping m
+        JOIN timeseries     t ON  t.id =  m.timeseries_id
+        JOIN datasource    ds ON ds.id =  t.datasource_id
+        JOIN datatype      dt ON dt.id = ds.datatype_id
+        JOIN provider       p ON  p.id = ds.provider_id 
+        group by m.chart_id
+    )
+    SELECT c.id   AS id,
+          p1.slug AS provider,
+          p1.name AS provider_name,
+           c.type AS type,
+           c.slug AS slug,
+           c.name AS name,
+          CASE
+            WHEN c.location_id IS NULL THEN NULL
+            ELSE json_build_object(
+                    'slug'    ,    l.slug,
+                    'provider',   p2.slug,
+                    'datatype',   dt.slug,
+                    'code'    ,    l.code
+            )
+            END       AS location,
+            COALESCE(m.mapping, '[]') AS mapping
+        FROM chart c
+        JOIN provider                     p1 ON p1.id = c.provider_id    -- Chart's Provider
+        LEFT JOIN location                 l ON l.id  = c.location_id    -- Chart's Location
+        LEFT JOIN datasource              ds ON ds.id = l.datasource_id -- Location's Datasource
+        LEFT JOIN provider                p2 ON p2.id = ds.provider_id   -- Location's Provider
+        LEFT JOIN datatype                dt ON dt.id = ds.datatype_id   -- Location's datatype
+        LEFT JOIN mappings                 m ON m.chart_id = c.id
+);
+
 --------------
 -- V_WATERSHED
 --------------

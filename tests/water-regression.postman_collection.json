@@ -7,6 +7,59 @@
 	},
 	"item": [
 		{
+			"name": "Providers",
+			"item": [
+				{
+					"name": "List Providers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Datasources",
 			"item": [
 				{
@@ -338,43 +391,6 @@
 									"key": "provider",
 									"value": "noaa-nws"
 								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "USGS Parameters",
-			"item": [
-				{
-					"name": "List Parameters",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/usgs/parameters",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"usgs",
-								"parameters"
 							]
 						}
 					},
@@ -1536,59 +1552,6 @@
 			]
 		},
 		{
-			"name": "Providers",
-			"item": [
-				{
-					"name": "List Providers",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"pm.test(\"Response time is less than 200 ms\", function () {",
-									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
-									"});",
-									"pm.test(\"Valid JSON response\", function () {",
-									"    pm.expect(pm.response.json());",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/providers",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"providers"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Timeseries",
 			"item": [
 				{
@@ -2065,6 +2028,98 @@
 					"response": []
 				},
 				{
+					"name": "List Charts - Filter Provider",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/charts?provider=lrh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"charts"
+							],
+							"query": [
+								{
+									"key": "provider",
+									"value": "lrh"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Charts Provider Context",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/charts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"charts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Chart (One)",
 					"event": [
 						{
@@ -2075,7 +2130,7 @@
 									"    pm.response.to.have.status(201);",
 									"});",
 									"let r = JSON.parse(responseBody);",
-									"pm.environment.set(\"new_chart_slug\", r.slug);"
+									"pm.environment.set(\"new_chart_slug\", r[0].slug);"
 								],
 								"type": "text/javascript"
 							}
@@ -2086,7 +2141,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"provider_slug\": \"mvp\",\n    \"location_slug\": \"{{regression_project_slug}}\",\n    \"name\": \"RegressionProject Dam Profile Chart\",\n    \"type_id\": \"53da77d0-6550-4f02-abf8-4bcd1a596a7c\"\n}   ",
+							"raw": "{\n    \"provider\": \"mvp\",\n    \"location\": {\n        \"slug\": \"{{regression_project_slug}}\"\n    },\n    \"name\": \"RegressionProject Dam Profile Chart\",\n    \"type\": \"dam-profile-chart\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2094,11 +2149,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/charts",
+							"raw": "{{base_url}}/providers/mvp/charts",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
+								"providers",
+								"mvp",
 								"charts"
 							]
 						}
@@ -2106,7 +2163,7 @@
 					"response": []
 				},
 				{
-					"name": "Get Chart (One)",
+					"name": "Get Chart Details (One)",
 					"event": [
 						{
 							"listen": "test",
@@ -2149,7 +2206,95 @@
 					"response": []
 				},
 				{
-					"name": "Create Chart Mapping (Many)",
+					"name": "Get Chart Details (One) - Provider Context",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/charts/{{new_chart_slug}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"charts",
+								"{{new_chart_slug}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Chart Details (One) - Chart from Seed Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/charts/alum-creek-dam-profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"charts",
+								"alum-creek-dam-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Chart Mapping Add",
 					"event": [
 						{
 							"listen": "test",
@@ -2176,43 +2321,42 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/charts/{{new_chart_slug}}/assign",
+							"raw": "{{base_url}}/providers/mvp/charts/{{new_chart_slug}}/mapping",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
+								"providers",
+								"mvp",
 								"charts",
 								"{{new_chart_slug}}",
-								"assign"
+								"mapping"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get Dam Profile Chart By Location Slug",
+					"name": "Chart Mapping Remove",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
+									"pm.test(\"Status code is 201 or 202\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
 									"});"
 								],
 								"type": "text/javascript"
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "[\n    {\n        \"variable\": \"inflow\",\n        \"key\": \"RegressionProject-Pool.Flow.Inst.15Minutes.0.OBS\",\n        \"datatype\": \"cwms-timeseries\",\n        \"provider\": \"mvp\"\n    },\n    {\n        \"variable\": \"outflow\",\n        \"key\": \"RegressionProject-Tailwater.Flow.Inst.15Minutes.0.OBS\",\n        \"datatype\": \"cwms-timeseries\",\n        \"provider\": \"mvp\"\n    },\n    {\n        \"variable\": \"streambed\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Streambed\",\n        \"datatype\": \"cwms-level\",\n        \"provider\": \"mvp\"\n    },\n    {\n        \"variable\": \"top-of-dam\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Top of Dam\",\n        \"datatype\": \"cwms-level\",\n        \"provider\": \"mvp\"\n    },\n    {\n        \"variable\": \"top-of-flood\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Top of Flood\",\n        \"datatype\": \"cwms-level\",\n        \"provider\": \"mvp\"\n    },\n    {\n        \"variable\": \"bottom-of-flood\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Bottom of Flood\",\n        \"datatype\": \"cwms-level\",\n        \"provider\": \"mvp\"\n    }\n]   ",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2220,64 +2364,16 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/locations/{{regression_project_slug}}/profile-chart",
+							"raw": "{{base_url}}/providers/mvp/charts/{{new_chart_slug}}/mapping",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"locations",
-								"{{regression_project_slug}}",
-								"profile-chart"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Dam Profile Chart By Location Slug (json)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/locations/{{regression_project_slug}}/profile-chart?format=json",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"locations",
-								"{{regression_project_slug}}",
-								"profile-chart"
-							],
-							"query": [
-								{
-									"key": "format",
-									"value": "json"
-								}
+								"providers",
+								"mvp",
+								"charts",
+								"{{new_chart_slug}}",
+								"mapping"
 							]
 						}
 					},
@@ -2311,13 +2407,15 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/visualizations/{{new_visualization_slug}}",
+							"raw": "{{base_url}}/providers/mvp/charts/{{new_chart_slug}}",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"visualizations",
-								"{{new_visualization_slug}}"
+								"providers",
+								"mvp",
+								"charts",
+								"{{new_chart_slug}}"
 							]
 						}
 					},

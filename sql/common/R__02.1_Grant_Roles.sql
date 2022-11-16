@@ -43,6 +43,8 @@ GRANT SELECT ON
     -- watershed,
     -- watershed_shapefile_uploads,
     -- watershed_usgs_sites,
+    v_chart,
+    v_chart_detail,
     v_datasource,
     v_location,
     v_timeseries

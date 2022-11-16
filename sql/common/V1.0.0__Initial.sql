@@ -179,15 +179,15 @@ CREATE TABLE IF NOT EXISTS chart (
     location_id UUID REFERENCES location(id),
     slug VARCHAR UNIQUE NOT NULL,
     name VARCHAR NOT NULL,
-    type_id UUID NOT NULL,
+    type VARCHAR NOT NULL,
     provider_id UUID NOT NULL REFERENCES provider(id),
     CONSTRAINT provider_unique_name UNIQUE(provider_id, name)
 );
 
 -- chart_variable_mapping
 CREATE TABLE IF NOT EXISTS chart_variable_mapping (
-    chart_id UUID NOT NULL REFERENCES chart(id),
+    chart_id UUID NOT NULL REFERENCES chart(id) ON DELETE CASCADE,
     variable VARCHAR NOT NULL,
     timeseries_id UUID NOT NULL REFERENCES timeseries(id) ON DELETE CASCADE,
-    CONSTRAINT chart_id_unique_variable UNIQUE(chart_id, variable)
+    CONSTRAINT chart_unique_variable UNIQUE(chart_id, variable)
 );

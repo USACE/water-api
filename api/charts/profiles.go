@@ -1,4 +1,4 @@
-package chartserver
+package charts
 
 import (
 	"context"

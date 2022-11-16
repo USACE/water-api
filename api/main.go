@@ -9,15 +9,10 @@ import (
 
 	"github.com/USACE/water-api/api/app"
 	"github.com/USACE/water-api/api/charts"
-	"github.com/USACE/water-api/api/chartserver"
-	"github.com/USACE/water-api/api/cwms"
 	"github.com/USACE/water-api/api/locations"
 	"github.com/USACE/water-api/api/middleware"
-	"github.com/USACE/water-api/api/nws"
 	"github.com/USACE/water-api/api/providers"
 	"github.com/USACE/water-api/api/timeseries"
-	"github.com/USACE/water-api/api/usgs"
-	"github.com/USACE/water-api/api/watersheds"
 
 	_ "github.com/jackc/pgx/v4"
 	"github.com/kelseyhightower/envconfig"
@@ -34,12 +29,6 @@ func main() {
 
 	// create store (database pool) from configuration
 	st, err := app.NewStore(config)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	// d3-chart-server integration
-	chartserver, err := chartserver.NewChartServer(chartserver.Config{URLString: config.ChartServerURL})
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -61,15 +50,15 @@ func main() {
 	features.Use(middleware.PgFeatureservProxy(config.PgFeatureservUrl))
 
 	// Mount Routes
-	cwms.Mount(st.Connection, e, &config, chartserver) // CWMS
+	// cwms.Mount(st.Connection, e, &config) // CWMS
 	// datasources.Mount(st.Connection, e, &config)            // Datasources
-	locations.Mount(st.Connection, e, &config, chartserver) // Locations
-	nws.Mount(st.Connection, e, &config)                    // National Weather Service
-	providers.Mount(st.Connection, e, &config)              // Providers
-	usgs.Mount(st.Connection, e, &config)                   // USGS
-	charts.Mount(st.Connection, e, &config)                 // Charts
-	watersheds.Mount(st.Connection, e, &config)             // Watersheds
-	timeseries.Mount(st.Connection, e, &config)             // Timeseries
+	charts.Mount(st.Connection, e, &config)     // Charts
+	locations.Mount(st.Connection, e, &config)  // Locations
+	providers.Mount(st.Connection, e, &config)  // Providers
+	timeseries.Mount(st.Connection, e, &config) // Timeseries
+	// nws.Mount(st.Connection, e, &config)        // National Weather Service
+	// usgs.Mount(st.Connection, e, &config)       // USGS
+	// watersheds.Mount(st.Connection, e, &config) // Watersheds
 
 	// Start Server
 	s := &http2.Server{
