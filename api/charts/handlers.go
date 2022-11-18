@@ -25,6 +25,8 @@ func (s Store) ListCharts(c echo.Context) error {
 
 func (s Store) GetChartDetail(c echo.Context) error {
 
+	format := strings.ToLower(c.QueryParam("format"))
+
 	var f ChartFilter
 	if err := c.Bind(&f); err != nil {
 		return c.JSON(http.StatusBadRequest, messages.NewMessage(err.Error()))
@@ -37,7 +39,24 @@ func (s Store) GetChartDetail(c echo.Context) error {
 		}
 		return c.JSON(http.StatusInternalServerError, messages.NewMessage(err.Error()))
 	}
-	return c.JSON(http.StatusOK, t)
+
+	switch format {
+	case "svg":
+		// Convert to concrete type that implements Renderer
+		r, err := t.Renderer()
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, messages.NewMessage(err.Error()))
+		}
+
+		svg, err := s.ChartServer.Render(r)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, messages.NewMessage(err.Error()))
+		}
+
+		return c.String(http.StatusOK, *svg)
+	default:
+		return c.JSON(http.StatusOK, t)
+	}
 }
 
 // CreateChart creates one or more new charts
@@ -72,7 +91,7 @@ func (s Store) CreateCharts(c echo.Context) error {
 		}
 	}
 
-	new, err := cc.Create(s.Connection)
+	new, err := CreateCharts(s.Connection, &cc)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, messages.NewMessage(err.Error()))
 	}

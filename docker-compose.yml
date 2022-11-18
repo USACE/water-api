@@ -13,6 +13,12 @@ services:
       context: ./d3-chart-server
     container_name: charts
     restart: on-failure
+    environment:
+      # NOTE:
+      #   ROOT_URL=localhost:3000 when running water-api in vscode debugger
+      #   ROOT_URL=http://charts:3000 when running water-api in docker-compose stack
+      # - ROOT_URL=http://localhost:3000
+      - ROOT_URL=http://charts:3000
     ports:
       - '3000:3000'
   water-db:

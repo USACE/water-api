@@ -28,8 +28,7 @@ func Mount(conn *pgxpool.Pool, e *echo.Echo, config *app.Config) {
 
 	// CHARTS; GLOBAL (ALL PROVIDERS) CONTEXT
 	public.GET("/charts", s.ListCharts)            // LIST CHARTS
-	public.GET("/charts/:chart", s.GetChartDetail) // GET CHART DETAILS
-	// public.GET("/charts/:chart/svg", s.RenderChart)                        // RENDER CHART SVG
+	public.GET("/charts/:chart", s.GetChartDetail) // GET CHART DETAILS (?format=svg renders chart)
 	public.GET("/chart_types", func(c echo.Context) error { return c.JSON(http.StatusOK, s.ChartServer.Charts) })
 
 	// CHARTS; SINGLE PROVIDER CONTEXT

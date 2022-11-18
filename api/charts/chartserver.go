@@ -2,6 +2,7 @@ package charts
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -13,20 +14,25 @@ type (
 	// .ChartMap is indexed by Slug string for fast lookups
 	ChartServer struct {
 		URL      *url.URL
-		Charts   []ChartInfo
-		ChartMap map[string]ChartInfo
+		Charts   []ChartType
+		ChartMap map[string]ChartType
 	}
 
 	ChartServerConfig struct {
 		URLString string
 	}
 
-	ChartInfo struct {
+	ChartType struct {
 		Slug           string   `json:"slug"`
 		URL            string   `json:"url"`
 		Name           string   `json:"name"`
 		Description    string   `json:"description"`
 		RequiredParams []string `json:"required_params"`
+	}
+
+	Renderer interface {
+		ChartTypeSlug() string
+		QueryValues() url.Values
 	}
 )
 
@@ -39,8 +45,8 @@ func NewChartServer(cfg ChartServerConfig) (*ChartServer, error) {
 
 	cs := ChartServer{
 		URL:      u,
-		Charts:   make([]ChartInfo, 0),
-		ChartMap: make(map[string]ChartInfo),
+		Charts:   make([]ChartType, 0),
+		ChartMap: make(map[string]ChartType),
 	}
 
 	// Fetch list of charts supported by chartserver hosted at url in config
@@ -64,4 +70,36 @@ func NewChartServer(cfg ChartServerConfig) (*ChartServer, error) {
 	}
 
 	return &cs, nil
+}
+
+func (cs ChartServer) Render(r Renderer) (*string, error) {
+
+	slug := r.ChartTypeSlug()
+	ChartType, ok := cs.ChartMap[slug]
+	if !ok {
+		return nil, fmt.Errorf("chart type '%s' not available from chartserver: %s", slug, cs.URL.String())
+	}
+
+	// Build URL
+	u, err := url.Parse(ChartType.URL)
+	if err != nil {
+		return nil, err
+	}
+	u.RawQuery = r.QueryValues().Encode()
+
+	urlstr := u.String()
+	resp, err := http.Get(urlstr)
+	if err != nil {
+		return nil, err
+	}
+	// TODO; Check Response Status (200), Handle Non-200 status gracefully
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	b := string(body)
+	return &b, nil
+
 }

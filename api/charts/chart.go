@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/USACE/water-api/api/helpers"
@@ -32,7 +33,11 @@ type (
 			Datatype *string `json:"datatype"` // Optional Location Information; required to establish linkage to unique location on Create
 			Code     *string `json:"code"`     // Optional Location Information; required to establish linkage to unique location on Create
 		} `json:"location"`
-		Mapping *[]ChartMapping `json:"mapping,omitempty"`
+	}
+
+	ChartDetail struct {
+		Chart
+		Mapping []ChartMapping `json:"mapping"`
 	}
 
 	ChartCollection struct {
@@ -49,6 +54,15 @@ func (c *ChartCollection) UnmarshalJSON(b []byte) error {
 		return json.Unmarshal(b, &c.Items[0])
 	default:
 		return errors.New("payload not recognized as JSON array or object")
+	}
+}
+
+func (d ChartDetail) Renderer() (Renderer, error) {
+	switch d.Type {
+	case "dam-profile-chart":
+		return DamProfileChart{ChartDetail: &d}, nil
+	default:
+		return nil, fmt.Errorf("api does not implement chart: %s", d.Type)
 	}
 }
 
@@ -98,11 +112,11 @@ func ListCharts(db *pgxpool.Pool, f *ChartFilter) ([]Chart, error) {
 }
 
 // GetChartDetail returns detailed information a single Chart
-func GetChartDetail(db *pgxpool.Pool, f *ChartFilter) (*Chart, error) {
+func GetChartDetail(db *pgxpool.Pool, f *ChartFilter) (*ChartDetail, error) {
 
-	var t Chart
+	var d ChartDetail
 	if err := pgxscan.Get(
-		context.Background(), db, &t,
+		context.Background(), db, &d,
 		`SELECT location, slug, name, type, provider, provider_name, mapping
 		 FROM v_chart_detail
 		 WHERE slug = LOWER($1)`, f.Slug,
@@ -110,11 +124,11 @@ func GetChartDetail(db *pgxpool.Pool, f *ChartFilter) (*Chart, error) {
 		return nil, err
 	}
 
-	return &t, nil
+	return &d, nil
 }
 
 // CreateChart creates a single Chart
-func (cc ChartCollection) Create(db *pgxpool.Pool) ([]Chart, error) {
+func CreateCharts(db *pgxpool.Pool, cc *ChartCollection) ([]Chart, error) {
 
 	tx, err := db.Begin(context.Background())
 	if err != nil {

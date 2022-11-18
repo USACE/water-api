@@ -64,7 +64,8 @@ BEGIN
     ('ff03ac20-439c-4504-8c33-8819db2acb23', 'inflow', (SELECT id from timeseries where datasource_key = 'AlumCr-Lake.Flow.Inst.15Minutes.0.OBS')),
     ('ff03ac20-439c-4504-8c33-8819db2acb23', 'outflow', (SELECT id from timeseries where datasource_key = 'AlumCr-Outflow.Flow.Inst.15Minutes.0.OBS')),
     ('ff03ac20-439c-4504-8c33-8819db2acb23', 'streambed', (SELECT id from timeseries where datasource_key = 'AlumCr.Elev.Inst.0.Streambed')),
-    ('ff03ac20-439c-4504-8c33-8819db2acb23', 'top-of-dam', (SELECT id from timeseries where datasource_key = 'AlumCr.Elev.Inst.0.Top of Dam')),
+    ('ff03ac20-439c-4504-8c33-8819db2acb23', 'damtop', (SELECT id from timeseries where datasource_key = 'AlumCr.Elev.Inst.0.Top of Dam')),
+    ('ff03ac20-439c-4504-8c33-8819db2acb23', 'dambottom', (SELECT id from timeseries where datasource_key = 'AlumCr.Elev.Inst.0.Streambed')),
     ('ff03ac20-439c-4504-8c33-8819db2acb23', 'top-of-flood', (SELECT id from timeseries where datasource_key = 'AlumCr.Elev.Inst.0.Top of Flood'));
     -- ('41f2f75e-9472-4339-bac6-be898e809aee', 'pool', (SELECT id from timeseries where datasource_key = 'Atwood-Lake.Elev.Inst.15Minutes.0.OBS')),
     -- ('41f2f75e-9472-4339-bac6-be898e809aee', 'inflow', (SELECT id from timeseries where datasource_key = 'Atwood-Lake.Flow.Inst.15Minutes.0.OBS')),

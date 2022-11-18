@@ -2294,6 +2294,55 @@
 					"response": []
 				},
 				{
+					"name": "Render Chart HTML (One) - Chart from Seed Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/charts/alum-creek-dam-profile?format=svg",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"charts",
+								"alum-creek-dam-profile"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "svg"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Chart Mapping Add",
 					"event": [
 						{
