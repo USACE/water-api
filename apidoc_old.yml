@@ -1,0 +1,965 @@
+openapi: 3.0.2
+info:
+  title: Access to Water REST API
+  description: Access to Water REST API
+  contact:
+    name: API Support
+    url: 'https://github.com/USACE/water'
+  version: '0.1'
+servers:
+  - url: 'http://localhost'
+    description: Local API Testing
+  - url: 'https://water-api.rsgis.dev'
+    description: Stable API
+  - url: 'https://develop-water-api.rsgis.dev'
+    description: Development API
+components:
+  schemas:
+    location:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        office_id:
+          type: string
+          format: uuid
+        state_id:
+          type: integer
+        name:
+          type: string
+        public_name:
+          type: string
+        kind_id:
+          type: string
+          format: uuid
+        kind:
+          type: string
+        geometry:
+          properties:
+            type:
+              type: string
+            coordinates:
+              type: array
+              items:
+                type: number
+              minItems: 2
+              maxItems: 2
+    site:
+      title: site
+      type: object
+      description: USGS Site
+      x-examples:
+        example-1:
+          value:
+            site_number: '01654000'
+            name: 'ACCOTINK CREEK NEAR ANNANDALE, VA'
+            geometry:
+              type: Point
+              coordinates:
+                - -77.228
+                - 38.812
+            parameter_codes:
+              - '00060'
+              - '00065'
+            elevation: 190.6
+            horizontal_datum_id: 4269
+            vertical_datum_id: 3
+            huc: '02070010'
+            state: VA
+            state: Virginia
+            vertical_datum: NAVD88
+            create_date: '2021-08-17T12:53:49.933208Z'
+            update_date: null
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        site_number:
+          type: string
+        geometry:
+          type: object
+          properties:
+            type:
+              type: string
+            coordinates:
+              type: array
+              minItems: 2
+              maxItems: 2
+              items:
+                type: number
+        elevation:
+          type: number
+        horizontal_datum_id:
+          type: integer
+          minimum: 0
+        vertical_datum_id:
+          type: integer
+          minimum: 0
+        huc:
+          type: string
+        parameter_codes:
+          type: array
+          items:
+            type: string
+        state:
+          type: string
+          maxLength: 2
+          minLength: 2
+        state:
+          type: string
+        vertical_datum:
+          type: string
+        create_date:
+          type: string
+        update_date:
+          type: string
+  examples:
+    createLocationRequest:
+      value:
+        name: New Project
+        public_name: New Project
+        office_id: 2f160ba7-fd5f-4716-8ced-4a29f75065a6
+        state_id: 1
+        kind_id: 460ea73b-c65e-4fc8-907a-6e6fd2907a99
+        geometry:
+          type: Point
+          coordinates:
+            - -82.445
+            - 38.419
+    Watershed-Extract:
+      value:
+        site_number: '02176930'
+        code: '00060'
+        site_id: 2a9b9aea-c700-487b-b68b-eb1e8af79478
+        paramter_id: ba29fc34-6315-4424-838f-9b1863715fad
+        times:
+          - '2021-10-27T16:15:00Z'
+          - '2021-10-27T17:00:00Z'
+          - '2021-10-27T16:45:00Z'
+          - '2021-10-27T16:30:00Z'
+        values:
+          - 166
+          - 163
+          - 163
+          - 163
+  requestBodies: {}
+  parameters:
+    after:
+      name: after
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date-time
+        example: '2021-10-27T22:15:00Z'
+        default: '''before'' - 7 days'
+      description: Start of a time window
+    before:
+      name: before
+      in: query
+      required: false
+      schema:
+        type: string
+        example: '2021-10-28T22:15:00Z'
+        default: Current time
+        format: date-time
+      description: End of a time window
+    watershed_slug:
+      name: watershed_slug
+      in: path
+      required: true
+      schema:
+        type: string
+        example: kanawha-river
+      description: Watershed Slug
+  responses:
+    Watershed-Extract:
+      description: Response streaming multiple JSON objects
+      content:
+        application/json:
+          schema:
+            description: ''
+            type: object
+            x-examples:
+              example-1:
+                site_number: '02176930'
+                code: '00060'
+                site_id: 2a9b9aea-c700-487b-b68b-eb1e8af79478
+                paramter_id: ba29fc34-6315-4424-838f-9b1863715fad
+                times:
+                  - '2021-10-27T16:15:00Z'
+                  - '2021-10-27T17:00:00Z'
+                  - '2021-10-27T16:45:00Z'
+                  - '2021-10-27T16:30:00Z'
+                values:
+                  - 166
+                  - 163
+                  - 163
+                  - 163
+            properties:
+              site_number:
+                type: string
+                minLength: 1
+              code:
+                type: string
+                minLength: 1
+              site_id:
+                type: string
+                minLength: 1
+              paramter_id:
+                type: string
+                minLength: 1
+              times:
+                type: array
+                items:
+                  type: string
+              values:
+                type: array
+                items:
+                  type: number
+          examples:
+            Site/parameter:
+              $ref: '#/components/examples/Watershed-Extract'
+paths:
+  /location_kind:
+    get:
+      operationId: get-location-kind
+      tags:
+        - Location Kind
+      description: Get Location Kinds
+      responses:
+        '200':
+          description: OK
+  /locations:
+    get:
+      operationId: get-locations
+      tags:
+        - Locations
+      description: List all Locations
+      responses:
+        '200':
+          description: OK
+    post:
+      operationId: create-locations
+      tags:
+        - Locations
+      description: Create New Location
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/location'
+            examples:
+              NewProject:
+                $ref: '#/components/examples/createLocationRequest'
+      responses:
+        '201':
+          description: Object Created
+  '/locations/{location_id}':
+    parameters:
+      - name: location_id
+        in: path
+        required: true
+        description: The ID of the location
+        schema:
+          type: string
+          format: uuid
+          default: 350836c0-b7fb-4c24-b367-57fce43092ce
+    get:
+      operationId: get-location-by-id
+      tags:
+        - Locations
+      description: Get Location
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/location'
+    put:
+      operationId: replace-location
+      tags:
+        - Locations
+      description: Update Location
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/location'
+  /offices:
+    get:
+      summary: ''
+      tags:
+        - Offices
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ''
+                minItems: 1
+                uniqueItems: true
+                x-examples:
+                  example-1:
+                    - id: 17fa25b8-44a0-4e6d-9679-bdf6b0ee6b1a
+                      name: Buffalo District
+                      symbol: LRB
+                      parent_id: 91cf44dc-6384-4622-bd9f-0f36e4343413
+                    - id: d8f8934d-e414-499d-bd51-bc93bbde6345
+                      name: Chicago District
+                      symbol: LRC
+                      parent_id: 91cf44dc-6384-4622-bd9f-0f36e4343413
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      minLength: 1
+                    name:
+                      type: string
+                      minLength: 1
+                    symbol:
+                      type: string
+                      minLength: 1
+                    parent_id:
+                      type: string
+                      minLength: 1
+                  required:
+                    - name
+                    - symbol
+                    - parent_id
+              examples:
+                example-1:
+                  value:
+                    - id: 17fa25b8-44a0-4e6d-9679-bdf6b0ee6b1a
+                      name: Buffalo District
+                      symbol: LRB
+                      parent_id: 91cf44dc-6384-4622-bd9f-0f36e4343413
+      operationId: get-offices
+      description: List Offices
+  /projects:
+    get:
+      operationId: get-projects
+      tags:
+        - Projects
+      description: List Project Locations
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/location'
+  /search/locations:
+    get:
+      operationId: search-locations
+      tags:
+        - Search
+      description: Search Locations
+      parameters:
+        - name: office_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: kind_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+            default: 460ea73b-c65e-4fc8-907a-6e6fd2907a99
+          required: true
+        - name: state_id
+          in: query
+          schema:
+            type: integer
+            format: integer
+        - name: q
+          in: query
+          schema:
+            type: string
+            default: bluestone
+          required: true
+      responses:
+        '200':
+          description: OK
+  /states:
+    get:
+      operationId: get-states
+      tags:
+        - States
+      description: List States
+      responses:
+        '200':
+          description: OK
+  /stats/states:
+    get:
+      operationId: get-stats-for-states
+      tags:
+        - Stats
+      description: Get States for States
+      responses:
+        '200':
+          description: OK
+  '/stats/states/{state_id}':
+    get:
+      operationId: get-stats-for-state
+      tags:
+        - Stats
+      description: Get Stats for Single State
+      parameters:
+        - name: state_id
+          in: path
+          required: true
+          description: The ID of the state
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+    parameters:
+      - schema:
+          type: integer
+        name: state_id
+        in: path
+        required: true
+  /usgs/sites:
+    get:
+      summary: ''
+      tags:
+        - USGS Sites
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/site'
+      operationId: get-usgs-sites
+      description: List all USGS Sites in Water API
+    parameters: []
+  /usgs/sites?state=:
+    get:
+      summary: ''
+      tags:
+        - USGS Sites
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/site'
+              examples: {}
+      operationId: get-usgs-sites-state
+      description: USGS Sites for Single State
+      parameters:
+        - schema:
+            type: string
+            minLength: 2
+            maxLength: 2
+            default: wv
+          in: query
+          name: state
+          description: State Abbreviation
+          required: true
+    parameters: []
+  /usgs/parameters:
+    get:
+      summary: ''
+      tags:
+        - USGS Parameters
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ''
+                minItems: 1
+                uniqueItems: true
+                x-examples:
+                  example-1:
+                    - id: a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28
+                      code: '00065'
+                      description: 'Gage height, feet'
+                    - id: ba29fc34-6315-4424-838f-9b1863715fad
+                      code: '00060'
+                      description: 'Discharge, cubic feet per second'
+                    - id: f739b4af-1c96-437c-a788-901f59d177fb
+                      code: '62614'
+                      description: 'Lake or reservoir water surface elevation above NGVD 1929, feet'
+                    - id: 60bb26cb-a65d-40d2-ad54-b00d6802de7b
+                      code: '62615'
+                      description: 'Lake or reservoir water surface elevation above NAVD 1988, feet'
+                    - id: 738eb4df-b34b-45cc-a5aa-f2136384244f
+                      code: '00045'
+                      description: 'Precipitation, total, inches'
+                    - id: 0fa9993d-6674-4ba3-ac8a-f02830beea1e
+                      code: '00010'
+                      description: 'Temperature, water, degrees Celsius'
+                    - id: 12ff9f0b-159b-43cb-8126-5253f7948380
+                      code: '00011'
+                      description: 'Temperature, water, degrees Fahrenheit'
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      minLength: 1
+                    description:
+                      type: string
+                      minLength: 1
+                  required:
+                    - code
+                    - description
+      operationId: get-usgs_parameters
+      description: USGS Parameters Supported by Water API
+    parameters: []
+  /sync/usgs_sites:
+    post:
+      summary: ''
+      operationId: post-sync-usgs-sites
+      responses:
+        '200':
+          description: OK
+      description: Sync Endpoint for Internal App Usage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: ''
+              minItems: 1
+              uniqueItems: true
+              x-examples:
+                example-1:
+                  - usgs_id: '01595300'
+                    name: 'ABRAM CREEK AT OAKMONT, WV'
+                    geometry:
+                      type: Point
+                      coordinates:
+                        - -79.17892449
+                        - 39.36676569
+                    elevation: 1834.9
+                    horizontal_datum_id: 4269
+                    vertical_datum_id: 3
+                    huc: '02070002'
+                    state: WV
+                    parameter_codes: []
+                    state: West Virginia
+                    vertical_datum: NAVD88
+                    create_date: '2021-08-24T12:51:30.282631Z'
+                    update_date: null
+                  - usgs_id: '03182700'
+                    name: 'ANTHONY CREEK NEAR ANTHONY, WV'
+                    geometry:
+                      type: Point
+                      coordinates:
+                        - -80.28988889
+                        - 37.9086111
+                    elevation: null
+                    horizontal_datum_id: 4269
+                    vertical_datum_id: 0
+                    huc: '05050003'
+                    state: WV
+                    parameter_codes: []
+                    state: West Virginia
+                    vertical_datum: UNKNOWN
+                    create_date: '2021-08-24T12:51:30.282631Z'
+                    update_date: null
+              items:
+                type: object
+                properties:
+                  usgs_id:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                    minLength: 1
+                  geometry:
+                    type: object
+                    required:
+                      - type
+                      - coordinates
+                    properties:
+                      type:
+                        type: string
+                        minLength: 1
+                      coordinates:
+                        type: array
+                        items:
+                          type: object
+                  elevation:
+                    type: number
+                  horizontal_datum_id:
+                    type: number
+                  vertical_datum_id:
+                    type: number
+                  huc:
+                    type: string
+                    minLength: 1
+                  state:
+                    type: string
+                    minLength: 1
+                required:
+                  - usgs_id
+                  - name
+                  - geometry
+                  - horizontal_datum_id
+                  - vertical_datum_id
+                  - state
+      tags:
+        - USGS Sites
+      x-internal: true
+  /usgs/site_parameters:
+    post:
+      summary: ''
+      operationId: post-usgs-site-parameters
+      responses:
+        '201':
+          description: Created
+      description: Automation endpoint to associate Paramaters to Sites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  site_number:
+                    type: string
+                  parameter_codes:
+                    type: array
+                    minItems: 1
+                    maxItems: 1
+                    items:
+                      type: string
+                required:
+                  - site_number
+                  - parameter_codes
+            examples:
+              example-1:
+                value:
+                  - site_number: '03408500'
+                    parameter_codes:
+                      - '00065'
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+      tags:
+        - USGS Site Parameters
+      parameters:
+        - schema:
+            type: string
+            default: appkey
+          in: query
+          name: key
+          required: true
+      x-internal: true
+  /nws/stages:
+    post:
+      summary: ''
+      operationId: post-nws-stages
+      responses:
+        '201':
+          description: Created
+      description: Used by Airflow to add new NWS Location/Site stages.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                nwsid:
+                  type: string
+                  minLength: 1
+                usgs_site_number:
+                  type: string
+                  minLength: 1
+                name:
+                  type: string
+                  minLength: 1
+                action:
+                  type: number
+                flood:
+                  type: number
+                moderate_flood:
+                  type: number
+                major_flood:
+                  type: number
+              required:
+                - nwsid
+                - usgs_site_number
+                - name
+                - action
+                - flood
+                - moderate_flood
+                - major_flood
+              x-examples:
+                example-1:
+                  nwsid: rgtst
+                  usgs_site_number: '99999999'
+                  name: Regression Test
+                  action: 5
+                  flood: 10
+                  moderate_flood: 15
+                  major_flood: 20
+            examples:
+              example-1:
+                value:
+                  nwsid: string
+                  usgs_site_number: string
+                  name: string
+                  action: 0
+                  flood: 0
+                  moderate_flood: 0
+                  major_flood: 0
+      tags:
+        - NWS Stages
+      parameters:
+        - schema:
+            type: string
+            default: appkey
+          in: query
+          name: key
+          required: true
+      x-internal: true
+    get:
+      summary: ''
+      operationId: get-nws-stages
+      responses:
+        '200':
+          description: OK
+      description: Flood Stages for NWS Sites/Locations.  Mainly used for automated syncing.
+      tags:
+        - NWS Stages
+      x-internal: true
+  '/nws/stages/{nwsid}':
+    get:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  nwsid:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                    minLength: 1
+                  action:
+                    type: number
+                  flood:
+                    type: number
+                  moderate_flood:
+                    type: number
+                  major_flood:
+                    type: number
+                required:
+                  - nwsid
+                  - name
+                  - action
+                  - flood
+                  - moderate_flood
+                  - major_flood
+                x-examples:
+                  example-1:
+                    nwsid: rgtst
+                    name: Regression Test Updated
+                    action: 6
+                    flood: 11
+                    moderate_flood: 16
+                    major_flood: 21
+              examples:
+                example-1:
+                  value:
+                    nwsid: string
+                    name: string
+                    action: 0
+                    flood: 0
+                    moderate_flood: 0
+                    major_flood: 0
+      operationId: get-nws-stages-for-site
+      description: Flood Stages for NWS Sites/Locations.  Mainly used for automated syncing.
+      tags:
+        - NWS Stages
+      x-internal: true
+    put:
+      summary: ''
+      operationId: put-nws-stages
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                nwsid:
+                  type: string
+                  minLength: 1
+                name:
+                  type: string
+                  minLength: 1
+                action:
+                  type: number
+                flood:
+                  type: number
+                moderate_flood:
+                  type: number
+                major_flood:
+                  type: number
+              required:
+                - nwsid
+                - name
+                - action
+                - flood
+                - moderate_flood
+                - major_flood
+              x-examples:
+                example-1:
+                  nwsid: rgtst
+                  name: Regression Test Updated
+                  action: 6
+                  flood: 11
+                  moderate_flood: 16
+                  major_flood: 21
+      description: Used by Airflow to update NWS Location/Site stages.
+      tags:
+        - NWS Stages
+      parameters:
+        - schema:
+            type: string
+            default: appkey
+          in: query
+          name: key
+          required: true
+      x-internal: true
+    parameters:
+      - schema:
+          type: string
+          default: adow2
+          minLength: 5
+        name: nwsid
+        in: path
+        description: NWSHB5
+        required: true
+  /watersheds:
+    get:
+      summary: ''
+      tags:
+        - Watersheds
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ''
+                minItems: 1
+                uniqueItems: true
+                x-examples:
+                  example-1:
+                    - id: 3e322a11-b76b-4710-8f9a-b7884cd8ae77
+                      office_symbol: LRH
+                      office_id: 2f160ba7-fd5f-4716-8ced-4a29f75065a6
+                      slug: big-sandy-river
+                      name: Big Sandy River
+                      bbox:
+                        - 1114000
+                        - 1624000
+                        - 1288000
+                        - 1796000
+                    - id: 50372dbc-f254-4584-8345-1c3613d2a102
+                      office_symbol: LRH
+                      office_id: 2f160ba7-fd5f-4716-8ced-4a29f75065a6
+                      slug: guyandotte-river
+                      name: Guyandotte River
+                      bbox:
+                        - 1166000
+                        - 1692000
+                        - 1298000
+                        - 1814000
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      minLength: 1
+                    office_symbol:
+                      type: string
+                      minLength: 1
+                    office_id:
+                      type: string
+                      minLength: 1
+                    slug:
+                      type: string
+                      minLength: 1
+                    name:
+                      type: string
+                      minLength: 1
+                    bbox:
+                      type: array
+                      minItems: 4
+                      maxItems: 4
+                      items:
+                        type: number
+                        minimum: 0
+                  required:
+                    - id
+                    - office_symbol
+                    - office_id
+                    - slug
+                    - name
+                    - bbox
+              examples:
+                example-1:
+                  value:
+                    - id: string
+                      office_symbol: string
+                      office_id: string
+                      slug: string
+                      name: string
+                      bbox:
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+      operationId: get-watersheds
+      description: List all Watersheds
+  '/watersheds/{watershed_slug}/extract':
+    parameters:
+      - $ref: '#/components/parameters/watershed_slug'
+    get:
+      summary: ''
+      tags:
+        - Watersheds
+      responses:
+        '200':
+          $ref: '#/components/responses/Watershed-Extract'
+      operationId: get-watersheds-watershed_slug-extract
+      description: Stream JSON object for each site/parameter combination associated with the watershed
+      parameters:
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'

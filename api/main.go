@@ -50,15 +50,10 @@ func main() {
 	features.Use(middleware.PgFeatureservProxy(config.PgFeatureservUrl))
 
 	// Mount Routes
-	// cwms.Mount(st.Connection, e, &config) // CWMS
-	// datasources.Mount(st.Connection, e, &config)            // Datasources
 	charts.Mount(st.Connection, e, &config)     // Charts
 	locations.Mount(st.Connection, e, &config)  // Locations
 	providers.Mount(st.Connection, e, &config)  // Providers
 	timeseries.Mount(st.Connection, e, &config) // Timeseries
-	// nws.Mount(st.Connection, e, &config)        // National Weather Service
-	// usgs.Mount(st.Connection, e, &config)       // USGS
-	// watersheds.Mount(st.Connection, e, &config) // Watersheds
 
 	// Start Server
 	s := &http2.Server{
