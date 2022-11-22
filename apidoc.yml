@@ -40,7 +40,8 @@ paths:
     get:
       tags:
         - provider
-      summary: Lists Data Providers
+      summary: List Providers
+      description: Lists Data Providers
       responses:
         '200':
           description: Successful operation
@@ -53,23 +54,26 @@ paths:
     get:
       tags:
         - datasource
-      summary: Lists Datasources
+      summary: List Datasources
+      description: Lists Datasources
   
   /locations:
     get:
       tags:
         - location
-      summary: Lists Locations
+      summary: List Locations
+      description: Lists Locations
   /locations/{location}:
     get:
       tags:
         - location
-      summary: Gets One Location
+      summary: Get Location
+      description: Gets One Location
   /providers/{provider}/locations:
     post:
       tags:
         - location
-      summary: Creates one or more locations
+      summary: Create Location(s)
       description: Creates one or more locations
       # operationId: 
       parameters:
@@ -96,8 +100,8 @@ paths:
     put:
       tags:
         - location
-      summary: Updates one or more locations
-      description: ''
+      summary: Update Location(s)
+      description: Updates one or more locations
       operationId: updatePetWithForm
       parameters:
         - name: provider
@@ -113,69 +117,81 @@ paths:
     delete:
       tags:
         - location
-      summary: Deletes one or more locations
+      summary: Delete Loaction(s)
+      description: Deletes one or more locations
 
   /providers/{provider}/locations/{location}:
     delete:
       tags:
         - location
-      summary: Deletes a single location
+      summary: Delete Location
       description: Deletes a single location using the location's unique slug
 
   /timeseries:
     get:
       tags:
         - timeseries
-      summary: Lists Timeseries
+      summary: List Timeseries
+      description: Lists Timeseries
   /providers/{provider}/timeseries:
     post:
       tags:
         - timeseries
-      summary: Creates One or More Timeseries
+      summary: Create Timeseries
+      description: Creates One or More Timeseries
   /providers/{provider}/timeseries/values:
     post:
       tags:
         - timeseries
-      summary: Creates/Updates Values for One or More Exiting Timeseries
+      summary: Create/Update Timeseries Values
+      description: Creates/Updates Values for One or More Exiting Timeseries
   
   /chart_types:
     get:
       tags:
         - chart
-      summary: Lists supported chart types
+      summary: List Chart Types
+      description: Lists supported chart types
   /charts:
     get:
       tags:
         - chart
-      summary: Lists sharts
+      summary: List Charts
+      description: Lists charts
   /charts/{chart}:
     get:
       tags:
         - chart
-      summary: Gets chart detail or renders chart
+      summary: Get Chart Detail / Render
+      description: Gets chart detail or renders chart
   /providers/{provider}/charts:
     get:
       tags:
         - chart
-      summary: Lists charts
+      summary: List Charts
+      description: Lists charts
     post:
       tags:
         - chart
-      summary: Creates one or more charts
+      summary: Create Chart(s)
+      description: Creates one or more charts
   /providers/{provider}/charts/{chart}:
     delete:
       tags:
         - chart
-      summary: Deletes a chart
+      summary: Delete Chart
+      description: Deletes a chart
   /providers/{provider}/charts/{chart}/mapping:
     post:
       tags:
         - chart
-      summary: Creates one or more timeseries-variable mappings for a chart
+      summary: Create Timeseries-Variable Mapping
+      description: Creates one or more timeseries-variable mappings for a chart
     delete:
       tags:
         - chart
-      summary: Deletes one or more timeseries-variable mappings from a chart
+      summary: Delete Timeseries-Variable mapping
+      description: Deletes one or more timeseries-variable mappings from a chart
 
 components:
   schemas:

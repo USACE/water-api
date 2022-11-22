@@ -45,6 +45,10 @@ func main() {
 		return c.JSON(http.StatusOK, map[string]interface{}{"status": "healthy"})
 	})
 
+	// API Documentation Routes
+	public.File("/apidoc", "/apidoc.html")
+	public.File("/apidoc.yml", "/apidoc.yml")
+
 	// pg-featureserv routes
 	features := public.Group("/features")
 	features.Use(middleware.PgFeatureservProxy(config.PgFeatureservUrl))
