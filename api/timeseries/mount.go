@@ -25,8 +25,12 @@ func Mount(conn *pgxpool.Pool, e *echo.Echo, config *app.Config) {
 	key.Use(middleware.KeyAuth(config.ApplicationKey))
 
 	// Timeseries
-	public.GET("/timeseries", s.ListTimeseries)
-	key.POST("/providers/:provider/timeseries", s.CreateTimeseries) // (airflow - array of objects in payload)
-	key.POST("/providers/:provider/timeseries/measurements", s.CreateOrUpdateTimeseriesMeasurements)
+	public.GET("/timeseries", s.ListTimeseries)                       // LIST
+	key.POST("/providers/:provider/timeseries", s.CreateTimeseries)   // CREATE
+	key.PUT("/providers/:provider/timeseries", s.UpdateTimeseries)    // UPDATE
+	key.DELETE("/providers/:provider/timeseries", s.DeleteTimeseries) // DELETE
+
+	// Timeseries Measurements
+	key.POST("/providers/:provider/timeseries/values", s.CreateOrUpdateTimeseriesMeasurements) // MEASUREMENTS
 
 }

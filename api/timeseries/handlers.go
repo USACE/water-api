@@ -77,3 +77,54 @@ func (s Store) CreateOrUpdateTimeseriesMeasurements(c echo.Context) error {
 	return c.JSON(http.StatusAccepted, tt)
 
 }
+
+func (s Store) UpdateTimeseries(c echo.Context) error {
+	var tsc models.TimeseriesCollection
+	if err := c.Bind(&tsc); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	// ensure provider slug for all posted locations matches route param :provider
+	// if not, return status unauthorized
+	routeProvider := c.Param("provider")
+	for _, item := range tsc.Items {
+		if !strings.EqualFold(routeProvider, item.Provider) {
+			return c.String(
+				http.StatusBadRequest,
+				"timeseries in post body has provider that does not match route param :provider",
+			)
+		}
+	}
+
+	tt, err := tsc.Update(s.Connection)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
+	}
+
+	return c.JSON(http.StatusOK, tt)
+}
+
+func (s Store) DeleteTimeseries(c echo.Context) error {
+	var tsc models.TimeseriesCollection
+	if err := c.Bind(&tsc); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	// ensure provider slug for all posted locations matches route param :provider
+	// if not, return status unauthorized
+	routeProvider := c.Param("provider")
+	for _, item := range tsc.Items {
+		if !strings.EqualFold(routeProvider, item.Provider) {
+			return c.String(
+				http.StatusBadRequest,
+				"timeseries in post body has provider that does not match route param :provider",
+			)
+		}
+	}
+
+	if err := tsc.Delete(s.Connection); err != nil {
+		return c.JSON(http.StatusInternalServerError, messages.DefaultMessageInternalServerError)
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{})
+}

@@ -139,6 +139,16 @@ paths:
         - timeseries
       summary: Create Timeseries
       description: Creates One or More Timeseries
+    put:
+      tags:
+        - timeseries
+      summary: Update Timeseries
+      description: Updates One or More Timeseries
+    delete:
+      tags:
+        - timeseries
+      summary: Delete Timeseries
+      description: Deletes One or More Timeseries and Associated Measurements
   /providers/{provider}/timeseries/values:
     post:
       tags:

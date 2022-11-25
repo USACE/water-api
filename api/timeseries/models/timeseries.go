@@ -29,7 +29,7 @@ type (
 		Key              string           `json:"key"`
 		LatestValue      *[]interface{}   `json:"latest_value" db:"latest_value"` // e.g. ["2022-09-27T12:00:00-05:00", 888.14]
 		Values           *[][]interface{} `json:"values,omitempty"`               // may be empty [] or [["2022-09-27T12:00:00-05:00", 888.00], ["2022-09-27T13:00:00-05:00", 888.15]]
-		EtlValuesEnabled *bool            `json:"etl_values_enabled,omitempty" db:"etl_values_enabled"`
+		EtlValuesEnabled *bool            `json:"etl_values_enabled" db:"etl_values_enabled"`
 		Location         struct {
 			Slug     *string `json:"slug"`     // Optional Location Information; required to establish linkage to unique location on Create
 			Provider *string `json:"provider"` // Optional Location Information; required to establish linkage to unique location on Create
@@ -58,7 +58,7 @@ func (c *TimeseriesCollection) UnmarshalJSON(b []byte) error {
 func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 
 	q := sq.Select(
-		`provider, provider_name, datatype, datatype_name, key, latest_value, location`,
+		`provider, provider_name, datatype, datatype_name, key, latest_value, etl_values_enabled, location`,
 	).From(
 		"v_timeseries t",
 	)
@@ -112,7 +112,6 @@ func ListTimeseries(db *pgxpool.Pool, f *TimeseriesFilter) ([]Timeseries, error)
 	return tt, nil
 }
 
-// func CreateTimeseries() ([]Timeseries, error) {}
 func (tsc TimeseriesCollection) Create(db *pgxpool.Pool, providerSlug string) ([]Timeseries, error) {
 	tx, err := db.Begin(context.Background())
 	if err != nil {
@@ -145,4 +144,68 @@ func (tsc TimeseriesCollection) Create(db *pgxpool.Pool, providerSlug string) ([
 	tx.Commit(context.Background())
 
 	return ListTimeseries(db, &TimeseriesFilter{IDs: &newIDs})
+}
+
+func (tsc TimeseriesCollection) Update(db *pgxpool.Pool) ([]Timeseries, error) {
+	tx, err := db.Begin(context.Background())
+	if err != nil {
+		return make([]Timeseries, 0), err
+	}
+	defer tx.Rollback(context.Background())
+
+	idMap := make(map[uuid.UUID]bool)
+	for _, t := range tsc.Items {
+		// Update etl_values_enabled if provided
+		if t.EtlValuesEnabled != nil {
+			rows, err := tx.Query(
+				context.Background(),
+				`UPDATE timeseries SET etl_values_enabled = $4
+				 WHERE datasource_id  = (SELECT id FROM v_datasource WHERE datatype = LOWER($1) AND provider = LOWER($2))
+				   AND datasource_key = $3
+				 RETURNING id`, t.Datatype, t.Provider, t.Key, t.EtlValuesEnabled,
+			)
+			if err != nil {
+				tx.Rollback(context.Background())
+				return make([]Timeseries, 0), err
+			}
+			var id uuid.UUID
+			if err := pgxscan.ScanOne(&id, rows); err != nil {
+				continue
+			}
+			idMap[id] = true
+		}
+	}
+	tx.Commit(context.Background())
+
+	// convert map of updated IDs to list
+	updatedIDs := make([]uuid.UUID, 0)
+	for k := range idMap {
+		updatedIDs = append(updatedIDs, k)
+	}
+
+	return ListTimeseries(db, &TimeseriesFilter{IDs: &updatedIDs})
+}
+
+func (tsc TimeseriesCollection) Delete(db *pgxpool.Pool) error {
+	tx, err := db.Begin(context.Background())
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(context.Background())
+
+	for _, t := range tsc.Items {
+		_, err := tx.Exec(
+			context.Background(),
+			`DELETE FROM timeseries
+			 WHERE datasource_id  = (SELECT id FROM v_datasource WHERE datatype = LOWER($1) AND provider = LOWER($2))
+			   AND datasource_key = $3`, t.Datatype, t.Provider, t.Key,
+		)
+		if err != nil {
+			tx.Rollback(context.Background())
+			return err
+		}
+	}
+	tx.Commit(context.Background())
+
+	return nil
 }

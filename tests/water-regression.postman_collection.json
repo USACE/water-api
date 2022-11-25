@@ -1637,7 +1637,48 @@
 					"response": []
 				},
 				{
-					"name": "Create/Update Timeseries Measurements (Many)",
+					"name": "Update Timeseries (Many) - Enable Values ETL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 202\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 202]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Pool.Elev.Inst.15Minutes.0.OBS\",\n        \"provider\": \"MVP\",\n        \"etl_values_enabled\": true\n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Pool.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"MVP\",\n        \"etl_values_enabled\": true\n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Tailwater.Stage.Inst.15Minutes.0.OBS\",\n        \"provider\": \"MVP\",\n        \"etl_values_enabled\": true\n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject-Tailwater.Flow.Inst.15Minutes.0.OBS\",\n        \"provider\": \"MVP\",\n        \"etl_values_enabled\": true\n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Top of Dam\",\n        \"provider\": \"MVP\",\n        \"etl_values_enabled\": true\n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Streambed\",\n        \"provider\": \"MVP\",\n        \"etl_values_enabled\": true\n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Top of Flood\",\n        \"provider\": \"MVP\"\n    },\n    {\n        \"datatype\": \"cwms-level\",\n        \"key\": \"RegressionProject.Elev.Inst.0.Bottom of Flood\",\n        \"provider\": \"MVP\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/timeseries",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"timeseries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create/Update Timeseries Values (Many)",
 					"event": [
 						{
 							"listen": "test",
@@ -1664,7 +1705,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/providers/mvp/timeseries/measurements",
+							"raw": "{{base_url}}/providers/mvp/timeseries/values",
 							"host": [
 								"{{base_url}}"
 							],
@@ -1672,7 +1713,7 @@
 								"providers",
 								"mvp",
 								"timeseries",
-								"measurements"
+								"values"
 							]
 						}
 					},
@@ -1975,6 +2016,88 @@
 									"key": "datatype",
 									"value": "nws-level"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Timeseries (Many) Test Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 or 202\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject.TEST_DELETE_1\",\n        \"location\": {\"provider\": \"mvp\", \"datatype\": \"cwms-location\", \"code\": \"RegressionProject-Pool\"},\n        \"provider\": \"MVP\"\n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject.TEST_DELETE_2\",\n        \"location\": {\"provider\": \"mvp\", \"datatype\": \"cwms-location\", \"code\": \"RegressionProject-Pool\"},\n        \"provider\": \"MVP\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/timeseries",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"timeseries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Timeseries (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject.TEST_DELETE_1\",\n        \"provider\": \"MVP\"\n    },\n    {\n        \"datatype\": \"cwms-timeseries\",\n        \"key\": \"RegressionProject.TEST_DELETE_2\",\n        \"provider\": \"MVP\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/mvp/timeseries",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"mvp",
+								"timeseries"
 							]
 						}
 					},
