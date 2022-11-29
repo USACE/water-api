@@ -30,8 +30,8 @@ func Mount(conn *pgxpool.Pool, e *echo.Echo, config *app.Config) {
 	key.PUT("/providers/:provider/timeseries", s.UpdateTimeseries)    // UPDATE
 	key.DELETE("/providers/:provider/timeseries", s.DeleteTimeseries) // DELETE
 
-	// Timeseries Measurements
-	key.POST("/providers/:provider/timeseries/values", s.CreateOrUpdateTimeseriesMeasurements) // MEASUREMENTS
+	// Timeseries Values
+	key.POST("/providers/:provider/timeseries/values", s.CreateOrUpdateTimeseriesValues) // VALUES
 
 	// Timeseries Groups
 	// public.GET("/providers/:provider/timeseries_groups", s.ListTimeseriesGroups)                                   // LIST GROUPS

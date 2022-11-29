@@ -148,7 +148,7 @@ paths:
       tags:
         - timeseries
       summary: Delete Timeseries
-      description: Deletes One or More Timeseries and Associated Measurements
+      description: Deletes One or More Timeseries and Associated Values
   /providers/{provider}/timeseries/values:
     post:
       tags:

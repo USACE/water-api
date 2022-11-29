@@ -10,7 +10,7 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-func (tsc TimeseriesCollection) CreateOrUpdateTimeseriesMeasurements(db *pgxpool.Pool) ([]Timeseries, error) {
+func (tsc TimeseriesCollection) CreateOrUpdateTimeseriesValues(db *pgxpool.Pool) ([]Timeseries, error) {
 
 	tx, err := db.Begin(context.Background())
 	if err != nil {
@@ -22,7 +22,7 @@ func (tsc TimeseriesCollection) CreateOrUpdateTimeseriesMeasurements(db *pgxpool
 
 	for _, t := range tsc.Items {
 
-		// If measurements aren't properly provided, skip this item
+		// If values aren't properly provided, skip this item
 		if t.Values == nil {
 			continue
 		}
@@ -45,13 +45,13 @@ func (tsc TimeseriesCollection) CreateOrUpdateTimeseriesMeasurements(db *pgxpool
 		}
 
 		/********************************************************
-		Iterate over the measurements and insert into db
+		Iterate over the values and insert into db
 		********************************************************/
 		for _, val := range *t.Values {
 
 			rows, err := tx.Query(
 				context.Background(),
-				`INSERT INTO timeseries_measurement (timeseries_id, time, value)
+				`INSERT INTO timeseries_value (timeseries_id, time, value)
 				 VALUES ($1, $2, $3)
 				 ON CONFLICT ON CONSTRAINT timeseries_id_unique_time DO UPDATE SET value = EXCLUDED.value
 				 RETURNING timeseries_id`, timeseriesId, val[0], val[1],
@@ -88,7 +88,7 @@ func (tsc TimeseriesCollection) CreateOrUpdateTimeseriesMeasurements(db *pgxpool
 		var row struct{ Time time.Time }
 		if err := pgxscan.Get(
 			context.Background(), db, &row, `
-			SELECT MAX(time) AS time FROM timeseries_measurement WHERE timeseries_id = $1`, tid,
+			SELECT MAX(time) AS time FROM timeseries_value WHERE timeseries_id = $1`, tid,
 		); err != nil {
 			return make([]Timeseries, 0), err
 		}
@@ -99,7 +99,7 @@ func (tsc TimeseriesCollection) CreateOrUpdateTimeseriesMeasurements(db *pgxpool
 			 SET latest_time  = $2,
 				 latest_value = (
 					SELECT value
-					  FROM timeseries_measurement
+					  FROM timeseries_value
 					 WHERE timeseries_id = $1
 				       AND time = $2
 				 )
