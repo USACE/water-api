@@ -40,6 +40,7 @@
 
 
 INSERT INTO location (datasource_id, code, slug, geometry, state_id, attributes) VALUES
+	((SELECT id FROM v_datasource  WHERE datatype = 'cwms-location' AND provider = 'lrb'),'Mount Morris','mount-morris',ST_GeomFromText('POINT(-77.90708 42.73329)',4326),1,'{"public_name":"Mount Morris Dam","kind":"PROJECT"}'),
     ((SELECT id FROM v_datasource  WHERE datatype = 'cwms-location' AND provider = 'lrh'),'LRH Test Project','lrh-test-project',ST_GeomFromText('POINT(-0.0 0.0)',4326),1,'{"public_name":"LRH Test Project","kind":"PROJECT"}'),
 
 	((SELECT id FROM v_datasource  WHERE datatype = 'cwms-location' AND provider = 'lrn'),'ACST1',slugify('acst1'),ST_GeomFromText('POINT(-87.05111 36.32)',4326),30,'{"public_name": "Sycamore Creek near Ashland City, TN", "kind": "SITE"}'),
@@ -2846,5 +2847,7 @@ INSERT INTO location (datasource_id, code, slug, geometry, state_id, attributes)
 	((SELECT id FROM v_datasource  WHERE datatype = 'cwms-location' AND provider = 'mvp'),'ZUMM5',slugify('zumm5'),ST_GeomFromText('POINT(-92.4322 44.2867)',4326),4,'{"public_name": "Zumbro River at Zumbro Falls", "kind": "SITE"}'),
 	((SELECT id FROM v_datasource  WHERE datatype = 'cwms-location' AND provider = 'mvp'),'ZumbroNorthFk_R',slugify('zumbronorthfk-r'),ST_GeomFromText('POINT(-92.47991 44.2583)',4326),4,'{"public_name": "North Fork Zumbro River", "kind": "STREAM"}'),
 	((SELECT id FROM v_datasource  WHERE datatype = 'cwms-location' AND provider = 'mvp'),'ZumbroSouthFk_R',slugify('zumbrosouthfk-r'),ST_GeomFromText('POINT(-92.47018 44.15413)',4326),4,'{"public_name": "South Fork Zumbro River", "kind": "STREAM"}'),
-	((SELECT id FROM v_datasource  WHERE datatype = 'cwms-location' AND provider = 'mvp'),'Zumbro_R',slugify('zumbro-r'),ST_GeomFromText('POINT(-91.92794 44.29163)',4326),4,'{"public_name": "Zumbro River", "kind": "STREAM"}');
+	((SELECT id FROM v_datasource  WHERE datatype = 'cwms-location' AND provider = 'mvp'),'Zumbro_R',slugify('zumbro-r'),ST_GeomFromText('POINT(-91.92794 44.29163)',4326),4,'{"public_name": "Zumbro River", "kind": "STREAM"}'),
+	((SELECT id FROM v_datasource  WHERE datatype = 'cwms-location' AND provider = 'nwp'),'ALF',slugify('alf'),ST_GeomFromText('POINT(-116.9997 48.17925)',4326),20,'{"public_name": "Albeni Falls Dam", "kind": "PROJECT"}'),
+	((SELECT id FROM v_datasource  WHERE datatype = 'cwms-location' AND provider = 'nws'),'YUMW1',slugify('yumw1'),ST_GeomFromText('POINT(-120.9456 47.19194)',4326),20,'{"public_name": "Yakima River At Cle Elum", "kind": "SITE"}');
 
