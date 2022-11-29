@@ -74,6 +74,48 @@ CREATE OR REPLACE VIEW v_timeseries AS (
     JOIN datatype     dt2 ON dt2.id = ds2.datatype_id    -- location's datatype
 );
 
+
+---------------------
+-- V_TIMESERIES_GROUP
+---------------------
+CREATE OR REPLACE VIEW v_timeseries_group AS (
+    SELECT p.slug       AS provider,
+           p.name       AS provider_name,
+           g.slug       AS slug,
+           g.name       AS name
+    FROM timeseries_group g
+    JOIN provider         p ON p.id = g.provider_id
+);
+
+----------------------------
+-- V_TIMESERIES_GROUP_DETAIL
+----------------------------
+CREATE OR REPLACE VIEW v_timeseries_group_detail AS (
+    WITH group_members as (
+        SELECT m.timeseries_group_id, 
+            COALESCE(json_agg(json_build_object(
+                'datatype',    dt.slug,
+                'provider',     p.slug,
+                'key',          t.datasource_key
+            )), '[]') AS timeseries
+        FROM timeseries_group_members m
+        JOIN timeseries     t ON  t.id =  m.timeseries_id
+        JOIN datasource    ds ON ds.id =  t.datasource_id
+        JOIN datatype      dt ON dt.id = ds.datatype_id
+        JOIN provider       p ON  p.id = ds.provider_id 
+        GROUP BY m.timeseries_group_id
+    )
+    SELECT p1.slug       AS provider,
+           p1.name       AS provider_name,
+            g.slug       AS slug,
+            g.name       AS name,
+            m.timeseries AS timeseries
+    FROM timeseries_group g
+    JOIN provider            p1 ON p1.id = g.provider_id
+    LEFT JOIN group_members  m  ON m.timeseries_group_id = g.id
+);
+
+
 ----------
 -- V_CHART
 ----------

@@ -25,6 +25,8 @@ GRANT SELECT ON
     provider,
     timeseries,
     timeseries_value,
+    timeseries_group,
+    timeseries_group_members,
     upload_status,  
     usgs_huc2,
     usgs_huc2_simple,
@@ -47,7 +49,9 @@ GRANT SELECT ON
     v_chart_detail,
     v_datasource,
     v_location,
-    v_timeseries
+    v_timeseries,
+    v_timeseries_group,
+    v_timeseries_group_detail
     -- v_usgs_site,
     -- v_watershed
 TO water_reader;
@@ -63,6 +67,8 @@ GRANT INSERT,UPDATE,DELETE ON
     provider,
     timeseries,
     timeseries_value,
+    timeseries_group,
+    timeseries_group_members,
     upload_status,
     usgs_measurements,
     usgs_site_parameters,
