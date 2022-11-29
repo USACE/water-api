@@ -169,6 +169,24 @@ CREATE TABLE IF NOT EXISTS timeseries_measurement (
     PRIMARY KEY (timeseries_id, time)
 );
 
+-------------------
+-- TIMESERIES_GROUP
+-------------------
+CREATE TABLE IF NOT EXISTS timeseries_group (
+    id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+    slug VARCHAR UNIQUE NOT NULL,
+    name VARCHAR NOT NULL,
+    provider_id UUID NOT NULL REFERENCES provider(id),
+    CONSTRAINT provider_unique_name UNIQUE(provider_id, name)
+);
+
+CREATE TABLE IF NOT EXISTS timeseries_group_members (
+    timeseries_group_id NOT NULL REFERENCES timeseries_group(id) ON DELETE CASCADE,
+    timeseries_id UUID NOT NULL REFERENCES timeseries(id) ON DELETE CASCADE,
+    CONSTRAINT timeseries_group_unique_timeseries UNIQUE(timeseries_group_id, timeseries_id)
+);
+
+
 --------------
 -- CHART
 --------------
