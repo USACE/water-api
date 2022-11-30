@@ -199,3 +199,34 @@ func (s Store) DeleteTimeseriesGroup(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{})
 }
+
+func (s Store) AddTimeseriesGroupMembers(c echo.Context) error {
+	provider, slug := c.Param("provider"), c.Param("timeseries_group")
+	var mc models.TimeseriesGroupMemberCollection
+	if err := c.Bind(&mc); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	g, err := models.AddTimeseriesGroupMembers(s.Connection, &provider, &slug, &mc)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, g)
+}
+
+func (s Store) RemoveTimeseriesGroupMembers(c echo.Context) error {
+
+	provider, slug := c.Param("provider"), c.Param("timeseries_group")
+	var mc models.TimeseriesGroupMemberCollection
+	if err := c.Bind(&mc); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	g, err := models.RemoveTimeseriesGroupMembers(s.Connection, &provider, &slug, &mc)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, g)
+}

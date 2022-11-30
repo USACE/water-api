@@ -2198,6 +2198,178 @@
 					"response": []
 				},
 				{
+					"name": "Remove Timeseries Group Members (one)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provider\": \"usgs\",\n    \"datatype\": \"usgs-timeseries\",\n    \"key\": \"03203600.00065\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/test-timeseries-group/members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"test-timeseries-group",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Timeseries Group Members (many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n        {\n            \"provider\": \"usgs\",\n            \"datatype\": \"usgs-timeseries\",\n            \"key\": \"03185000.00060\"\n        },\n        {\n            \"provider\": \"usgs\",\n            \"datatype\": \"usgs-timeseries\",\n            \"key\": \"03185000.00065\"\n        }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/test-timeseries-group/members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"test-timeseries-group",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Timeseries Group Members (one)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provider\": \"usgs\",\n    \"datatype\": \"usgs-timeseries\",\n    \"key\": \"03203600.00065\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/test-timeseries-group/members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"test-timeseries-group",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Timeseries Group Members (many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n        {\n            \"provider\": \"usgs\",\n            \"datatype\": \"usgs-timeseries\",\n            \"key\": \"03185000.00060\"\n        },\n        {\n            \"provider\": \"usgs\",\n            \"datatype\": \"usgs-timeseries\",\n            \"key\": \"03185000.00065\"\n        }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/test-timeseries-group/members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"test-timeseries-group",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Timeseries Group (One)",
 					"event": [
 						{

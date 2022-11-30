@@ -26,17 +26,13 @@ type (
 		Name         string `json:"name"`
 	}
 
-	TimeseriesGroupDetail struct {
-		TimeseriesGroup
-		Timeseries []struct {
-			Provider string `json:"provider"`
-			Datatype string `json:"datatype"`
-			Key      string `json:"key"`
-		} `json:"timeseries"` // abbreviated timeseries information
-	}
-
 	TimeseriesGroupCollection struct {
 		Items []TimeseriesGroup `json:"items"`
+	}
+
+	TimeseriesGroupDetail struct {
+		TimeseriesGroup
+		Timeseries []TimeseriesGroupMember `json:"timeseries"` // abbreviated timeseries information
 	}
 )
 
