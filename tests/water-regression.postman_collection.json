@@ -2196,6 +2196,130 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Create Timeseries Group (One)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provider\": \"lrh\",\n    \"name\": \"Regression Test Timeseries Group 1\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Timeseries Group (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"provider\": \"lrh\",\n        \"name\": \"Regression Test Timeseries Group 2\"\n    },\n    {\n        \"provider\": \"lrh\",\n        \"name\": \"Regression Test Timeseries Group 3\"\n    },\n    {\n        \"provider\": \"lrh\",\n        \"name\": \"Regression Test Timeseries Group 4\"\n    },\n    {\n        \"provider\": \"lrh\",\n        \"name\": \"Regression Test Timeseries Group 5\"\n    }\n]\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Timeseries Group",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/regression-test-timeseries-group-1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"regression-test-timeseries-group-1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

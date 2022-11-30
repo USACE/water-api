@@ -1,6 +1,7 @@
 package timeseries
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -158,4 +159,43 @@ func (s Store) GetTimeseriesGroupDetail(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, &g)
+}
+
+func (s Store) CreateTimeseriesGroups(c echo.Context) error {
+
+	var gc models.TimeseriesGroupCollection
+	if err := c.Bind(&gc); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	routeProvider := c.Param("provider")
+	for _, item := range gc.Items {
+		// 1. Verify provider in payload body matches route param :provider
+		if !strings.EqualFold(routeProvider, item.Provider) {
+			return c.JSON(
+				http.StatusBadRequest,
+				messages.NewMessage(
+					fmt.Sprintf(
+						"timeseries group in post body has provider (%s) that does not match route param :provider (%s)",
+						item.Provider,
+						routeProvider,
+					),
+				),
+			)
+		}
+	}
+	gg, err := models.CreateTimeseriesGroups(s.Connection, &gc)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, gg)
+}
+
+func (s Store) DeleteTimeseriesGroup(c echo.Context) error {
+	provider, slug := c.Param("provider"), c.Param("timeseries_group")
+
+	if err := models.DeleteTimeseriesGroup(s.Connection, &provider, &slug); err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{})
 }

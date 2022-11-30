@@ -79,7 +79,8 @@ CREATE OR REPLACE VIEW v_timeseries AS (
 -- V_TIMESERIES_GROUP
 ---------------------
 CREATE OR REPLACE VIEW v_timeseries_group AS (
-    SELECT p.slug       AS provider,
+    SELECT g.id         AS id,
+           p.slug       AS provider,
            p.name       AS provider_name,
            g.slug       AS slug,
            g.name       AS name
@@ -105,11 +106,12 @@ CREATE OR REPLACE VIEW v_timeseries_group_detail AS (
         JOIN provider       p ON  p.id = ds.provider_id 
         GROUP BY m.timeseries_group_id
     )
-    SELECT p1.slug       AS provider,
-           p1.name       AS provider_name,
-            g.slug       AS slug,
-            g.name       AS name,
-            m.timeseries AS timeseries
+    SELECT g.id                          AS id,
+           p1.slug                       AS provider,
+           p1.name                       AS provider_name,
+            g.slug                       AS slug,
+            g.name                       AS name,
+            COALESCE(m.timeseries, '[]') AS timeseries
     FROM timeseries_group g
     JOIN provider            p1 ON p1.id = g.provider_id
     LEFT JOIN group_members  m  ON m.timeseries_group_id = g.id

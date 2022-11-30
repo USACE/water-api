@@ -2,8 +2,11 @@ package models
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/USACE/water-api/api/helpers"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -31,7 +34,23 @@ type (
 			Key      string `json:"key"`
 		} `json:"timeseries"` // abbreviated timeseries information
 	}
+
+	TimeseriesGroupCollection struct {
+		Items []TimeseriesGroup `json:"items"`
+	}
 )
+
+func (c *TimeseriesGroupCollection) UnmarshalJSON(b []byte) error {
+	switch helpers.JSONType(b) {
+	case "ARRAY":
+		return json.Unmarshal(b, &c.Items)
+	case "OBJECT":
+		c.Items = make([]TimeseriesGroup, 1)
+		return json.Unmarshal(b, &c.Items[0])
+	default:
+		return errors.New("payload not recognized as JSON array or object")
+	}
+}
 
 func ListTimeseriesGroupsQuery(f *TimeseriesGroupFilter) (sq.SelectBuilder, error) {
 
@@ -92,4 +111,68 @@ func GetTimeseriesGroupDetail(db *pgxpool.Pool, f *TimeseriesGroupFilter) (*Time
 	}
 
 	return &d, nil
+}
+
+// CreateTimeseriesGroups creates a Timeseries Group
+func CreateTimeseriesGroups(db *pgxpool.Pool, gc *TimeseriesGroupCollection) ([]TimeseriesGroup, error) {
+
+	tx, err := db.Begin(context.Background())
+	if err != nil {
+		return make([]TimeseriesGroup, 0), err
+	}
+	defer tx.Rollback(context.Background())
+	newIDs := make([]uuid.UUID, 0)
+
+	// Create a map of all existing slugs in the database.
+	// Append the map each time a new location is created and another slug is taken.
+	slugMap, err := helpers.SlugMap(db, "timeseries_group", "slug", "", "")
+	if err != nil {
+		return make([]TimeseriesGroup, 0), err
+	}
+	for _, n := range gc.Items {
+		// Get Unique Slug for Each Location
+		slug, err := helpers.GetUniqueSlug(n.Name, slugMap)
+		if err != nil {
+			return make([]TimeseriesGroup, 0), err
+		}
+		// Add slug to map so it's not reused within this transaction
+		slugMap[slug] = true
+
+		rows, err := tx.Query(
+			context.Background(),
+			`INSERT INTO timeseries_group (slug, name, provider_id)
+			 VALUES
+			 	(
+					$1,
+					$2,
+					(SELECT id from provider WHERE slug = LOWER($3))
+				)
+			 ON CONFLICT ON CONSTRAINT provider_unique_timeseries_group_name DO NOTHING
+			 RETURNING id`, slug, n.Name, n.Provider,
+		)
+		if err != nil {
+			tx.Rollback(context.Background())
+			return make([]TimeseriesGroup, 0), err
+		}
+		var id uuid.UUID
+		if err := pgxscan.ScanOne(&id, rows); err != nil {
+			continue // TimeseriesGroup already exists; DO NOTHING bypasses RETURNING id
+		}
+		newIDs = append(newIDs, id)
+	}
+	tx.Commit(context.Background())
+
+	return ListTimeseriesGroups(db, &TimeseriesGroupFilter{IDs: &newIDs})
+}
+
+func DeleteTimeseriesGroup(db *pgxpool.Pool, provider *string, slug *string) error {
+	if _, err := db.Exec(
+		context.Background(),
+		`DELETE FROM timeseries_group 
+		 WHERE provider_id = (SELECT id FROM provider WHERE slug = LOWER($1))
+		   AND slug = LOWER($2)`, provider, slug,
+	); err != nil {
+		return err
+	}
+	return nil
 }
