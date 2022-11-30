@@ -34,8 +34,8 @@ func Mount(conn *pgxpool.Pool, e *echo.Echo, config *app.Config) {
 	key.POST("/providers/:provider/timeseries/values", s.CreateOrUpdateTimeseriesValues) // VALUES
 
 	// Timeseries Groups
-	// public.GET("/providers/:provider/timeseries_groups", s.ListTimeseriesGroups)                                   // LIST GROUPS
-	// public.GET("/providers/:provider/timeseries_groups/:timeseries_group", s.GetTimeseriesGroup)                   // GET GROUP
+	public.GET("/providers/:provider/timeseries_groups", s.ListTimeseriesGroups)                       // LIST GROUPS
+	public.GET("/providers/:provider/timeseries_groups/:timeseries_group", s.GetTimeseriesGroupDetail) // GET GROUP
 	// public.GET("/providers/:provider/timeseries_groups/:timeseries_group/values", s.GetTimeseriesGroupValues)      // GET VALUES (EXTRACT)
 	// key.POST("/providers/:provider/timeseries_groups", s.CreateTimeseriesGroups)                                   // CREATE GROUP(S)
 	// key.PUT("/providers/:provider/timeseries_groups/:timeseries_group", s.UpdateTimeseriesGroup)                   // UPDATE GROUP

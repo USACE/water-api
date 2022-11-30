@@ -9,6 +9,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+/////////////
+// TIMESERIES
+/////////////
+
 func (s Store) ListTimeseries(c echo.Context) error {
 	// Get filters from query provider= or datatype=
 	var f models.TimeseriesFilter
@@ -124,4 +128,34 @@ func (s Store) DeleteTimeseries(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{})
+}
+
+////////////////////
+// TIMESERIES GROUPS
+////////////////////
+
+func (s Store) ListTimeseriesGroups(c echo.Context) error {
+
+	var f models.TimeseriesGroupFilter
+	if err := c.Bind(&f); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	gg, err := models.ListTimeseriesGroups(s.Connection, &f)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, gg)
+}
+
+func (s Store) GetTimeseriesGroupDetail(c echo.Context) error {
+
+	var f models.TimeseriesGroupFilter
+	if err := c.Bind(&f); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	g, err := models.GetTimeseriesGroupDetail(s.Connection, &f)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, &g)
 }
