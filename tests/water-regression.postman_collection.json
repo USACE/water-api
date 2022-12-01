@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "0cee5aeb-24bd-438f-b355-d566b43edcf6",
+		"_postman_id": "63e5eabd-4049-424e-82e3-82dec1201691",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20040250"
 	},
 	"item": [
 		{
@@ -1563,6 +1564,12 @@
 								"exec": [
 									"pm.test(\"Status code is 201 or 202\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1604,6 +1611,12 @@
 								"exec": [
 									"pm.test(\"Status code is 201 or 202\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1645,6 +1658,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200 or 202\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([200, 202]);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1686,6 +1705,12 @@
 								"exec": [
 									"pm.test(\"Status code is 201 or 202\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1728,6 +1753,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1770,6 +1801,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1818,6 +1855,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1862,6 +1905,68 @@
 					"response": []
 				},
 				{
+					"name": "List Timeseries by provider and datatype and state",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/timeseries?provider=lrn&datatype=cwms-timeseries&state=ky",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"timeseries"
+							],
+							"query": [
+								{
+									"key": "provider",
+									"value": "lrn"
+								},
+								{
+									"key": "datatype",
+									"value": "cwms-timeseries"
+								},
+								{
+									"key": "state",
+									"value": "ky"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "List Timeseries by provider, ds_type, etl_values_enabled",
 					"event": [
 						{
@@ -1870,6 +1975,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1926,6 +2037,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1978,6 +2095,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2030,6 +2153,12 @@
 								"exec": [
 									"pm.test(\"Status code is 201 or 202\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2071,6 +2200,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2117,6 +2252,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2161,6 +2302,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2206,6 +2353,9 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2252,6 +2402,9 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2308,6 +2461,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2351,6 +2510,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2394,6 +2559,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2437,6 +2608,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2480,6 +2657,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2521,6 +2704,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2562,6 +2751,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2609,6 +2804,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2651,6 +2852,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2699,6 +2906,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2786,6 +2999,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2829,6 +3048,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2874,6 +3099,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2917,6 +3148,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
