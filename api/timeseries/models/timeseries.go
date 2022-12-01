@@ -18,6 +18,7 @@ type (
 		Datatype         *string      `query:"datatype"`
 		Provider         *string      `query:"provider"`
 		EtlValuesEnabled *bool        `query:"etl_values_enabled"`
+		State            *string      `query:"state"`
 		Q                *string      `query:"q"`
 	}
 
@@ -35,6 +36,7 @@ type (
 			Provider *string `json:"provider"` // Optional Location Information; required to establish linkage to unique location on Create
 			Datatype *string `json:"datatype"` // Optional Location Information; required to establish linkage to unique location on Create
 			Code     *string `json:"code"`     // Optional Location Information; required to establish linkage to unique location on Create
+			State    *string `json:"state"`    // Optional Location Information;
 		} `json:"location"` // todo; consider using a fully populated `location.LocationInfo` struct here
 	}
 
@@ -82,6 +84,11 @@ func ListTimeseriesQuery(f *TimeseriesFilter) (sq.SelectBuilder, error) {
 		// Filter by etl_values_enabled
 		if f.EtlValuesEnabled != nil {
 			q = q.Where("etl_values_enabled = ?", f.EtlValuesEnabled)
+		}
+
+		// Filter by State
+		if f.State != nil {
+			q = q.Where("location->>'state' = UPPER(?)", f.State)
 		}
 
 		// Filter by list of known UUIDs
