@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "63e5eabd-4049-424e-82e3-82dec1201691",
+		"_postman_id": "c54a16fc-1af9-43f3-9233-4e1b30c4f8b5",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20040250"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -3152,9 +3151,7 @@
 									"pm.test(\"Response time is less than 200 ms\", function () {",
 									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
 									"});",
-									"pm.test(\"Valid JSON response\", function () {",
-									"    pm.expect(pm.response.json());",
-									"});"
+									""
 								],
 								"type": "text/javascript"
 							}
