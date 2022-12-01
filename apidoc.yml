@@ -33,6 +33,8 @@ tags:
     description: A geospatial location
   - name: timeseries
     description: A collection of zero or more (timestamp,value) pairs that share common metadata
+  - name: timeseries_group
+    description: A named collection of zero or more timeseries
   - name: chart
     description: A configured chart, optionally linked to a location
 paths:
@@ -148,13 +150,58 @@ paths:
       tags:
         - timeseries
       summary: Delete Timeseries
-      description: Deletes One or More Timeseries and Associated Measurements
+      description: Deletes One or More Timeseries and Associated Values
   /providers/{provider}/timeseries/values:
     post:
       tags:
         - timeseries
       summary: Create/Update Timeseries Values
       description: Creates/Updates Values for One or More Exiting Timeseries
+  
+  /providers/{provider}/timeseries_groups:
+    get:
+      tags:
+        - timeseries_group
+      summary: List Timeseries Groups
+      description: Lists Timeseries Groups
+    post:
+      tags:
+        - timeseries_group
+      summary: Create Timeseries Groups
+      description: Creates One or More New Timeseries Groups
+    put:
+      tags:
+        - timeseries_group
+      summary: Update Timeseries Groups
+      description: Updates Metadata for One or More Timeseries Groups
+    delete:
+      tags:
+        - timeseries_group
+      summary: Delete Timeseries Groups
+      description: Deletes One or More Timeseries Groups (and Associated Group Memberships)
+  /providers/{provider}/timeseries_groups/{timeseries_group}:
+    get:
+      tags:
+        - timeseries_group
+      summary: Get Timeseries Group Detail
+      description: Gets Timeseries Group Details for a Single Timeseries Group
+  /providers/{provider}/timeseries_groups/{timeseries_group}/members:
+    post:
+      tags:
+        - timeseries_group
+      summary: Add Timeseries Group Members
+      description: Adds One or More Timeseries to a Timeseries Group
+    delete:
+      tags:
+        - timeseries_group
+      summary: Remove Timeseries Group Members
+      description: Removes One or More Timeseries from a Timeseries Group
+  /providers/{provider}/timeseries_groups/{timeseries_group}/values:
+    get:
+      tags:
+        - timeseries_group
+      summary: Stream Timeseries Group Values
+      description: Streams Timeseries Values for all timeseries in a timeseries group 
   
   /chart_types:
     get:

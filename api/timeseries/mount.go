@@ -30,7 +30,17 @@ func Mount(conn *pgxpool.Pool, e *echo.Echo, config *app.Config) {
 	key.PUT("/providers/:provider/timeseries", s.UpdateTimeseries)    // UPDATE
 	key.DELETE("/providers/:provider/timeseries", s.DeleteTimeseries) // DELETE
 
-	// Timeseries Measurements
-	key.POST("/providers/:provider/timeseries/values", s.CreateOrUpdateTimeseriesMeasurements) // MEASUREMENTS
+	// Timeseries Values
+	key.POST("/providers/:provider/timeseries/values", s.CreateOrUpdateTimeseriesValues) // VALUES
+
+	// Timeseries Groups
+	// key.PUT("/providers/:provider/timeseries_groups/:timeseries_group", s.UpdateTimeseriesGroup)                   // UPDATE GROUP; TODO; Not Implemented
+	public.GET("/providers/:provider/timeseries_groups", s.ListTimeseriesGroups)                                   // LIST GROUPS
+	public.GET("/providers/:provider/timeseries_groups/:timeseries_group", s.GetTimeseriesGroupDetail)             // GET GROUP
+	public.GET("/providers/:provider/timeseries_groups/:timeseries_group/values", s.GetTimeseriesGroupValues)      // GET VALUES (EXTRACT)
+	key.POST("/providers/:provider/timeseries_groups", s.CreateTimeseriesGroups)                                   // CREATE GROUP(S)
+	key.DELETE("/providers/:provider/timeseries_groups/:timeseries_group", s.DeleteTimeseriesGroup)                // DELETE GROUP
+	key.POST("/providers/:provider/timeseries_groups/:timeseries_group/members", s.AddTimeseriesGroupMembers)      // ADD GROUP MEMBER(S)
+	key.DELETE("/providers/:provider/timeseries_groups/:timeseries_group/members", s.RemoveTimeseriesGroupMembers) // REMOVE GROUP MEMBER(S)
 
 }

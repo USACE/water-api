@@ -61,18 +61,64 @@ CREATE OR REPLACE VIEW v_timeseries AS (
                'slug'    ,   l.slug,
                'provider',  p2.slug,
                'datatype', dt2.slug,
-               'code'    ,   l.code
+               'code'    ,   l.code,
+               'state'   , sa.stusps
 		   )                            AS location,
            t.etl_values_enabled         AS etl_values_enabled
     FROM timeseries t
-    JOIN datasource   ds1 ON ds1.id =   t.datasource_id  -- timeseries' datasource
-    JOIN provider      p1 ON  p1.id = ds1.provider_id    -- timeseries' provider
-    JOIN datatype     dt1 ON dt1.id = ds1.datatype_id    -- timeseries' datatype
+    JOIN datasource   ds1 ON ds1.id =   t.datasource_id      -- timeseries' datasource
+    JOIN provider      p1 ON  p1.id = ds1.provider_id        -- timeseries' provider
+    JOIN datatype     dt1 ON dt1.id = ds1.datatype_id        -- timeseries' datatype
     JOIN location       l ON   l.id =   t.location_id
-    JOIN datasource   ds2 ON ds2.id =   l.datasource_id  -- location's datasource
-    JOIN provider      p2 ON  p2.id = ds2.provider_id    -- location's provider
-    JOIN datatype     dt2 ON dt2.id = ds2.datatype_id    -- location's datatype
+    JOIN datasource   ds2 ON ds2.id =   l.datasource_id      -- location's datasource
+    JOIN provider      p2 ON  p2.id = ds2.provider_id        -- location's provider
+    JOIN datatype     dt2 ON dt2.id = ds2.datatype_id        -- location's datatype
+    LEFT JOIN tiger_data.state_all sa ON sa.gid = l.state_id -- location's state
 );
+
+
+---------------------
+-- V_TIMESERIES_GROUP
+---------------------
+CREATE OR REPLACE VIEW v_timeseries_group AS (
+    SELECT g.id         AS id,
+           p.slug       AS provider,
+           p.name       AS provider_name,
+           g.slug       AS slug,
+           g.name       AS name
+    FROM timeseries_group g
+    JOIN provider         p ON p.id = g.provider_id
+);
+
+----------------------------
+-- V_TIMESERIES_GROUP_DETAIL
+----------------------------
+CREATE OR REPLACE VIEW v_timeseries_group_detail AS (
+    WITH group_members as (
+        SELECT m.timeseries_group_id, 
+            COALESCE(json_agg(json_build_object(
+                'datatype',    dt.slug,
+                'provider',     p.slug,
+                'key',          t.datasource_key
+            )), '[]') AS timeseries
+        FROM timeseries_group_members m
+        JOIN timeseries     t ON  t.id =  m.timeseries_id
+        JOIN datasource    ds ON ds.id =  t.datasource_id
+        JOIN datatype      dt ON dt.id = ds.datatype_id
+        JOIN provider       p ON  p.id = ds.provider_id 
+        GROUP BY m.timeseries_group_id
+    )
+    SELECT g.id                          AS id,
+           p1.slug                       AS provider,
+           p1.name                       AS provider_name,
+            g.slug                       AS slug,
+            g.name                       AS name,
+            COALESCE(m.timeseries, '[]') AS timeseries
+    FROM timeseries_group g
+    JOIN provider            p1 ON p1.id = g.provider_id
+    LEFT JOIN group_members  m  ON m.timeseries_group_id = g.id
+);
+
 
 ----------
 -- V_CHART

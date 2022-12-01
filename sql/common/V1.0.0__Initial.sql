@@ -160,14 +160,32 @@ CREATE TABLE IF NOT EXISTS timeseries (
 -- Ensure case-insensitive uniqueness in datasource_key column (within a single datasource)
 CREATE UNIQUE INDEX timeseries_case_insensitive_unique_datasource_key ON timeseries (datasource_id, LOWER(datasource_key));
 
--- timeseries_measurement
-CREATE TABLE IF NOT EXISTS timeseries_measurement (
+-- timeseries_value
+CREATE TABLE IF NOT EXISTS timeseries_value (
     timeseries_id UUID NOT NULL REFERENCES timeseries (id) ON DELETE CASCADE,
     time TIMESTAMPTZ NOT NULL,
     value DOUBLE PRECISION NOT NULL,
     CONSTRAINT timeseries_id_unique_time UNIQUE(timeseries_id, time),
     PRIMARY KEY (timeseries_id, time)
 );
+
+-------------------
+-- TIMESERIES_GROUP
+-------------------
+CREATE TABLE IF NOT EXISTS timeseries_group (
+    id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+    slug VARCHAR UNIQUE NOT NULL,
+    name VARCHAR NOT NULL,
+    provider_id UUID NOT NULL REFERENCES provider(id),
+    CONSTRAINT provider_unique_timeseries_group_name UNIQUE(provider_id, name)
+);
+
+CREATE TABLE IF NOT EXISTS timeseries_group_members (
+    timeseries_group_id UUID NOT NULL REFERENCES timeseries_group(id) ON DELETE CASCADE,
+    timeseries_id UUID NOT NULL REFERENCES timeseries(id) ON DELETE CASCADE,
+    CONSTRAINT timeseries_group_unique_timeseries UNIQUE(timeseries_group_id, timeseries_id)
+);
+
 
 --------------
 -- CHART
@@ -181,7 +199,7 @@ CREATE TABLE IF NOT EXISTS chart (
     name VARCHAR NOT NULL,
     type VARCHAR NOT NULL,
     provider_id UUID NOT NULL REFERENCES provider(id),
-    CONSTRAINT provider_unique_name UNIQUE(provider_id, name)
+    CONSTRAINT provider_unique_chart_name UNIQUE(provider_id, name)
 );
 
 -- chart_variable_mapping

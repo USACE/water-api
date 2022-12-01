@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "c3bb6f1f-3f81-41cf-89fe-38c01fb37caf",
+		"_postman_id": "63e5eabd-4049-424e-82e3-82dec1201691",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20040250"
 	},
 	"item": [
 		{
@@ -1563,6 +1564,12 @@
 								"exec": [
 									"pm.test(\"Status code is 201 or 202\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1604,6 +1611,12 @@
 								"exec": [
 									"pm.test(\"Status code is 201 or 202\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1645,6 +1658,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200 or 202\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([200, 202]);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1686,6 +1705,12 @@
 								"exec": [
 									"pm.test(\"Status code is 201 or 202\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1728,6 +1753,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1770,6 +1801,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1818,6 +1855,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1862,6 +1905,68 @@
 					"response": []
 				},
 				{
+					"name": "List Timeseries by provider and datatype and state",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/timeseries?provider=lrn&datatype=cwms-timeseries&state=ky",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"timeseries"
+							],
+							"query": [
+								{
+									"key": "provider",
+									"value": "lrn"
+								},
+								{
+									"key": "datatype",
+									"value": "cwms-timeseries"
+								},
+								{
+									"key": "state",
+									"value": "ky"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "List Timeseries by provider, ds_type, etl_values_enabled",
 					"event": [
 						{
@@ -1870,6 +1975,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1926,6 +2037,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1978,6 +2095,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2030,6 +2153,12 @@
 								"exec": [
 									"pm.test(\"Status code is 201 or 202\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2071,6 +2200,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2106,6 +2241,558 @@
 			]
 		},
 		{
+			"name": "Timeseries Groups",
+			"item": [
+				{
+					"name": "List Timeseries Groups",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Timeseries Group Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/test-timeseries-group",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"test-timeseries-group"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Timeseries Group Values (Extract) - No Time Window",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/test-timeseries-group/values",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"test-timeseries-group",
+								"values"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Timeseries Group Values (Extract) - Time Window",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/test-timeseries-group/values?after=2021-08-01T03:30:00Z&before=2021-08-01T04:15:00Z",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"test-timeseries-group",
+								"values"
+							],
+							"query": [
+								{
+									"key": "after",
+									"value": "2021-08-01T03:30:00Z"
+								},
+								{
+									"key": "before",
+									"value": "2021-08-01T04:15:00Z"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Timeseries Group Members (one)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provider\": \"usgs\",\n    \"datatype\": \"usgs-timeseries\",\n    \"key\": \"03203600.00065\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/test-timeseries-group/members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"test-timeseries-group",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Timeseries Group Members (many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n        {\n            \"provider\": \"usgs\",\n            \"datatype\": \"usgs-timeseries\",\n            \"key\": \"03185000.00060\"\n        },\n        {\n            \"provider\": \"usgs\",\n            \"datatype\": \"usgs-timeseries\",\n            \"key\": \"03185000.00065\"\n        }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/test-timeseries-group/members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"test-timeseries-group",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Timeseries Group Members (one)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provider\": \"usgs\",\n    \"datatype\": \"usgs-timeseries\",\n    \"key\": \"03203600.00065\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/test-timeseries-group/members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"test-timeseries-group",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Timeseries Group Members (many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n        {\n            \"provider\": \"usgs\",\n            \"datatype\": \"usgs-timeseries\",\n            \"key\": \"03185000.00060\"\n        },\n        {\n            \"provider\": \"usgs\",\n            \"datatype\": \"usgs-timeseries\",\n            \"key\": \"03185000.00065\"\n        }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/test-timeseries-group/members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"test-timeseries-group",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Timeseries Group (One)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provider\": \"lrh\",\n    \"name\": \"Regression Test Timeseries Group 1\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Timeseries Group (Many)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"provider\": \"lrh\",\n        \"name\": \"Regression Test Timeseries Group 2\"\n    },\n    {\n        \"provider\": \"lrh\",\n        \"name\": \"Regression Test Timeseries Group 3\"\n    },\n    {\n        \"provider\": \"lrh\",\n        \"name\": \"Regression Test Timeseries Group 4\"\n    },\n    {\n        \"provider\": \"lrh\",\n        \"name\": \"Regression Test Timeseries Group 5\"\n    }\n]\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Timeseries Group",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/regression-test-timeseries-group-1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"regression-test-timeseries-group-1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Charts",
 			"item": [
 				{
@@ -2117,6 +2804,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2159,6 +2852,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2207,6 +2906,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2294,6 +2999,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2337,6 +3048,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2382,6 +3099,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2425,6 +3148,12 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
 									"});"
 								],
 								"type": "text/javascript"
