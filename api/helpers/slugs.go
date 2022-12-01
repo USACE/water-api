@@ -2,7 +2,6 @@ package helpers
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -47,7 +46,7 @@ func GetUniqueSlug(name string, slugMap map[string]bool) (string, error) {
 		}
 		i++
 	}
-	return "", errors.New("reached max iteration %i without finding a unique slug")
+	return "", fmt.Errorf("reached max iteration %v without finding a unique slug for: %s", i, name)
 }
 
 // NextUniqueSlug returns the next available slug given a table
@@ -104,4 +103,32 @@ func NextUniqueSlug(db *pgxpool.Pool, table, field, inString, contextField, cont
 		}
 	}
 	return fmt.Sprintf("%s-%d", slugTry, *pLargest+1), nil
+}
+
+// SlugMap returns all slugs that are already used in a table with key equal to the slug,
+// value equal to boolean true for fast indexing. Uniqueness can be limited to subset of a table
+// rather than table-unique using contextField and contextValue.
+//
+//	contextField is a column name in table; contextValue is a value in contextField;
+//	If contextField="" or contextValue="", returned string will be table unique
+//	If contextField is provided, the returned string will be unique among rows having contextField = contextValue
+func SlugMap(db *pgxpool.Pool, table, field, contextField, contextValue string) (map[string]bool, error) {
+
+	sql, args := fmt.Sprintf(`SELECT %s FROM %s`, field, table), make([]interface{}, 0)
+	if contextField != "" && contextValue != "" {
+		sql += fmt.Sprintf(" WHERE %s = $1", contextField)
+		args = append(args, contextValue)
+	}
+
+	ss := make([]string, 0)
+	if err := pgxscan.Select(context.Background(), db, &ss, sql, args...); err != nil {
+		return make(map[string]bool, 0), err
+	}
+
+	m := make(map[string]bool, len(ss))
+	for _, s := range ss {
+		m[s] = true
+	}
+
+	return m, nil
 }

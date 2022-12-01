@@ -2,7 +2,7 @@
 -- ${flyway:timestamp}
 
 -- Grant Schema Usage to water_user
-GRANT USAGE ON SCHEMA a2w_cwms TO water_user;
+GRANT USAGE ON SCHEMA water TO water_user;
 
 -- Grant 'tiger' Schema Usage to water_user
 GRANT USAGE ON SCHEMA tiger TO water_user;
@@ -19,37 +19,22 @@ GRANT SELECT ON tiger_data.state_all TO water_user;
 GRANT SELECT ON
     config,
     datasource,
-    datasource_type,
-    location,
-    location_kind,
-    level,
-    level_kind,
-    level_value,
-    nws_stages,
-    office,
+    datatype,
+    location,    
     provider,
     timeseries,
-    upload_status,  
-    usgs_site,
-    usgs_huc2,
-    usgs_huc2_simple,
-    usgs_huc4,
-    usgs_huc4_simple,
-    usgs_huc6,
-    usgs_huc6_simple,
-    usgs_huc8,
-    usgs_huc8_simple,
-    usgs_measurements,
-    usgs_site_parameters,
-    usgs_parameter,
-    vertical_datum,
-    visualization,
-    visualization_variable_mapping,
-    watershed,
-    watershed_shapefile_uploads,
-    watershed_usgs_sites,    
-    v_usgs_site,
-    v_watershed
+    timeseries_value,
+    timeseries_group,
+    timeseries_group_members,
+    chart,
+    chart_variable_mapping,
+    v_chart,
+    v_chart_detail,
+    v_datasource,
+    v_location,
+    v_timeseries,
+    v_timeseries_group,
+    v_timeseries_group_detail
 TO water_reader;
 
 -- Role water_writer
@@ -57,26 +42,15 @@ TO water_reader;
 GRANT INSERT,UPDATE,DELETE ON
     config,
     datasource,
-    datasource_type,
-    location,
-    location_kind,
-    level,
-    level_kind,
-    level_value,
+    datatype,
+    location,    
     provider,
     timeseries,
-    vertical_datum,
-    nws_stages,
-    upload_status,
-    usgs_site,
-    usgs_measurements,
-    usgs_site_parameters,
-    usgs_parameter,
-    visualization,
-    visualization_variable_mapping,
-    watershed,
-    watershed_shapefile_uploads,
-    watershed_usgs_sites
+    timeseries_value,
+    timeseries_group,
+    timeseries_group_members,
+    chart,
+    chart_variable_mapping
 TO water_writer;
 
 -- Role postgis_reader

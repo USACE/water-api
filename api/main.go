@@ -8,14 +8,11 @@ import (
 	"golang.org/x/net/http2"
 
 	"github.com/USACE/water-api/api/app"
-	"github.com/USACE/water-api/api/chartserver"
-	"github.com/USACE/water-api/api/cwms"
+	"github.com/USACE/water-api/api/charts"
+	"github.com/USACE/water-api/api/locations"
 	"github.com/USACE/water-api/api/middleware"
-	"github.com/USACE/water-api/api/nws"
 	"github.com/USACE/water-api/api/providers"
-	"github.com/USACE/water-api/api/usgs"
-	"github.com/USACE/water-api/api/visualizations"
-	"github.com/USACE/water-api/api/watersheds"
+	"github.com/USACE/water-api/api/timeseries"
 
 	_ "github.com/jackc/pgx/v4"
 	"github.com/kelseyhightower/envconfig"
@@ -36,12 +33,6 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	// d3-chart-server integration
-	chartserver, err := chartserver.NewChartServer(chartserver.Config{URLString: config.ChartServerURL})
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
 	// All Routes
 	e := echo.New()                         // All Routes
 	e.Use(middleware.CORS, middleware.GZIP) // All Routes Middleware
@@ -54,17 +45,19 @@ func main() {
 		return c.JSON(http.StatusOK, map[string]interface{}{"status": "healthy"})
 	})
 
+	// API Documentation Routes
+	public.File("/apidoc", "/apidoc.html")
+	public.File("/apidoc.yml", "/apidoc.yml")
+
 	// pg-featureserv routes
 	features := public.Group("/features")
 	features.Use(middleware.PgFeatureservProxy(config.PgFeatureservUrl))
 
 	// Mount Routes
-	cwms.Mount(st.Connection, e, &config, chartserver) // CWMS
-	nws.Mount(st.Connection, e, &config)               // National Weather Service
-	providers.Mount(st.Connection, e, &config)         // Providers
-	usgs.Mount(st.Connection, e, &config)              // USGS
-	visualizations.Mount(st.Connection, e, &config)    // Visualizations
-	watersheds.Mount(st.Connection, e, &config)        // Watersheds
+	charts.Mount(st.Connection, e, &config)     // Charts
+	locations.Mount(st.Connection, e, &config)  // Locations
+	providers.Mount(st.Connection, e, &config)  // Providers
+	timeseries.Mount(st.Connection, e, &config) // Timeseries
 
 	// Start Server
 	s := &http2.Server{

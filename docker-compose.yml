@@ -13,6 +13,12 @@ services:
       context: ./d3-chart-server
     container_name: charts
     restart: on-failure
+    environment:
+      # NOTE:
+      #   ROOT_URL=localhost:3000 when running water-api in vscode debugger
+      #   ROOT_URL=http://charts:3000 when running water-api in docker-compose stack
+      # - ROOT_URL=http://localhost:3000
+      - ROOT_URL=http://charts:3000
     ports:
       - '3000:3000'
   water-db:
@@ -43,10 +49,10 @@ services:
     image: flyway/flyway
     container_name: water-flyway
     restart: on-failure
-    command: -url=jdbc:postgresql://water-db:5432/postgres -schemas=a2w_cwms -user=postgres -password=postgres -connectRetries=60 migrate
+    command: -url=jdbc:postgresql://water-db:5432/postgres -schemas=water -user=postgres -password=postgres -connectRetries=60 migrate
     environment:
       - FLYWAY_EDITION=community
-      - FLYWAY_LOCATIONS=filesystem:/flyway/sql/common,filesystem:/flyway/sql/local
+      - FLYWAY_LOCATIONS=filesystem:/flyway/sql/common,filesystem:/flyway/sql/local,filesystem:/flyway/sql/develop
     volumes:
       - ./sql:/flyway/sql
     depends_on:
