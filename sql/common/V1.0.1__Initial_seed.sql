@@ -1,23 +1,3 @@
-
-INSERT INTO cwms_location_kind (name) VALUES
-	('SITE'),
-	('PROJECT'),
-	('STREAM'),
-	('STREAM_LOCATION'),
-	('PUMP'),
-	('EMBANKMENT'),
-	('OUTLET'),
-	('GATE'),
-	('BASIN'),
-	('LOCK'),
-	('TURBINE'),
-	('STREAM_REACH');
-
-INSERT INTO usgs_site_type (abbreviation, name) VALUES
-	('LK', 'Lake, Reservoir, Impoundment'),
-    ('ST', 'Stream'),
-    ('ST-TS', 'Tidal Stream');
-
 INSERT INTO provider (id, name, slug, parent_id) VALUES
     ('91cf44dc-6384-4622-bd9f-0f36e4343413','Great Lakes and Ohio River Division','lrd',Null),
     ('17fa25b8-44a0-4e6d-9679-bdf6b0ee6b1a','Buffalo District','lrb','91cf44dc-6384-4622-bd9f-0f36e4343413'),
@@ -85,20 +65,3 @@ INSERT into datatype(id, slug, name, uri) VALUES
     ('42d3f5cb-8c5e-4857-a80d-202c0b86ed6c', 'nws-timeseries', 'NWS Timeseries', 'https://water.weather.gov'),
     ('f5854c47-7cc3-4bcb-9d13-83ed5ca31905', 'nws-level', 'NWS Level', 'https://water.weather.gov'),
     ('52f34db5-4129-41a3-812e-df63e7f9e715', 'nws-site', 'NWS Site', 'https://water.weather.gov');
-
--- usgs_parameter seed data
-INSERT INTO usgs_parameter (id, code, description) VALUES 
-    ('a9f78261-e6a6-4ad2-827e-bd7a4ac0dc28', '00065', 'Gage height, feet'),
-    ('ba29fc34-6315-4424-838f-9b1863715fad', '00060', 'Discharge, cubic feet per second'),
-    ('06cca640-f52b-4c0c-8f64-a985836fda5a', '00061', 'Discharge, cubic feet per second, instantaneous'),
-    ('f739b4af-1c96-437c-a788-901f59d177fb', '62614', 'Lake or reservoir water surface elevation above NGVD 1929, feet'),
-    ('60bb26cb-a65d-40d2-ad54-b00d6802de7b', '62615', 'Lake or reservoir water surface elevation above NAVD 1988, feet'),
-    ('738eb4df-b34b-45cc-a5aa-f2136384244f', '00045', 'Precipitation, total, inches'),
-    ('0fa9993d-6674-4ba3-ac8a-f02830beea1e', '00010', 'Temperature, water, degrees Celsius'),
-    ('12ff9f0b-159b-43cb-8126-5253f7948380', '00011', 'Temperature, water, degrees Fahrenheit');
-
-
-INSERT INTO upload_status (id, name) VALUES
-    ('b5d777fc-c46b-4a10-a488-1415e3d7849d', 'INITIATED'),
-    ('969e00ad-2be1-4cf5-9f80-5c198e1e8450', 'SUCCESS'),
-    ('020c8cda-913b-4c2d-8580-2834381bf885', 'FAIL');

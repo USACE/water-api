@@ -18,7 +18,6 @@ GRANT SELECT ON tiger_data.state_all TO water_user;
 
 GRANT SELECT ON
     config,
-    cwms_location_kind,
     datasource,
     datatype,
     location,    
@@ -27,24 +26,8 @@ GRANT SELECT ON
     timeseries_value,
     timeseries_group,
     timeseries_group_members,
-    upload_status,  
-    usgs_huc2,
-    usgs_huc2_simple,
-    usgs_huc4,
-    usgs_huc4_simple,
-    usgs_huc6,
-    usgs_huc6_simple,
-    usgs_huc8,
-    usgs_huc8_simple,
-    usgs_measurements,
-    usgs_site_parameters,
-    usgs_site_type,
-    usgs_parameter,
     chart,
     chart_variable_mapping,
-    -- watershed,
-    -- watershed_shapefile_uploads,
-    -- watershed_usgs_sites,
     v_chart,
     v_chart_detail,
     v_datasource,
@@ -52,15 +35,12 @@ GRANT SELECT ON
     v_timeseries,
     v_timeseries_group,
     v_timeseries_group_detail
-    -- v_usgs_site,
-    -- v_watershed
 TO water_reader;
 
 -- Role water_writer
 -- Tables specific to water app
 GRANT INSERT,UPDATE,DELETE ON
     config,
-    cwms_location_kind,
     datasource,
     datatype,
     location,    
@@ -69,15 +49,8 @@ GRANT INSERT,UPDATE,DELETE ON
     timeseries_value,
     timeseries_group,
     timeseries_group_members,
-    upload_status,
-    usgs_measurements,
-    usgs_site_parameters,
-    usgs_parameter,
     chart,
     chart_variable_mapping
-    -- watershed,
-    -- watershed_shapefile_uploads,
-    -- watershed_usgs_sites
 TO water_writer;
 
 -- Role postgis_reader
