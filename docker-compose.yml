@@ -46,15 +46,20 @@ services:
     # profiles: ["init"]
   # --------------------------------
   water-flyway:
-    image: flyway/flyway
-    container_name: water-flyway
+    build:
+      context: sql  
     restart: on-failure
-    command: -url=jdbc:postgresql://water-db:5432/postgres -schemas=water -user=postgres -password=postgres -connectRetries=60 migrate
+    command: -connectRetries=60 migrate
     environment:
       - FLYWAY_EDITION=community
-      - FLYWAY_LOCATIONS=filesystem:/flyway/sql/common,filesystem:/flyway/sql/local,filesystem:/flyway/sql/develop
-    volumes:
-      - ./sql:/flyway/sql
+      # Exclude Local Seed Data; Uncomment Line Below
+      # - FLYWAY_LOCATIONS=filesystem:/flyway/sql/common,filesystem:/flyway/sql/develop
+      # Include Local Seed Data; Uncomment Line Below (Comment Line Above)
+      - FLYWAY_LOCATIONS=filesystem:/flyway/sql/common,filesystem:/flyway/sql/develop,filesystem:/flyway/sql/local
+      - FLYWAY_PASSWORD=postgres
+      - FLYWAY_SCHEMAS=water
+      - FLYWAY_URL=jdbc:postgresql://water-db:5432/postgres
+      - FLYWAY_USER=postgres
     depends_on:
       water-db:
         condition: service_started
