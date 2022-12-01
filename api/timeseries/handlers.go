@@ -1,12 +1,15 @@
 package timeseries
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/USACE/water-api/api/messages"
 	"github.com/USACE/water-api/api/timeseries/models"
+	"github.com/georgysavva/scany/pgxscan"
 	"github.com/labstack/echo/v4"
 )
 
@@ -229,4 +232,83 @@ func (s Store) RemoveTimeseriesGroupMembers(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, g)
+}
+
+func (s Store) GetTimeseriesGroupValues(c echo.Context) error {
+
+	// Uniquely Identify Timeseries Group
+	provider, slug := c.Param("provider"), c.Param("timeseries_group")
+
+	// Time Window
+	after, before := c.QueryParam("after"), c.QueryParam("before")
+	if (after == "" || before == "") && (after != before) {
+		return c.JSON(http.StatusBadRequest, messages.NewMessage("query parameters 'after' and 'before' must both be provided, or both must left blank"))
+	}
+
+	var tw models.TimeWindow
+	if err := models.NewTimeWindow(&tw, after, before); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	rows, err := s.Connection.Query(
+		context.Background(),
+		`WITH values AS (
+			SELECT t.id    AS timeseries_id,
+				   v.time  AS time,
+				   v.value AS value
+			FROM v_timeseries_group g
+			JOIN timeseries_group_members m ON m.timeseries_group_id = g.id
+			JOIN timeseries               t ON t.id = m.timeseries_id 
+			JOIN timeseries_value         v ON v.timeseries_id = m.timeseries_id
+			 AND v.time >= $3
+			 AND v.time <= $4
+		    WHERE g.provider = LOWER($1) AND g.slug = LOWER($2)
+		    ORDER BY t.id, v.time
+	   ), values_agg AS (
+		    SELECT timeseries_id,
+			       json_agg(json_build_array(time, value)) AS values
+		    FROM values
+		    GROUP BY timeseries_id
+		)
+		SELECT t.provider,
+		       t.datatype,
+			   t.key,
+	           v.values
+	    FROM values_agg v
+	    JOIN v_timeseries t ON t.id = v.timeseries_id`,
+		provider, slug, tw.After, tw.Before,
+	)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	defer rows.Close()
+
+	type T struct {
+		Provider string           `json:"provider"`
+		Datatype string           `json:"datatype"`
+		Key      string           `json:"key"`
+		Values   *[][]interface{} `json:"values"` // may be empty [] or [["2022-09-27T12:00:00-05:00", 888.00], ["2022-09-27T13:00:00-05:00", 888.15]]
+	}
+
+	enc := json.NewEncoder(c.Response())
+	for rows.Next() {
+		var t T
+		if err := pgxscan.ScanRow(&t, rows); err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+
+		if err := enc.Encode(t); err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		c.Response().Flush()
+	}
+
+	// Any errors encountered by rows.Next or rows.Scan will be returned here
+	if rows.Err() != nil {
+		return err
+	}
+
+	// No errors found
+	return nil
 }

@@ -2198,6 +2198,108 @@
 					"response": []
 				},
 				{
+					"name": "Get Timeseries Group Values (Extract) - No Time Window",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/test-timeseries-group/values",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"test-timeseries-group",
+								"values"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Timeseries Group Values (Extract) - Time Window",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries_groups/test-timeseries-group/values?after=2021-08-01T03:30:00Z&before=2021-08-01T04:15:00Z",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries_groups",
+								"test-timeseries-group",
+								"values"
+							],
+							"query": [
+								{
+									"key": "after",
+									"value": "2021-08-01T03:30:00Z"
+								},
+								{
+									"key": "before",
+									"value": "2021-08-01T04:15:00Z"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Remove Timeseries Group Members (one)",
 					"event": [
 						{
