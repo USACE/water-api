@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "c54a16fc-1af9-43f3-9233-4e1b30c4f8b5",
+		"_postman_id": "084cb3df-375e-4977-9d44-afb7bb77bf8c",
 		"name": "water-regression",
 		"description": "Regression tests for Access to Water API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20040250"
 	},
 	"item": [
 		{
@@ -1563,6 +1564,53 @@
 								"exec": [
 									"pm.test(\"Status code is 201 or 202\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"pm.test(\"Response time is less than 200 ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"pm.test(\"Valid JSON response\", function () {",
+									"    pm.expect(pm.response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"key\": \"Atwood-Outflow.Flow.Inst.0.Control Min\",\n        \"location\": {\n            \"provider\": \"LRH\",\n            \"datatype\": \"cwms-location\",\n            \"code\": \"Atwood-Outflow\"\n        },\n        \"datatype\": \"cwms-level\",\n        \"provider\": \"LRH\"\n    },\n    {\n        \"key\": \"Atwood-Outflow.Stage.Inst.0.Control Max with Dir\",\n        \"location\": {\n            \"provider\": \"LRH\",\n            \"datatype\": \"cwms-location\",\n            \"code\": \"Atwood-Outflow\"\n        },\n        \"datatype\": \"cwms-level\",\n        \"provider\": \"LRH\"\n    },\n    {\n        \"key\": \"Atwood-Outflow.Stage.Inst.0.Control Max Without Dir\",\n        \"location\": {\n            \"provider\": \"LRH\",\n            \"datatype\": \"cwms-location\",\n            \"code\": \"Atwood-Outflow\"\n        },\n        \"datatype\": \"cwms-level\",\n        \"provider\": \"LRH\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/providers/lrh/timeseries",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"lrh",
+								"timeseries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Timeseries (Many) Atwood Ensure 200 on Duplicate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
 									"});",
 									"pm.test(\"Response time is less than 200 ms\", function () {",
 									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
