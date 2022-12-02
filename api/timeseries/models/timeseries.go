@@ -120,16 +120,12 @@ func ListTimeseries(db *pgxpool.Pool, f *TimeseriesFilter) ([]Timeseries, error)
 }
 
 func (tsc TimeseriesCollection) Create(db *pgxpool.Pool, providerSlug string) ([]Timeseries, error) {
-	tx, err := db.Begin(context.Background())
-	if err != nil {
-		return make([]Timeseries, 0), err
-	}
-	defer tx.Rollback(context.Background())
 
 	newIDs := make([]uuid.UUID, 0)
 	for _, t := range tsc.Items {
-		rows, err := tx.Query(
-			context.Background(),
+		var id uuid.UUID
+		if err := pgxscan.Get(
+			context.Background(), db, &id,
 			`INSERT INTO timeseries (datasource_id, datasource_key, location_id)
              VALUES (
                 (SELECT id FROM v_datasource WHERE datatype = LOWER($1) AND provider = LOWER($2)),
@@ -137,19 +133,12 @@ func (tsc TimeseriesCollection) Create(db *pgxpool.Pool, providerSlug string) ([
                 (SELECT id FROM v_location WHERE LOWER(code) = LOWER($4) AND provider = LOWER($5))
              ) ON CONFLICT DO NOTHING
 			 RETURNING id`, t.Datatype, t.Provider, t.Key, t.Location.Code, t.Location.Provider,
-		)
-		if err != nil {
-			tx.Rollback(context.Background())
-			return make([]Timeseries, 0), err
-		}
-		var id uuid.UUID
-		if err := pgxscan.ScanOne(&id, rows); err != nil {
+		); err != nil {
 			continue
 		}
+
 		newIDs = append(newIDs, id)
 	}
-	tx.Commit(context.Background())
-
 	return ListTimeseries(db, &TimeseriesFilter{IDs: &newIDs})
 }
 
