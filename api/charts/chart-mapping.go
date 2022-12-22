@@ -45,8 +45,7 @@ func CreateOrUpdateChartMapping(db *pgxpool.Pool, chartProvider *string, chartSl
 	}
 	defer tx.Rollback(context.Background())
 
-	updatedIDs := make([]uuid.UUID, 0)
-
+	ids := make([]uuid.UUID, 0)
 	for _, m := range mc.Items {
 
 		rows, err := tx.Query(
@@ -59,7 +58,7 @@ func CreateOrUpdateChartMapping(db *pgxpool.Pool, chartProvider *string, chartSl
 				(SELECT id FROM v_timeseries WHERE provider = LOWER($4) AND datatype = LOWER($5) AND LOWER(key) = LOWER($6))
 			)
 			ON CONFLICT ON CONSTRAINT chart_unique_variable DO UPDATE SET timeseries_id = EXCLUDED.timeseries_id
-			RETURNING chart_id`, chartProvider, chartSlug, m.Variable, m.Provider, m.Datatype, m.Key,
+			RETURNING timeseries_id`, chartProvider, chartSlug, m.Variable, m.Provider, m.Datatype, m.Key,
 		)
 		if err != nil {
 			tx.Rollback(context.Background())
@@ -70,15 +69,19 @@ func CreateOrUpdateChartMapping(db *pgxpool.Pool, chartProvider *string, chartSl
 			tx.Rollback(context.Background())
 			return err
 		}
+		ids = append(ids, id)
+	}
 
-		updatedIDs = append(updatedIDs, id)
+	// Auto-Enable Timeseries Measurement ETL for any timeseries added to a visualization
+	if _, err := tx.Exec(
+		context.Background(),
+		`UPDATE timeseries SET etl_values_enabled = true WHERE id = ANY($1)`, &ids,
+	); err != nil {
+		tx.Rollback(context.Background())
+		return err
 	}
 
 	tx.Commit(context.Background())
-
-	if len(updatedIDs) == 0 {
-		return errors.New("no records updated")
-	}
 
 	return nil
 
