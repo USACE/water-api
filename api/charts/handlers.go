@@ -53,7 +53,7 @@ func (s Store) GetChartDetail(c echo.Context) error {
 			return c.JSON(http.StatusInternalServerError, messages.NewMessage(err.Error()))
 		}
 
-		return c.String(http.StatusOK, *svg)
+		return c.HTML(http.StatusOK, *svg)
 	default:
 		return c.JSON(http.StatusOK, t)
 	}
