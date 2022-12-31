@@ -6,7 +6,6 @@ networks:
   cumulus:
     name: cumulus-api_default
 
-
 services:
   charts:
     build:
