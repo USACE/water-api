@@ -59,6 +59,8 @@ func (c *ChartCollection) UnmarshalJSON(b []byte) error {
 
 func (d ChartDetail) Renderer() (Renderer, error) {
 	switch d.Type {
+	case "example-scatter":
+		return ExampleScatter{ChartDetail: &d}, nil
 	case "dam-profile-chart":
 		return DamProfileChart{ChartDetail: &d}, nil
 	default:
