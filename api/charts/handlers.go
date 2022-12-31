@@ -104,7 +104,7 @@ func (s Store) CreateOrUpdateChartMapping(c echo.Context) error {
 
 	var mc ChartMappingCollection
 	if err := c.Bind(&mc); err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return c.JSON(http.StatusInternalServerError, messages.NewMessage(err.Error()))
 	}
 
 	err := CreateOrUpdateChartMapping(s.Connection, &provider, &chart, &mc)
@@ -120,7 +120,7 @@ func (s Store) DeleteChartMapping(c echo.Context) error {
 
 	var mc ChartMappingCollection
 	if err := c.Bind(&mc); err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return c.JSON(http.StatusInternalServerError, messages.NewMessage(err.Error()))
 	}
 
 	err := DeleteChartMapping(s.Connection, &provider, &chart, &mc)
