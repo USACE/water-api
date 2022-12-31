@@ -5,17 +5,17 @@ import (
 	"net/url"
 )
 
-// DamProfileChart thinly wraps ChartDetail to allow implementing
+// ExampleScatter thinly wraps ChartDetail to allow implementing
 // the Renderer interface
-type DamProfileChart struct {
+type ExampleScatter struct {
 	ChartDetail *ChartDetail
 }
 
-func (d DamProfileChart) ChartTypeSlug() string {
+func (d ExampleScatter) ChartTypeSlug() string {
 	return d.ChartDetail.Type
 }
 
-func (d DamProfileChart) QueryValues() url.Values {
+func (d ExampleScatter) QueryValues() url.Values {
 	q := url.Values{}
 	for _, m := range d.ChartDetail.Mapping {
 		if m.LatestValue != nil {
@@ -23,10 +23,8 @@ func (d DamProfileChart) QueryValues() url.Values {
 			_, v := latest[0], latest[1]
 
 			switch m.Variable {
-			case "pool", "tail", "inflow", "outflow", "damtop", "dambottom":
+			case "pointcount":
 				q.Add(m.Variable, fmt.Sprintf("%v", v))
-			case "top-of-dam", "top-of-flood":
-				q.Add("level", fmt.Sprintf("%s,%v", m.Variable, v))
 			}
 		}
 	}
