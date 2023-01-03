@@ -18,6 +18,8 @@ func (d DamProfileChart) ChartTypeSlug() string {
 func (d DamProfileChart) QueryValues() url.Values {
 
 	LEVELNAMES := map[string]string{
+		"damtop":                 "Top of Dam",
+		"dambottom":              "Bottom of Dam",
 		"level-top-of-normal":    "Top of Normal",
 		"level-bottom-of-normal": "Bottom of Normal",
 		"level-top-of-flood":     "Top of Flood",
@@ -34,9 +36,9 @@ func (d DamProfileChart) QueryValues() url.Values {
 				q.Add(m.Variable, fmt.Sprintf("%v", v))
 			case "level-top-of-normal", "level-bottom-of-normal", "level-top-of-flood":
 				q.Add("level", fmt.Sprintf("%s,%v", LEVELNAMES[m.Variable], v))
-			case "damtop", "dambottom":
-				q.Add(m.Variable, fmt.Sprintf("%v", v))             // add required variables damtop, dambottom
-				q.Add("level", fmt.Sprintf("%s,%v", m.Variable, v)) // add level markerlines
+			case "dambottom", "damtop":
+				q.Add(m.Variable, fmt.Sprintf("%v", v))                         // add required variables damtop, dambottom
+				q.Add("level", fmt.Sprintf("%s,%v", LEVELNAMES[m.Variable], v)) // add level markerlines
 			}
 		}
 	}
